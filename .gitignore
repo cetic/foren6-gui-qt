@@ -24,3 +24,8 @@ moc_*.cpp
 qrc_*.cpp
 Makefile
 Makefile.*
+
+#Genenerated files by the sniffer
+*.pcap
+*.snif
+
