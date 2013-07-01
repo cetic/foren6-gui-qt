@@ -1,0 +1,26 @@
+#Unix global
+
+.*
+!.gitignore
+*~
+.directory
+
+#Windows global
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+#Qt specific
+
+debug
+release
+*.pro.user
+*.pro.user.*
+*.o
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+Makefile
+Makefile.*
