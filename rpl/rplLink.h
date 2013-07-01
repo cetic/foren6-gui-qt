@@ -19,6 +19,7 @@ class Link : public QGraphicsItem
 		qreal weight() { return _link->metric.value; }
 		Node *to() { return _to; }
 		Node *from() { return _from; }
+		di_link_t *getLinkData() { return _link; }
 
 		QPen pen() const;
 		void setPen(const QPen& pen);

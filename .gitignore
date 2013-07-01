@@ -28,4 +28,5 @@ Makefile.*
 #Genenerated files by the sniffer
 *.pcap
 *.snif
+callgrind.out.*
 

@@ -12,7 +12,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = rpl_diagnosis_tool
 TEMPLATE = app
 
-LIBS += -lgraph -lgvc
 LIBS += /home/am/Documents/libpacketparser.so/bin/libpacket_parser.so
 
 INCLUDEPATH += /home/am/Documents/libpacketparser.so/

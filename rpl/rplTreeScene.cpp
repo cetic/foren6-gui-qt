@@ -23,23 +23,28 @@ TreeScene::TreeScene()
 
 
 void TreeScene::addNode(Node *node) {
+	qDebug("Adding Node %p %llX", node, node->getNodeData()->wpan_address);
 	_nodes.append(node);
 	addItem(node);
 }
 
 void TreeScene::addLink(Link *link) {
+	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.child->wpan_address, link->getLinkData()->key.parent->wpan_address);
 	_links.append(link);
 	addItem(link);
 }
 
 void TreeScene::removeNode(Node *node) {
+	qDebug("Removing Node %p", node);
 	removeItem(node);
 	_nodes.removeAll(node);
 }
 
 void TreeScene::removeLink(Link *link) {
+	qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
 	removeItem(link);
 	_links.removeAll(link);
+	qDebug("Removed Link %p, raw link %p", link, link->getLinkData());
 }
 
 void TreeScene::updateNodePositions() {
@@ -80,8 +85,8 @@ void TreeScene::updateNodePositions() {
 		if (dist > 0) {
 			dist = sqrt(dist) / 2;
 			n1->incSpeed(-dx *100 / dist, -dy *100  / dist);
-			n1->updatePosition();
 		}
+		n1->updatePosition();
 	}
 
 	foreach(currentLink, _links) {

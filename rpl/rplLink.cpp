@@ -10,6 +10,8 @@ Link::Link(di_link_t *link) : _link(link)
 	_to = static_cast<Node*>(link->key.parent->user_data);
 	Q_ASSERT(_from);
 	Q_ASSERT(_to);
+	Q_ASSERT(_from->getNodeData() == link->key.child);
+	Q_ASSERT(_to->getNodeData() == link->key.parent);
 }
 
 Link::~Link()

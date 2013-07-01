@@ -4,7 +4,12 @@
 namespace rpl
 {
 
-Node::Node(di_node_t *nodeData, QString label) : _nodeData(nodeData), _ellipse(0, 0, 100, 10, this), _label(label, this)
+Node::Node(di_node_t *nodeData, QString label)
+	: _nodeData(nodeData),
+	  _ellipse(0, 0, 100, 10, this),
+	  _label(label, this),
+	  _dx(0),
+	  _dy(0)
 {
 	this->addToGroup(&_ellipse);
 	this->addToGroup(&_label);
