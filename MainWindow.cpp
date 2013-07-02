@@ -9,8 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	ui->rplTreeView->setScene(rplViewManager.scene());
-	connect(ui->startSnifferButton, SIGNAL(clicked()), this, SLOT(onStartSniffer()));
-	connect(ui->stopSnifferButton, SIGNAL(clicked()), this, SLOT(onStopSniffer()));
+	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
+	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 }
 
 MainWindow::~MainWindow()
