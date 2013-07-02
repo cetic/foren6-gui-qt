@@ -20,6 +20,7 @@ class Link : public QGraphicsItem
 		Node *to() { return _to; }
 		Node *from() { return _from; }
 		di_link_t *getLinkData() { return _link; }
+		void prepareGeometryChangeHack() { prepareGeometryChange(); }
 
 		QPen pen() const;
 		void setPen(const QPen& pen);
