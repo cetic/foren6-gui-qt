@@ -12,9 +12,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = rpl_diagnosis_tool
 TEMPLATE = app
 
-LIBS += /home/am/Documents/libpacketparser.so/bin/libpacket_parser.so
+LIBS += $$PWD/../analyzer/dist/Debug/GNU-Linux-x86/libanalyzer.so
 
-INCLUDEPATH += /home/am/Documents/libpacketparser.so/
+INCLUDEPATH += $$PWD/../analyzer/
 
 
 
