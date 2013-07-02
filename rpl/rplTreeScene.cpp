@@ -54,10 +54,6 @@ void TreeScene::updateNodePositions() {
 	Node *n1, *n2;
 
 	foreach(currentLink, _links) {
-		currentLink->prepareGeometryChangeHack();
-	}
-
-	foreach(currentLink, _links) {
 		QPointF pos1 = currentLink->from()->centerPos();
 		QPointF pos2 = currentLink->to()->centerPos();
 		qreal vx = pos2.x() - pos1.x();
@@ -122,10 +118,6 @@ void TreeScene::updateNodePositions() {
 		}
 		n1->incSpeed(0, 1);
 		n1->updatePosition();
-	}
-
-	foreach(currentLink, _links) {
-		currentLink->update();
 	}
 }
 

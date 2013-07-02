@@ -15,6 +15,9 @@ class Node : public QGraphicsItemGroup
 	public:
 		Node(di_node_t *nodeData, QString label);
 
+		void addLink(Link *link) { _links.append(link); }
+		void removeLink(Link *link) { _links.removeOne(link); }
+
 		void setCenterPos(QPointF newpos);
 		void setCenterPos(qreal x, qreal y);
 
@@ -22,9 +25,13 @@ class Node : public QGraphicsItemGroup
 		qreal centerX() const { return centerPos().x(); }
 		qreal centerY() const { return centerPos().y(); }
 
+		void setPos(qreal x, qreal y);
+
 		void incSpeed(qreal x, qreal y);
 		qreal speedX() { return _dx; }
 		qreal speedY() { return _dy; }
+
+		qreal radius() { return _ellipse.rect().width() / 2; }
 
 		di_node_t *getNodeData() { return _nodeData; }
 
@@ -38,6 +45,7 @@ class Node : public QGraphicsItemGroup
 		QGraphicsEllipseItem _ellipse;
 		QGraphicsTextItem _label;
 		qreal _dx, _dy;
+		QList<Link*> _links;
 };
 
 }

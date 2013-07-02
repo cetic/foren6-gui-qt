@@ -1,22 +1,36 @@
 #include "rplNode.h"
 #include <QPointF>
+#include <QBrush>
+#include "rplLink.h"
 
 namespace rpl
 {
 
 Node::Node(di_node_t *nodeData, QString label)
 	: _nodeData(nodeData),
-	  _ellipse(0, 0, 100, 30, this),
-	  _label(label, this),
+	  _ellipse(this),
+	  _label(this),
 	  _dx(0),
 	  _dy(0)
 {
-	this->addToGroup(&_ellipse);
-	this->addToGroup(&_label);
+	static int ugly_hack = 0;
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable );
 	setAcceptHoverEvents( true );
-	this->setToolTip("A test");
-	_label.setPos(boundingRect().width()/2 - _label.boundingRect().width()/2, boundingRect().height()/2 - _label.boundingRect().height()/2);
+
+	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
+	ugly_hack++;
+	this->addToGroup(&_label);
+
+	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 5;
+
+	_ellipse.setRect(0, 0, maxSize, maxSize);
+	_ellipse.setBrush(QBrush(Qt::white));
+	this->addToGroup(&_ellipse);
+
+	_label.setPos(maxSize/2 - _label.boundingRect().width()/2, maxSize/2 - _label.boundingRect().height()/2);
+
+	setCenterPos(qrand()%500, qrand()%500);
+	setZValue(1);
 }
 
 void Node::setCenterPos(QPointF newpos) {
@@ -25,6 +39,16 @@ void Node::setCenterPos(QPointF newpos) {
 
 void Node::setCenterPos(qreal x, qreal y) {
 	setPos(x - boundingRect().width()/2, y - boundingRect().height()/2);
+}
+
+void Node::setPos(qreal x, qreal y) {
+	Link *link;
+
+	QGraphicsItemGroup::setPos(x, y);
+
+	foreach(link, _links) {
+		link->updatePosition();
+	}
 }
 
 void Node::onNodeChanged() {

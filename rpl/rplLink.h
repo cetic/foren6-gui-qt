@@ -10,7 +10,7 @@ namespace rpl
 
 class Node;
 
-class Link : public QGraphicsItem
+class Link : public QGraphicsLineItem
 {
 	public:
 		Link(di_link_t *link);
@@ -20,10 +20,9 @@ class Link : public QGraphicsItem
 		Node *to() { return _to; }
 		Node *from() { return _from; }
 		di_link_t *getLinkData() { return _link; }
-		void prepareGeometryChangeHack() { prepareGeometryChange(); }
 
-		QPen pen() const;
-		void setPen(const QPen& pen);
+		void updatePosition();
+
 		virtual QRectF boundingRect() const;
 		virtual QPainterPath shape() const;
 		virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -33,6 +32,7 @@ class Link : public QGraphicsItem
 		Node *_from;
 		Node *_to;
 		QPen _pen;
+		QPolygonF _arrowHead;
 };
 
 }
