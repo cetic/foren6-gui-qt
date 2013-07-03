@@ -32,7 +32,6 @@ void TreeScene::addNode(Node *node) {
 
 void TreeScene::addLink(Link *link) {
 	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.child->wpan_address, link->getLinkData()->key.parent->wpan_address);
-	_links.append(link);
 	addItem(link);
 }
 
@@ -45,7 +44,6 @@ void TreeScene::removeNode(Node *node) {
 void TreeScene::removeLink(Link *link) {
 	qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
 	removeItem(link);
-	_links.removeAll(link);
 	qDebug("Removed Link %p, raw link %p", link, link->getLinkData());
 }
 
@@ -53,19 +51,20 @@ void TreeScene::updateNodePositions() {
 	Link *currentLink;
 	Node *n1, *n2;
 
-	foreach(currentLink, _links) {
-		QPointF pos1 = currentLink->from()->centerPos();
-		QPointF pos2 = currentLink->to()->centerPos();
-		qreal vx = pos2.x() - pos1.x();
-		qreal vy = pos2.y() - pos1.y();
-		qreal dist = sqrt(vx * vx + vy * vy);
-		if(qAbs(dist) < 0.01) dist = 0.01;
-		qreal factor = (100 - dist)/(dist * 3);
-		currentLink->from()->incSpeed(-factor * vx, -factor * vy);
-		currentLink->to()->incSpeed(factor * vx, factor * vy);
-	}
-
 	foreach(n1, _nodes) {
+		foreach(currentLink, n1->links()) {
+			QPointF pos1 = currentLink->from()->centerPos();
+			QPointF pos2 = currentLink->to()->centerPos();
+			qreal vx = pos2.x() - pos1.x();
+			qreal vy = pos2.y() - pos1.y();
+			qreal dist = sqrt(vx * vx + vy * vy);
+			if(qAbs(dist) < 0.01) dist = 0.01;
+			qreal factor = (100 - dist)/(dist * 3);
+			currentLink->from()->incSpeed(-factor * vx, -factor * vy);
+			currentLink->to()->incSpeed(factor * vx, factor * vy);
+		}
+
+
 		qreal dx = 0, dy = 0;
 		foreach(n2, _nodes) {
 			if(n1 == n2)

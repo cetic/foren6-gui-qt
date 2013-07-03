@@ -14,6 +14,7 @@ class Node : public QGraphicsItemGroup
 {
 	public:
 		Node(di_node_t *nodeData, QString label);
+		~Node();
 
 		void addLink(Link *link) { _links.append(link); }
 		void removeLink(Link *link) { _links.removeOne(link); }
@@ -34,6 +35,7 @@ class Node : public QGraphicsItemGroup
 		qreal radius() { return _ellipse.rect().width() / 2; }
 
 		di_node_t *getNodeData() { return _nodeData; }
+		QList<Link*> links() { return _links; }
 
 	public slots:
 		void updatePosition();

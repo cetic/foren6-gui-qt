@@ -30,7 +30,6 @@ class TreeScene : public QGraphicsScene
 	private:
 		QTimer _updateDagsTimer;
 		QList<Node*> _nodes;
-		QList<Link*> _links;
 };
 
 }

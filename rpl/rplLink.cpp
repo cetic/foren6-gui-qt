@@ -2,6 +2,7 @@
 #include "rplNode.h"
 #include <QPainter>
 #include <math.h>
+#include <QGraphicsScene>
 
 namespace rpl
 {

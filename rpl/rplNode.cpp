@@ -33,6 +33,16 @@ Node::Node(di_node_t *nodeData, QString label)
 	setZValue(1);
 }
 
+Node::~Node() {
+	Link *link;
+
+	foreach(link, _links) {
+		delete link;
+	}
+
+	_links.clear();
+}
+
 void Node::setCenterPos(QPointF newpos) {
 	setCenterPos(newpos.x(), newpos.y());
 }
