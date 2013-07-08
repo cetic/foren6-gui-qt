@@ -13,7 +13,7 @@ class Node;
 class Link : public QGraphicsLineItem
 {
 	public:
-		Link(di_link_t *link);
+		Link(di_link_t *link, Node *from, Node *to);
 		virtual ~Link();
 
 		qreal weight() { return _link->metric.value; }

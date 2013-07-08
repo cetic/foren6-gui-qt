@@ -3,6 +3,7 @@
 #include "rplLink.h"
 #include "rplNode.h"
 #include <QGraphicsWidget>
+#include <data_info/hash_container.h>
 
 namespace rpl
 {
@@ -105,7 +106,7 @@ void NetworkInfoManager::onLinkCreated(di_link_t *link) {
 	action->event = Action::AE_Created;
 	action->type = Action::AT_Link;
 	action->ptr = link;
-	qDebug("Link created: %p, %llX -> %llX", link, link->key.child->wpan_address, link->key.parent->wpan_address);
+	qDebug("Link created: %p, %llX -> %llX", link, link->key.child, link->key.parent);
 	_thisInstance->_pendingActions.append(action);
 }
 
@@ -115,7 +116,7 @@ void NetworkInfoManager::onLinkDeleted(di_link_t *link) {
 	action->event = Action::AE_Deleted;
 	action->type = Action::AT_Link;
 	action->ptr = link->user_data;
-	qDebug("Link deleted: %p, %llX -> %llX", link, link->key.child->wpan_address, link->key.parent->wpan_address);
+	qDebug("Link deleted: %p, %llX -> %llX", link, link->key.child, link->key.parent);
 	_thisInstance->_pendingActions.append(action);
 	if((unsigned int)link->user_data < 1000 && link->user_data) {
 		qDebug("WTF");
@@ -133,8 +134,12 @@ void NetworkInfoManager::checkPendingActions() {
 				if(action->event == Action::AE_Created) {
 					di_link_t *link = static_cast<di_link_t*>(action->ptr);
 					Link *linkNodes;
+					Node *from, *to;
 
-					linkNodes = new Link(link);
+					from = (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.child), HVM_FailIfNonExistant))->user_data;
+					to = (Node*)   ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.parent), HVM_FailIfNonExistant))->user_data;
+
+					linkNodes = new Link(link, from, to);
 					link->user_data = linkNodes;
 					_thisInstance->_scene.addLink(linkNodes);
 				} else if(action->event == Action::AE_Deleted) {

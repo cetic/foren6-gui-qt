@@ -31,7 +31,7 @@ void TreeScene::addNode(Node *node) {
 }
 
 void TreeScene::addLink(Link *link) {
-	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.child->wpan_address, link->getLinkData()->key.parent->wpan_address);
+	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.child, link->getLinkData()->key.parent);
 	addItem(link);
 }
 

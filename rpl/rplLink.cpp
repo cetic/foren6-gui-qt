@@ -10,14 +10,12 @@ namespace rpl
 static const qreal Pi = 3.14159;
 
 
-Link::Link(di_link_t *link) : _link(link)
+Link::Link(di_link_t *link, Node *from, Node *to) : _link(link)
 {
-	_from = static_cast<Node*>(link->key.child->user_data);
-	_to = static_cast<Node*>(link->key.parent->user_data);
+	_from = from;
+	_to = to;
 	Q_ASSERT(_from);
 	Q_ASSERT(_to);
-	Q_ASSERT(_from->getNodeData() == link->key.child);
-	Q_ASSERT(_to->getNodeData() == link->key.parent);
 
 	_from->addLink(this);
 	_to->addLink(this);
