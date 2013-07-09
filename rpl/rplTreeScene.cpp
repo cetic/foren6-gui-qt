@@ -25,13 +25,13 @@ TreeScene::TreeScene()
 
 
 void TreeScene::addNode(Node *node) {
-	qDebug("Adding Node %p %llX", node, node->getNodeData()->wpan_address);
+	qDebug("Adding Node %p %llX", node, node->getNodeData()->key.ref.wpan_address);
 	_nodes.append(node);
 	addItem(node);
 }
 
 void TreeScene::addLink(Link *link) {
-	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.child, link->getLinkData()->key.parent);
+	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.ref.child.wpan_address, link->getLinkData()->key.ref.parent.wpan_address);
 	addItem(link);
 }
 

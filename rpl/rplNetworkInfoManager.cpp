@@ -41,7 +41,7 @@ void NetworkInfoManager::onNodeCreated(di_node_t *node) {
 	action->event = Action::AE_Created;
 	action->type = Action::AT_Node;
 	action->ptr = node;
-	qDebug("Node created: %p, %llX", node, node->wpan_address);
+	qDebug("Node created: %p, %llX", node, node->key.ref.wpan_address);
 	_thisInstance->_pendingActions.append(action);
 }
 
@@ -60,7 +60,7 @@ void NetworkInfoManager::onNodeDeleted(di_node_t *node) {
 	action->event = Action::AE_Deleted;
 	action->type = Action::AT_Node;
 	action->ptr = node->user_data;
-	qDebug("Node deleted: %p, %llX", node, node->wpan_address);
+	qDebug("Node deleted: %p, %llX", node, node->key.ref.wpan_address);
 	_thisInstance->_pendingActions.append(action);
 }
 
@@ -106,7 +106,7 @@ void NetworkInfoManager::onLinkCreated(di_link_t *link) {
 	action->event = Action::AE_Created;
 	action->type = Action::AT_Link;
 	action->ptr = link;
-	qDebug("Link created: %p, %llX -> %llX", link, link->key.child, link->key.parent);
+	qDebug("Link created: %p, %llX -> %llX", link, link->key.ref.child.wpan_address, link->key.ref.parent.wpan_address);
 	_thisInstance->_pendingActions.append(action);
 }
 
@@ -116,7 +116,7 @@ void NetworkInfoManager::onLinkDeleted(di_link_t *link) {
 	action->event = Action::AE_Deleted;
 	action->type = Action::AT_Link;
 	action->ptr = link->user_data;
-	qDebug("Link deleted: %p, %llX -> %llX", link, link->key.child, link->key.parent);
+	qDebug("Link deleted: %p, %llX -> %llX", link, link->key.ref.child.wpan_address, link->key.ref.parent.wpan_address);
 	_thisInstance->_pendingActions.append(action);
 	if((unsigned int)link->user_data < 1000 && link->user_data) {
 		qDebug("WTF");
@@ -135,9 +135,14 @@ void NetworkInfoManager::checkPendingActions() {
 					di_link_t *link = static_cast<di_link_t*>(action->ptr);
 					Link *linkNodes;
 					Node *from, *to;
+					di_node_key_t node_key;
 
-					from = (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.child), HVM_FailIfNonExistant, NULL))->user_data;
-					to = (Node*)   ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.parent), HVM_FailIfNonExistant, NULL))->user_data;
+					node_key = (di_node_key_t){link->key.ref.child, 0};
+					from = (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(node_key), HVM_FailIfNonExistant, NULL))->user_data;
+
+
+					node_key = (di_node_key_t){link->key.ref.parent, 0};
+					to =   (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(node_key), HVM_FailIfNonExistant, NULL))->user_data;
 
 					linkNodes = new Link(link, from, to);
 					link->user_data = linkNodes;
@@ -154,7 +159,7 @@ void NetworkInfoManager::checkPendingActions() {
 				if(action->event == Action::AE_Created) {
 					Node *newnode;
 
-					newnode = new Node(node, QString::number(node->wpan_address, 16));
+					newnode = new Node(node, QString::number(node->key.ref.wpan_address, 16));
 					node->user_data = newnode;
 					_thisInstance->_scene.addNode(newnode);
 				} else if(action->event == Action::AE_Deleted) {
