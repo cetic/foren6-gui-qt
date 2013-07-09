@@ -36,7 +36,7 @@ class NetworkInfoManager : public QObject
 		void checkPendingActions();
 
 	private:
-		rpl_collector_t *_collected_data;
+		di_rpl_data_t *_collected_data;
 		TreeScene _scene;
 		static NetworkInfoManager *_thisInstance;
 

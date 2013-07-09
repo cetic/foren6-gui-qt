@@ -136,8 +136,8 @@ void NetworkInfoManager::checkPendingActions() {
 					Link *linkNodes;
 					Node *from, *to;
 
-					from = (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.child), HVM_FailIfNonExistant))->user_data;
-					to = (Node*)   ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.parent), HVM_FailIfNonExistant))->user_data;
+					from = (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.child), HVM_FailIfNonExistant, NULL))->user_data;
+					to = (Node*)   ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(link->key.parent), HVM_FailIfNonExistant, NULL))->user_data;
 
 					linkNodes = new Link(link, from, to);
 					link->user_data = linkNodes;
