@@ -6,17 +6,22 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
+	const char *target = "/dev/ttyUSB0";
 	rpl_tool_init();
-	interface = rpl_tool_get_interface("../capture/bin/libinterface_telos.so");
+
+	if(QApplication::instance()->arguments().size() > 1)
+		target = QApplication::instance()->arguments().at(1).toUtf8().constData();
+
+	if(QString(target).endsWith(".pcap"))
+		interface = rpl_tool_get_interface("../capture/bin/libinterface_pcap.so");
+	else interface = rpl_tool_get_interface("../capture/bin/libinterface_telos.so");
+
 	if(interface == 0)
 		qFatal("Could not get telos interface !");
 
 	interface->init();
 
-	if(QApplication::instance()->arguments().size() > 1)
-		sniffer_handle = interface->open(QApplication::instance()->arguments().at(1).toUtf8().constData());
-	else sniffer_handle = interface->open("/dev/ttyUSB0");
+	sniffer_handle = interface->open(target);
 
 	if(sniffer_handle == 0)
 		qFatal("Could not open target interface !");

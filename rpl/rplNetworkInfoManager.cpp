@@ -41,7 +41,7 @@ void NetworkInfoManager::onNodeCreated(di_node_t *node) {
 	action->event = Action::AE_Created;
 	action->type = Action::AT_Node;
 	action->ptr = node;
-	qDebug("Node created: %p, %llX", node, node->key.ref.wpan_address);
+	qDebug("Node created: %p, %llX", node, node_get_mac64(node));
 	_thisInstance->_pendingActions.append(action);
 }
 
@@ -59,8 +59,8 @@ void NetworkInfoManager::onNodeDeleted(di_node_t *node) {
 	Action *action = new Action;
 	action->event = Action::AE_Deleted;
 	action->type = Action::AT_Node;
-	action->ptr = node->user_data;
-	qDebug("Node deleted: %p, %llX", node, node->key.ref.wpan_address);
+	action->ptr = node_get_user_data(node);
+	qDebug("Node deleted: %p, %llX", node, node_get_mac64(node));
 	_thisInstance->_pendingActions.append(action);
 }
 
@@ -138,11 +138,11 @@ void NetworkInfoManager::checkPendingActions() {
 					di_node_key_t node_key;
 
 					node_key = (di_node_key_t){link->key.ref.child, 0};
-					from = (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(node_key), HVM_FailIfNonExistant, NULL))->user_data;
+					from = (Node*) node_get_user_data((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(node_key), HVM_FailIfNonExistant, NULL));
 
 
 					node_key = (di_node_key_t){link->key.ref.parent, 0};
-					to =   (Node*) ((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(node_key), HVM_FailIfNonExistant, NULL))->user_data;
+					to =   (Node*) node_get_user_data((di_node_t*)hash_value(_collected_data->nodes, hash_key_make(node_key), HVM_FailIfNonExistant, NULL));
 
 					linkNodes = new Link(link, from, to);
 					link->user_data = linkNodes;
@@ -159,15 +159,15 @@ void NetworkInfoManager::checkPendingActions() {
 				if(action->event == Action::AE_Created) {
 					Node *newnode;
 
-					newnode = new Node(node, QString::number(node->key.ref.wpan_address, 16));
-					node->user_data = newnode;
+					newnode = new Node(node, QString::number(node_get_mac64(node), 16));
+					node_set_user_data(node, newnode);
 					_thisInstance->_scene.addNode(newnode);
 				} else if(action->event == Action::AE_Deleted) {
 					Node *node = static_cast<Node*>(action->ptr);
 					_thisInstance->_scene.removeNode(node);
 					delete node;
 				} else if(action->event == Action::AE_Updated) {
-					static_cast<Node*>(node->user_data)->onNodeChanged();
+					static_cast<Node*>(node_get_user_data(node))->onNodeChanged();
 				}
 				break;
 			}

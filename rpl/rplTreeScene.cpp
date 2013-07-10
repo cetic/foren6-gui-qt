@@ -25,7 +25,7 @@ TreeScene::TreeScene()
 
 
 void TreeScene::addNode(Node *node) {
-	qDebug("Adding Node %p %llX", node, node->getNodeData()->key.ref.wpan_address);
+	qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
 	_nodes.append(node);
 	addItem(node);
 }
