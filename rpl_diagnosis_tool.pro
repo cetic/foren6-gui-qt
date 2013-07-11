@@ -12,7 +12,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = rpl_diagnosis_tool
 TEMPLATE = app
 
-LIBS += $$PWD/../analyzer/dist/Debug/GNU-Linux-x86/libanalyzer.so
+LIBS += -L$$PWD/../analyzer/dist/Debug/GNU-Linux-x86/
+LIBS += -lanalyzer
 
 INCLUDEPATH += $$PWD/../analyzer/
 
@@ -32,3 +33,6 @@ HEADERS  += MainWindow.h \
     rpl/rplLink.h
 
 FORMS    += MainWindow.ui
+
+RESOURCES += \
+    Resource.qrc
