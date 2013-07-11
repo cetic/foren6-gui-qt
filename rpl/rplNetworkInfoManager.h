@@ -15,6 +15,7 @@ class NetworkInfoManager : public QObject
 		Q_OBJECT
 	public:
 		NetworkInfoManager();
+		~NetworkInfoManager();
 
 		TreeScene *scene() { return &_scene; }
 

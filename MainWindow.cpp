@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
 	interface->close(sniffer_handle);
+	rpl_tool_cleanup();
 	delete ui;
 }
 

@@ -35,6 +35,14 @@ NetworkInfoManager::NetworkInfoManager()
 	_checkPendingActionsTimer.start();
 }
 
+NetworkInfoManager::~NetworkInfoManager() {
+	_checkPendingActionsTimer.stop();
+	QMutexLocker lockMutex(&_thisInstance->_pendingActionsMutex);
+	_collected_data = 0;
+	_thisInstance = 0;
+
+}
+
 void NetworkInfoManager::onNodeCreated(di_node_t *node) {
 	QMutexLocker lockMutex(&_thisInstance->_pendingActionsMutex);
 	Action *action = new Action;
