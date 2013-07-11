@@ -33,3 +33,6 @@ HEADERS  += MainWindow.h \
     rpl/rplLink.h
 
 FORMS    += MainWindow.ui
+
+RESOURCES += \
+    Resource.qrc

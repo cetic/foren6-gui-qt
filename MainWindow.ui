@@ -236,8 +236,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
    <property name="icon">
-    <iconset>
-     <normaloff>../../../../../usr/share/icons/oxygen/48x48/actions/media-playback-start.png</normaloff>../../../../../usr/share/icons/oxygen/48x48/actions/media-playback-start.png</iconset>
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/media-playback-start.png</normaloff>:/icons/resources/icons/media-playback-start.png</iconset>
    </property>
    <property name="text">
     <string>Start</string>
@@ -248,8 +248,8 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionStop">
    <property name="icon">
-    <iconset>
-     <normaloff>../../../../../usr/share/icons/default.kde4/48x48/actions/media-playback-stop.png</normaloff>../../../../../usr/share/icons/default.kde4/48x48/actions/media-playback-stop.png</iconset>
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/media-playback-stop.png</normaloff>:/icons/resources/icons/media-playback-stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -260,6 +260,8 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="Resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
