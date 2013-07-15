@@ -22,6 +22,7 @@ class TreeScene : public QGraphicsScene
 		void addLink(Link *link);
 		void removeNode(Node *node);
 		void removeLink(Link *link);
+		void removeAllLinks();
 		void clear();
 
 	protected slots:
@@ -31,6 +32,7 @@ class TreeScene : public QGraphicsScene
 	private:
 		QTimer _updateDagsTimer;
 		QList<Node*> _nodes;
+		QList<Link*> _links;
 };
 
 }

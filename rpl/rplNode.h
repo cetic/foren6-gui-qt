@@ -41,13 +41,22 @@ class Node : public QGraphicsItemGroup
 		void updatePosition();
 		void onNodeChanged();
 
+	protected:
+		void mousePressEvent(QGraphicsSceneMouseEvent *event);
+		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+
 	private:
 		QElapsedTimer _timeElapsed;    //Since last pos update
+		QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
 		di_node_t *_nodeData;
 		QGraphicsEllipseItem _ellipse;
 		QGraphicsTextItem _label;
 		qreal _dx, _dy;
 		QList<Link*> _links;
+
+		bool _isBeingMoved;
+		bool _pinned;
 };
 
 }

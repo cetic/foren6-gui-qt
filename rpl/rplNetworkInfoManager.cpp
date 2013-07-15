@@ -145,11 +145,12 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 		currentNode = dynamic_cast<Node*>(currentItem);
 		if(currentNode) {
 			presentNodes.insert(node_get_mac64(currentNode->getNodeData()), currentNode);
+			//_scene.removeItem(currentItem);
+		} else if(currentItem->group() == 0)
 			_scene.removeItem(currentItem);
-		}
 	}
 
-	_scene.clear();
+	_scene.removeAllLinks();
 
 	it = hash_begin(NULL, NULL);
 	itEnd = hash_begin(NULL, NULL);
@@ -163,9 +164,9 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 			presentNodes.remove(node_get_mac64(node));
 		} else {
 			newnode = new Node(node, QString::number(node_get_mac64(node), 16));
+			_scene.addNode(newnode);
 		}
 		node_set_user_data(node, newnode);
-		_scene.addNode(newnode);
 	}
 
 	for(hash_begin(link_container, it), hash_end(link_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
@@ -182,6 +183,7 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 	}
 
 	foreach(currentNode, presentNodes) {
+		_scene.removeNode(currentNode);
 		delete currentNode;
 	}
 

@@ -67,7 +67,7 @@ void MainWindow::onSliderMove(int value) {
 
 	if(value == ui->horizontalSlider->maximum())
 		version = 0;  //realtime mode
-	else if(version == 0)
+	else if(version == 0 && rpldata_get_node_last_version() > 1)
 		version = 1; //When the slide is at left most, use the first version which is version 1 (version 0 is the realtime version)
 
 	ui->logEdit->append(QString("Using version %1").arg(version));

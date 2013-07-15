@@ -17,7 +17,7 @@ namespace rpl
 
 TreeScene::TreeScene()
 {
-	_updateDagsTimer.setInterval(100);
+	_updateDagsTimer.setInterval(40);
 	_updateDagsTimer.setSingleShot(false);
 	connect(&_updateDagsTimer, SIGNAL(timeout()), this, SLOT(updateNodePositions()));
 	_updateDagsTimer.start();
@@ -33,6 +33,7 @@ void TreeScene::addNode(Node *node) {
 void TreeScene::addLink(Link *link) {
 	//qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.ref.child.wpan_address, link->getLinkData()->key.ref.parent.wpan_address);
 	addItem(link);
+	_links.append(link);
 }
 
 void TreeScene::removeNode(Node *node) {
@@ -44,6 +45,15 @@ void TreeScene::removeNode(Node *node) {
 void TreeScene::removeLink(Link *link) {
 	//qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
 	removeItem(link);
+	_links.removeAll(link);
+}
+
+void TreeScene::removeAllLinks() {
+	Link *link;
+	foreach(link, _links) {
+		_links.removeAll(link);
+		delete link;
+	}
 }
 
 void TreeScene::clear() {
