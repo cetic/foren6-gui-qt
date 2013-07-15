@@ -130,8 +130,8 @@ void NetworkInfoManager::onLinkDeleted(di_link_t *link) {
 
 void NetworkInfoManager::useVersion(uint32_t version) {
 	hash_iterator_ptr it, itEnd;
-	hash_container_ptr node_container = rpldata_get_nodes(currentVersion);
-	hash_container_ptr link_container = rpldata_get_links(currentVersion);
+	hash_container_ptr node_container = rpldata_get_nodes(version);
+	hash_container_ptr link_container = rpldata_get_links(version);
 	QHash<addr_wpan_t, Node*> presentNodes;
 	QGraphicsItem *currentItem;
 	Node *currentNode;
