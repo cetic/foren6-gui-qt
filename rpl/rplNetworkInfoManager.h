@@ -15,8 +15,10 @@ class NetworkInfoManager : public QObject
 		Q_OBJECT
 	public:
 		NetworkInfoManager();
+		~NetworkInfoManager();
 
 		TreeScene *scene() { return &_scene; }
+		void useVersion(uint32_t version);
 
 	protected:
 		static void onNodeCreated(di_node_t *node);
@@ -36,7 +38,7 @@ class NetworkInfoManager : public QObject
 		void checkPendingActions();
 
 	private:
-		rpl_collector_t *_collected_data;
+		di_rpl_data_t *_collected_data;
 		TreeScene _scene;
 		static NetworkInfoManager *_thisInstance;
 
@@ -58,6 +60,7 @@ class NetworkInfoManager : public QObject
 		QList<Action*> _pendingActions;
 		QMutex _pendingActionsMutex;
 		QTimer _checkPendingActionsTimer;
+		uint32_t currentVersion;
 };
 
 }

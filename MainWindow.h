@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
 	protected slots:
 		void onStartSniffer();
 		void onStopSniffer();
+		void onSliderMove(int value);
 		
 	private:
 		Ui::MainWindow *ui;
