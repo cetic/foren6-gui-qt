@@ -16,7 +16,7 @@ class Link : public QGraphicsLineItem
 		Link(di_link_t *link, Node *from, Node *to);
 		virtual ~Link();
 
-		qreal weight() { return _link->metric.value; }
+		qreal weight() { return link_get_metric(_link)->value; }
 		Node *to() { return _to; }
 		Node *from() { return _from; }
 		di_link_t *getLinkData() { return _link; }

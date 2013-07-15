@@ -25,26 +25,30 @@ TreeScene::TreeScene()
 
 
 void TreeScene::addNode(Node *node) {
-	qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
+	//qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
 	_nodes.append(node);
 	addItem(node);
 }
 
 void TreeScene::addLink(Link *link) {
-	qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.ref.child.wpan_address, link->getLinkData()->key.ref.parent.wpan_address);
+	//qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.ref.child.wpan_address, link->getLinkData()->key.ref.parent.wpan_address);
 	addItem(link);
 }
 
 void TreeScene::removeNode(Node *node) {
-	qDebug("Removing Node %p", node);
+	//qDebug("Removing Node %p", node);
 	removeItem(node);
 	_nodes.removeAll(node);
 }
 
 void TreeScene::removeLink(Link *link) {
-	qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
+	//qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
 	removeItem(link);
-	qDebug("Removed Link %p, raw link %p", link, link->getLinkData());
+}
+
+void TreeScene::clear() {
+	QGraphicsScene::clear();
+	_nodes.clear();
 }
 
 void TreeScene::updateNodePositions() {
