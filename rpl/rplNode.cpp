@@ -2,6 +2,7 @@
 #include <QPointF>
 #include <QBrush>
 #include "rplLink.h"
+#include <QGraphicsSceneMouseEvent>
 
 namespace rpl
 {
@@ -11,13 +12,16 @@ Node::Node(di_node_t *nodeData, QString label)
 	  _ellipse(this),
 	  _label(this),
 	  _dx(0),
-	  _dy(0)
+	  _dy(0),
+	  _isBeingMoved(false),
+	  _pinned(false)
 {
 	static int ugly_hack = 0;
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable );
 	setAcceptHoverEvents( true );
 
 	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
+	qDebug("New node %s", _label.toPlainText().toAscii().constData());
 	ugly_hack++;
 	this->addToGroup(&_label);
 
@@ -109,7 +113,51 @@ void Node::updatePosition() {
 			newY = 500;
 			_dy = - _dy/2;
 		}
-		setCenterPos(newX, newY);
+		if(_isBeingMoved == false && _pinned == false)
+			setCenterPos(newX, newY);
+	}
+}
+
+void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+	QGraphicsItemGroup::mousePressEvent(event);
+	_timeElapsedMouseMove.invalidate();
+}
+
+void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+	QGraphicsItemGroup::mouseReleaseEvent(event);
+	if(_isBeingMoved == false)
+		_pinned = !_pinned;
+	else if(_timeElapsedMouseMove.isValid()) {
+			qint64 elapsedTime = _timeElapsedMouseMove.restart();
+			if(elapsedTime) {
+				_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
+				_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
+			}
+			qDebug("Mouse speed %f, %f", _dx, _dy);
+		}
+
+	_isBeingMoved = false;
+}
+
+void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+	Link *link;
+	_isBeingMoved = true;
+
+	if(_timeElapsedMouseMove.isValid() == false)
+		_timeElapsedMouseMove.start();
+	else {
+		qint64 elapsedTime = _timeElapsedMouseMove.restart();
+		if(elapsedTime) {
+			_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
+			_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
+		}
+		qDebug("Mouse speed %f, %f", _dx, _dy);
+	}
+
+	QGraphicsItemGroup::mouseMoveEvent(event);
+
+	foreach(link, _links) {
+		link->updatePosition();
 	}
 }
 
