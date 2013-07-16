@@ -155,31 +155,35 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 	it = hash_begin(NULL, NULL);
 	itEnd = hash_begin(NULL, NULL);
 
-	for(hash_begin(node_container, it), hash_end(node_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
-		di_node_t *node = (di_node_t *)hash_it_value(it);
-		Node *newnode;
+	if(node_container) {
+		for(hash_begin(node_container, it), hash_end(node_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
+			di_node_t *node = (di_node_t *)hash_it_value(it);
+			Node *newnode;
 
-		newnode = presentNodes.value(node_get_mac64(node), 0);
-		if(newnode) {
-			presentNodes.remove(node_get_mac64(node));
-		} else {
-			newnode = new Node(node, QString::number(node_get_mac64(node), 16));
-			_scene.addNode(newnode);
+			newnode = presentNodes.value(node_get_mac64(node), 0);
+			if(newnode) {
+				presentNodes.remove(node_get_mac64(node));
+			} else {
+				newnode = new Node(node, QString::number(node_get_mac64(node), 16));
+				_scene.addNode(newnode);
+			}
+			node_set_user_data(node, newnode);
 		}
-		node_set_user_data(node, newnode);
 	}
 
-	for(hash_begin(link_container, it), hash_end(link_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
-		di_link_t *link = (di_link_t *)hash_it_value(it);
-		Link *linkNodes;
-		Node *from, *to;
+	if(link_container) {
+		for(hash_begin(link_container, it), hash_end(link_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
+			di_link_t *link = (di_link_t *)hash_it_value(it);
+			Link *linkNodes;
+			Node *from, *to;
 
-		from = (Node*) node_get_user_data((di_node_t*)hash_value(node_container, hash_key_make(link_get_key(link)->ref.child), HVM_FailIfNonExistant, NULL));
-		to =   (Node*) node_get_user_data((di_node_t*)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
+			from = (Node*) node_get_user_data((di_node_t*)hash_value(node_container, hash_key_make(link_get_key(link)->ref.child), HVM_FailIfNonExistant, NULL));
+			to =   (Node*) node_get_user_data((di_node_t*)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
 
-		linkNodes = new Link(link, from, to);
-		link_set_user_data(link, linkNodes);
-		_scene.addLink(linkNodes);
+			linkNodes = new Link(link, from, to);
+			link_set_user_data(link, linkNodes);
+			_scene.addLink(linkNodes);
+		}
 	}
 
 	foreach(currentNode, presentNodes) {

@@ -55,7 +55,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::onStartSniffer() {
 	interface->start(sniffer_handle);
-	ui->logEdit->append(QString("Currently %1 versions").arg(rpldata_get_node_last_version()));
+	ui->logEdit->append(QString("Currently %1 versions").arg(rpldata_get_wsn_last_version()));
 }
 
 void MainWindow::onStopSniffer() {
@@ -63,11 +63,11 @@ void MainWindow::onStopSniffer() {
 }
 
 void MainWindow::onSliderMove(int value) {
-	uint32_t version = value*rpldata_get_node_last_version()/ui->horizontalSlider->maximum();
+	uint32_t version = value*rpldata_get_wsn_last_version()/ui->horizontalSlider->maximum();
 
 	if(value == ui->horizontalSlider->maximum())
 		version = 0;  //realtime mode
-	else if(version == 0 && rpldata_get_node_last_version() > 1)
+	else if(version == 0 && rpldata_get_wsn_last_version() > 1)
 		version = 1; //When the slide is at left most, use the first version which is version 1 (version 0 is the realtime version)
 
 	ui->logEdit->append(QString("Using version %1").arg(version));
