@@ -35,12 +35,10 @@ class NetworkInfoManager : public QObject
 		static void onLinkDeleted(di_link_t *link);
 
 	protected slots:
-		void checkPendingActions();
+		void updateVersion();
 
 	private:
-		di_rpl_data_t *_collected_data;
 		TreeScene _scene;
-		static NetworkInfoManager *_thisInstance;
 
 		struct Action {
 			enum {
@@ -57,9 +55,7 @@ class NetworkInfoManager : public QObject
 			void *ptr;
 		};
 
-		QList<Action*> _pendingActions;
-		QMutex _pendingActionsMutex;
-		QTimer _checkPendingActionsTimer;
+		QTimer _updateVersionTimer;
 		uint32_t currentVersion;
 };
 

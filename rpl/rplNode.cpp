@@ -21,7 +21,6 @@ Node::Node(di_node_t *nodeData, QString label)
 	setAcceptHoverEvents( true );
 
 	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
-	qDebug("New node %s", _label.toPlainText().toAscii().constData());
 	ugly_hack++;
 	this->addToGroup(&_label);
 
@@ -133,7 +132,6 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 				_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
 				_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
 			}
-			qDebug("Mouse speed %f, %f", _dx, _dy);
 		}
 
 	_isBeingMoved = false;
@@ -151,7 +149,6 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 			_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
 			_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
 		}
-		qDebug("Mouse speed %f, %f", _dx, _dy);
 	}
 
 	QGraphicsItemGroup::mouseMoveEvent(event);
