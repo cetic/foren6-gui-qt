@@ -59,7 +59,7 @@ void Link::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 	if (_from->collidesWithItem(_to))
 		return;
 
-	qreal arrowSize = 10;
+	qreal arrowSize = 6;
 	painter->setPen(pen());
 	painter->setBrush(pen().color());
 

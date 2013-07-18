@@ -4,6 +4,7 @@
 #include "rplLink.h"
 #include <QGraphicsSceneMouseEvent>
 #include "rplNetworkInfoManager.h"
+#include <QApplication>
 
 namespace rpl
 {
@@ -21,10 +22,13 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString 
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable );
 	setAcceptHoverEvents( true );
 
+	QFont labelFont = QApplication::font();
+	labelFont.setPointSize(8);
+	_label.setFont(labelFont);
 	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
 	this->addToGroup(&_label);
 
-	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 5;
+	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;
 
 	_ellipse.setRect(0, 0, maxSize, maxSize);
 	_ellipse.setBrush(QBrush(Qt::white));
