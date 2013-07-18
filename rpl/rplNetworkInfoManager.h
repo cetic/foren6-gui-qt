@@ -25,7 +25,7 @@ class NetworkInfoManager : public QObject
 		void useVersion(uint32_t version);
 
 	signals:
-		void nodeUpdateSelected(const di_node_t *node);
+		void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
 
 	protected slots:
 		void updateVersion();

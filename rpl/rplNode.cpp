@@ -73,8 +73,10 @@ QPointF Node::centerPos() const {
 }
 
 void Node::incSpeed(qreal x, qreal y) {
-	_dx += x;
-	_dy += y;
+	if(_isBeingMoved == false && _pinned == false) {
+		_dx += x;
+		_dy += y;
+	}
 //	if(_dx > 20)
 //		_dx = 20;
 //	if(_dx < -20)
@@ -89,7 +91,7 @@ void Node::incSpeed(qreal x, qreal y) {
 void Node::updatePosition() {
 	if(!_timeElapsed.isValid()) {
 		_timeElapsed.start();
-	} else {
+	} else if(_isBeingMoved == false && _pinned == false) {
 		qint64 interval = _timeElapsed.restart();
 		qreal newX = centerX() + _dx*interval/1000;
 		qreal newY = centerY() + _dy*interval/1000;
@@ -112,8 +114,7 @@ void Node::updatePosition() {
 			newY = 500;
 			_dy = - _dy/2;
 		}
-		if(_isBeingMoved == false && _pinned == false)
-			setCenterPos(newX, newY);
+		setCenterPos(newX, newY);
 	}
 }
 
@@ -123,6 +124,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 		_timeElapsedMouseMove.invalidate();
 		_isBeingMoved = true;
 	} else if(event->button() == Qt::RightButton) {
+		_timeElapsed.invalidate();
 		_pinned = !_pinned;
 	}
 }
