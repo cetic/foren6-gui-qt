@@ -72,6 +72,8 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	nodeInfoTree.nodeRank->setText(0, "Rank");
 	nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 	nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+
+	ui->rplNodeInfoTree->expandAll();
 }
 
 MainWindow::~MainWindow()
