@@ -167,4 +167,12 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	}
 }
 
+void Node::setSelected(bool selected) {
+	if(selected) {
+		_ellipse.setPen(QPen(QColor(Qt::darkBlue)));
+	} else {
+		_ellipse.setPen(QPen(QColor(Qt::black)));
+	}
+}
+
 }

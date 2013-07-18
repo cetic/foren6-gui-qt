@@ -67,6 +67,9 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <widget class="QTreeWidget" name="rplNodeInfoTree">
+        <attribute name="headerDefaultSectionSize">
+         <number>150</number>
+        </attribute>
         <column>
          <property name="text">
           <string>Name</string>
@@ -77,109 +80,6 @@
           <string>data</string>
          </property>
         </column>
-        <item>
-         <property name="text">
-          <string>Rpl Instance</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Instance</string>
-          </property>
-          <property name="text">
-           <string>50</string>
-          </property>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>DODAG</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Version</string>
-          </property>
-          <property name="text">
-           <string>240</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>ID</string>
-          </property>
-          <property name="text">
-           <string>aaaa::1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Prefix</string>
-          </property>
-          <property name="text">
-           <string>aaaa::/16</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>MinHopRankInc</string>
-          </property>
-          <property name="text">
-           <string>256</string>
-          </property>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>Node</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>WPAN address</string>
-          </property>
-          <property name="text">
-           <string>1274002101929</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Link-local IPv6</string>
-          </property>
-          <property name="text">
-           <string>fe80::02101929</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Global IPv6</string>
-          </property>
-          <property name="text">
-           <string>aaaa::02101929</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Rank</string>
-          </property>
-          <property name="text">
-           <string>1291</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>ETX</string>
-          </property>
-          <property name="text">
-           <string>3.41</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Sent packet count</string>
-          </property>
-          <property name="text">
-           <string>141</string>
-          </property>
-         </item>
-        </item>
        </widget>
        <widget class="QGraphicsView" name="rplTreeView"/>
       </widget>

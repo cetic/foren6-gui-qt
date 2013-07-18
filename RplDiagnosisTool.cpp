@@ -7,6 +7,7 @@ RplDiagnosisTool::RplDiagnosisTool()
 	mainWindow = new MainWindow(this);
 
 	QObject::connect(mainWindow, SIGNAL(changeVersion(uint32_t)), wsnManager, SLOT(useVersion(uint32_t)));
+	QObject::connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*)), mainWindow, SLOT(setNodeInfoTarget(const di_node_t*)));
 
 	mainWindow->show();
 }

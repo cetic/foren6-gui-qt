@@ -36,7 +36,10 @@ class Node : public QGraphicsItemGroup
 		qreal radius() { return _ellipse.rect().width() / 2; }
 
 		di_node_t *getNodeData() { return _nodeData; }
+		void setNodeData(di_node_t *data) { _nodeData = data; }
 		QList<Link*> links() { return _links; }
+
+		void setSelected(bool selected);
 
 	public slots:
 		void updatePosition();
@@ -56,6 +59,7 @@ class Node : public QGraphicsItemGroup
 		QGraphicsTextItem _label;
 		qreal _dx, _dy;
 		QList<Link*> _links;
+		bool _isSelected;
 
 		bool _isBeingMoved;
 		bool _pinned;

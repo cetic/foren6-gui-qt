@@ -22,7 +22,10 @@ NetworkInfoManager::~NetworkInfoManager() {
 }
 
 void NetworkInfoManager::selectNode(Node *node) {
+	if(selectedNode)
+		selectedNode->setSelected(false);
 	selectedNode = node;
+	selectedNode->setSelected(true);
 	emit nodeUpdateSelected(node->getNodeData());
 }
 
@@ -66,6 +69,7 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 				_scene.addNode(newnode);
 			}
 			node_set_user_data(node, newnode);
+			newnode->setNodeData(node);
 		}
 	}
 
@@ -85,6 +89,8 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 	}
 
 	foreach(currentNode, presentNodes) {
+		if(currentNode == selectedNode)
+			selectedNode = 0;
 		_scene.removeNode(currentNode);
 		delete currentNode;
 	}
