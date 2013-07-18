@@ -18,21 +18,14 @@ class NetworkInfoManager : public QObject
 		~NetworkInfoManager();
 
 		TreeScene *scene() { return &_scene; }
+
+		void selectNode(Node *node);
+
+	public slots:
 		void useVersion(uint32_t version);
 
-	protected:
-		static void onNodeCreated(di_node_t *node);
-		static void onNodeUpdated(di_node_t *node);
-		static void onNodeDeleted(di_node_t *node);
-
-		static void onDodagCreated(di_dodag_t *dodag);
-		static void onDodagUpdated(di_dodag_t *dodag);
-
-		static void onRplInstanceCreated(di_rpl_instance_t *rplInstance);
-		static void onRplInstanceUpdated(di_rpl_instance_t *rplInstance);
-
-		static void onLinkCreated(di_link_t *link);
-		static void onLinkDeleted(di_link_t *link);
+	signals:
+		void nodeUpdateSelected(const di_node_t *node);
 
 	protected slots:
 		void updateVersion();
@@ -57,6 +50,7 @@ class NetworkInfoManager : public QObject
 
 		QTimer _updateVersionTimer;
 		uint32_t currentVersion;
+		Node *selectedNode;
 };
 
 }

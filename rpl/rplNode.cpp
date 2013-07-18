@@ -3,12 +3,14 @@
 #include <QBrush>
 #include "rplLink.h"
 #include <QGraphicsSceneMouseEvent>
+#include "rplNetworkInfoManager.h"
 
 namespace rpl
 {
 
-Node::Node(di_node_t *nodeData, QString label)
-	: _nodeData(nodeData),
+Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString label)
+	: _networkInfoManager(networkInfoManager),
+	  _nodeData(nodeData),
 	  _ellipse(this),
 	  _label(this),
 	  _dx(0),
@@ -16,12 +18,10 @@ Node::Node(di_node_t *nodeData, QString label)
 	  _isBeingMoved(false),
 	  _pinned(false)
 {
-	static int ugly_hack = 0;
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable );
 	setAcceptHoverEvents( true );
 
 	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
-	ugly_hack++;
 	this->addToGroup(&_label);
 
 	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 5;
@@ -119,14 +119,39 @@ void Node::updatePosition() {
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsItemGroup::mousePressEvent(event);
-	_timeElapsedMouseMove.invalidate();
+	if(event->button() == Qt::LeftButton) {
+		_timeElapsedMouseMove.invalidate();
+		_isBeingMoved = true;
+	} else if(event->button() == Qt::RightButton) {
+		_pinned = !_pinned;
+	}
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsItemGroup::mouseReleaseEvent(event);
-	if(_isBeingMoved == false)
-		_pinned = !_pinned;
-	else if(_timeElapsedMouseMove.isValid()) {
+	if(event->button() == Qt::LeftButton) {
+		if((event->buttonDownScenePos(Qt::LeftButton) - event->scenePos()).manhattanLength() < 4) {
+			_networkInfoManager->selectNode(this);
+		} else {
+			if(_timeElapsedMouseMove.isValid()) {
+				qint64 elapsedTime = _timeElapsedMouseMove.restart();
+				if(elapsedTime) {
+					_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
+					_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
+				}
+			}
+		}
+
+		_isBeingMoved = false;
+	}
+}
+
+void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+	if(_isBeingMoved) {
+		Link *link;
+		if(_timeElapsedMouseMove.isValid() == false)
+			_timeElapsedMouseMove.start();
+		else {
 			qint64 elapsedTime = _timeElapsedMouseMove.restart();
 			if(elapsedTime) {
 				_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
@@ -134,27 +159,11 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 			}
 		}
 
-	_isBeingMoved = false;
-}
+		QGraphicsItemGroup::mouseMoveEvent(event);
 
-void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-	Link *link;
-	_isBeingMoved = true;
-
-	if(_timeElapsedMouseMove.isValid() == false)
-		_timeElapsedMouseMove.start();
-	else {
-		qint64 elapsedTime = _timeElapsedMouseMove.restart();
-		if(elapsedTime) {
-			_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
-			_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
+		foreach(link, _links) {
+			link->updatePosition();
 		}
-	}
-
-	QGraphicsItemGroup::mouseMoveEvent(event);
-
-	foreach(link, _links) {
-		link->updatePosition();
 	}
 }
 

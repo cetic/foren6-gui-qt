@@ -9,11 +9,12 @@ namespace rpl
 {
 
 class Link;
+class NetworkInfoManager;
 
 class Node : public QGraphicsItemGroup
 {
 	public:
-		Node(di_node_t *nodeData, QString label);
+		Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString label);
 		~Node();
 
 		void addLink(Link *link) { _links.append(link); }
@@ -47,6 +48,7 @@ class Node : public QGraphicsItemGroup
 		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 	private:
+		NetworkInfoManager *_networkInfoManager;
 		QElapsedTimer _timeElapsed;    //Since last pos update
 		QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
 		di_node_t *_nodeData;

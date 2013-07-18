@@ -11,6 +11,7 @@ namespace rpl
 NetworkInfoManager::NetworkInfoManager()
 {
 	currentVersion = 0;
+	selectedNode = 0;
 	_updateVersionTimer.setInterval(100);
 	_updateVersionTimer.setSingleShot(false);
 	QObject::connect(&_updateVersionTimer, SIGNAL(timeout()), this, SLOT(updateVersion()));
@@ -18,6 +19,11 @@ NetworkInfoManager::NetworkInfoManager()
 }
 
 NetworkInfoManager::~NetworkInfoManager() {
+}
+
+void NetworkInfoManager::selectNode(Node *node) {
+	selectedNode = node;
+	emit nodeUpdateSelected(node->getNodeData());
 }
 
 void NetworkInfoManager::useVersion(uint32_t version) {
@@ -56,7 +62,7 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 			if(newnode) {
 				presentNodes.remove(node_get_mac64(node));
 			} else {
-				newnode = new Node(node, QString::number(node_get_mac64(node), 16));
+				newnode = new Node(this, node, QString::number(node_get_mac64(node), 16));
 				_scene.addNode(newnode);
 			}
 			node_set_user_data(node, newnode);
@@ -90,6 +96,9 @@ void NetworkInfoManager::useVersion(uint32_t version) {
 void NetworkInfoManager::updateVersion() {
 	if(currentVersion == 0)
 		useVersion(0);  //update only in realtime mode
+
+	if(selectedNode)
+		emit nodeUpdateSelected(selectedNode->getNodeData());
 }
 
 }

@@ -9,13 +9,23 @@ namespace Ui {
 class MainWindow;
 }
 
+class RplDiagnosisTool;
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 		
 	public:
-		explicit MainWindow(QWidget *parent = 0);
+		MainWindow(RplDiagnosisTool *rplDiagnosisTool);
 		~MainWindow();
+
+		void setVersionCount(uint32_t count);
+
+	signals:
+		void changeVersion(uint32_t newVersion);
+
+	public slots:
+		void setNodeInfoTarget(const di_node_t* node);
 
 	protected slots:
 		void onStartSniffer();
@@ -24,9 +34,7 @@ class MainWindow : public QMainWindow
 		
 	private:
 		Ui::MainWindow *ui;
-		rpl::NetworkInfoManager rplViewManager;
-		interface_t *interface;
-		ifreader_t sniffer_handle;
+		RplDiagnosisTool *rplDiagnosisTool;
 };
 
 #endif // MAINWINDOW_H
