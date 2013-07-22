@@ -3,7 +3,10 @@
 #include <rpl_packet_parser.h>
 #include "rpl/rplNetworkInfoManager.h"
 #include "RplDiagnosisTool.h"
+#include "EventLog.h"
 #include <arpa/inet.h>
+
+#include <QFileDialog>
 
 MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	QMainWindow(0),
@@ -15,63 +18,70 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	ui->infoSplitter->setStretchFactor(1, 1);
 	ui->logSplitter->setStretchFactor(0, 3);
 	ui->logSplitter->setStretchFactor(1, 1);
+	messageLog = new EventLog(this);
+	ui->messageTable->setModel(messageLog);
 
 	ui->rplTreeView->setScene(rplDiagnosisTool->getScene());
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
+	connect(ui->actionOpenSniffer, SIGNAL(triggered()), this, SLOT(onOpenSniffer()));
 	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onSliderMove(int)));
+	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));
+	connect(ui->filterEdit, SIGNAL(textChanged(QString)), this, SLOT(onFilterTextChanged(QString)));
 
 
-	nodeInfoTree.rplInstanceMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-	nodeInfoTree.rplInstanceMain->setText(0, "RPL Instance");
-	nodeInfoTree.rplInstanceId = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
-	nodeInfoTree.rplInstanceId->setText(0, "Instance ID");
-	nodeInfoTree.rplInstanceModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
-	nodeInfoTree.rplInstanceModeOfOperation->setText(0, "Mode of Operation");
+	{
+		nodeInfoTree.rplInstanceMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+		nodeInfoTree.rplInstanceMain->setText(0, "RPL Instance");
+		nodeInfoTree.rplInstanceId = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
+		nodeInfoTree.rplInstanceId->setText(0, "Instance ID");
+		nodeInfoTree.rplInstanceModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
+		nodeInfoTree.rplInstanceModeOfOperation->setText(0, "Mode of Operation");
 
-	nodeInfoTree.dodagMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-	nodeInfoTree.dodagMain->setText(0, "DODAG");
-	nodeInfoTree.dodagVersion = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagVersion->setText(0, "Version");
-	nodeInfoTree.dodagId = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagId->setText(0, "DODAG ID");
-	nodeInfoTree.dodagPrefix = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagPrefix->setText(0, "Prefix");
-	nodeInfoTree.dodagConfigAuthEnabled = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigAuthEnabled->setText(0, "Use Authentication");
-	nodeInfoTree.dodagConfigPathControlSize = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigPathControlSize->setText(0, "Path Control Size");
-	nodeInfoTree.dodagConfigDioIntervalMin = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigDioIntervalMin->setText(0, "DIO Interval Min");
-	nodeInfoTree.dodagConfigDioIntervalMax = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigDioIntervalMax->setText(0, "DIO Interval Max");
-	nodeInfoTree.dodagConfigDioRedundancyConstant = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigDioRedundancyConstant->setText(0, "DIO Redundancy Constant");
-	nodeInfoTree.dodagConfigMaxRankIncrease = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigMaxRankIncrease->setText(0, "Max Rank Increase");
-	nodeInfoTree.dodagConfigMinHopRankIncrease = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigMinHopRankIncrease->setText(0, "Min Hop Rank Increase");
-	nodeInfoTree.dodagConfigDefaultLifetime = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigDefaultLifetime->setText(0, "Defaut Lifetime");
-	nodeInfoTree.dodagConfigLifetimeUnit = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigLifetimeUnit->setText(0, "Lifetime Unit");
-	nodeInfoTree.dodagConfigObjectiveFunction = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-	nodeInfoTree.dodagConfigObjectiveFunction->setText(0, "Objective Function");
+		nodeInfoTree.dodagMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+		nodeInfoTree.dodagMain->setText(0, "DODAG");
+		nodeInfoTree.dodagVersion = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagVersion->setText(0, "Version");
+		nodeInfoTree.dodagId = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagId->setText(0, "DODAG ID");
+		nodeInfoTree.dodagPrefix = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagPrefix->setText(0, "Prefix");
+		nodeInfoTree.dodagConfigAuthEnabled = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigAuthEnabled->setText(0, "Use Authentication");
+		nodeInfoTree.dodagConfigPathControlSize = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigPathControlSize->setText(0, "Path Control Size");
+		nodeInfoTree.dodagConfigDioIntervalMin = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigDioIntervalMin->setText(0, "DIO Interval Min");
+		nodeInfoTree.dodagConfigDioIntervalMax = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigDioIntervalMax->setText(0, "DIO Interval Max");
+		nodeInfoTree.dodagConfigDioRedundancyConstant = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigDioRedundancyConstant->setText(0, "DIO Redundancy Constant");
+		nodeInfoTree.dodagConfigMaxRankIncrease = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigMaxRankIncrease->setText(0, "Max Rank Increase");
+		nodeInfoTree.dodagConfigMinHopRankIncrease = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigMinHopRankIncrease->setText(0, "Min Hop Rank Increase");
+		nodeInfoTree.dodagConfigDefaultLifetime = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigDefaultLifetime->setText(0, "Defaut Lifetime");
+		nodeInfoTree.dodagConfigLifetimeUnit = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigLifetimeUnit->setText(0, "Lifetime Unit");
+		nodeInfoTree.dodagConfigObjectiveFunction = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagConfigObjectiveFunction->setText(0, "Objective Function");
 
-	nodeInfoTree.nodeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-	nodeInfoTree.nodeMain->setText(0, "Node");
-	nodeInfoTree.nodeMacAddress = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-	nodeInfoTree.nodeMacAddress->setText(0, "MAC Address");
-	nodeInfoTree.nodeLocalIp = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-	nodeInfoTree.nodeLocalIp->setText(0, "Link-Local IP");
-	nodeInfoTree.nodeGlobalIp = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-	nodeInfoTree.nodeGlobalIp->setText(0, "Global IP");
-	nodeInfoTree.nodeMetric = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-	nodeInfoTree.nodeMetric->setText(0, "Metric");
-	nodeInfoTree.nodeRank = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-	nodeInfoTree.nodeRank->setText(0, "Rank");
-	nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-	nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+		nodeInfoTree.nodeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+		nodeInfoTree.nodeMain->setText(0, "Node");
+		nodeInfoTree.nodeMacAddress = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeMacAddress->setText(0, "MAC Address");
+		nodeInfoTree.nodeLocalIp = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeLocalIp->setText(0, "Link-Local IP");
+		nodeInfoTree.nodeGlobalIp = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeGlobalIp->setText(0, "Global IP");
+		nodeInfoTree.nodeMetric = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeMetric->setText(0, "Metric");
+		nodeInfoTree.nodeRank = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeRank->setText(0, "Rank");
+		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+	}
 
 	ui->rplNodeInfoTree->expandAll();
 }
@@ -80,6 +90,32 @@ MainWindow::~MainWindow()
 {
 	rpl_tool_cleanup();
 	delete ui;
+}
+
+void MainWindow::addMessage(int version, const QString& type, const QString& message) {
+	messageLog->addMessage(version, type, message);
+}
+
+void MainWindow::onMessageLogDoubleClicked(QModelIndex index) {
+	uint32_t version = messageLog->getVersion(index.row());
+	ui->horizontalSlider->setValue(version);
+	emit changeVersion(version);
+}
+
+void MainWindow::onFilterTextChanged(QString newText) {
+	messageLog->setFilter(newText);
+}
+
+void MainWindow::updateVersionCount(uint32_t versionCount) {
+	bool setRealtime;
+
+	if(ui->horizontalSlider->value() == ui->horizontalSlider->maximum())
+		setRealtime = true;
+	else setRealtime = false;
+
+	ui->horizontalSlider->setMaximum(versionCount);
+	if(setRealtime)
+		ui->horizontalSlider->setValue(versionCount);
 }
 
 void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
@@ -92,7 +128,9 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 		nodeInfoTree.rplInstanceId->setText(1, QString::number(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
 		nodeInfoTree.rplInstanceModeOfOperation->setText(1, QString::number(rpl_instance_get_mop(rpl_instance)));
 	} else {
-		nodeInfoTree.rplInstanceId->setText(1, "");
+		if(dodag)
+			nodeInfoTree.rplInstanceId->setText(1, QString::number(dodag_get_rpl_instance(dodag)->rpl_instance));
+		else nodeInfoTree.rplInstanceId->setText(1, "");
 		nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
 	}
 
@@ -160,15 +198,20 @@ void MainWindow::onStopSniffer() {
 	rplDiagnosisTool->onStopSniffer();
 }
 
+void MainWindow::onOpenSniffer() {
+	QString file = QFileDialog::getOpenFileName(this, "Choose interface file");
+	if(!file.isNull()) {
+		rplDiagnosisTool->openSnifferTarget(file);
+	}
+}
+
 void MainWindow::onSliderMove(int value) {
-	uint32_t version = value*rpldata_get_wsn_last_version()/ui->horizontalSlider->maximum();
+	uint32_t version = qMin(value, ui->horizontalSlider->maximum());
 
 	if(value == ui->horizontalSlider->maximum())
 		version = 0;  //realtime mode
 	else if(version == 0 && rpldata_get_wsn_last_version() > 1)
 		version = 1; //When the slide is at left most, use the first version which is version 1 (version 0 is the realtime version)
-
-	ui->logEdit->append(QString("Using version %1").arg(version));
 
 	emit changeVersion(version);
 }

@@ -33,14 +33,16 @@ SOURCES += main.cpp\
     rpl/rplNode.cpp \
     rpl/rplNetworkInfoManager.cpp \
     rpl/rplLink.cpp \
-    RplDiagnosisTool.cpp
+    RplDiagnosisTool.cpp \
+    EventLog.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
     rpl/rplNode.h \
     rpl/rplNetworkInfoManager.h \
     rpl/rplLink.h \
-    RplDiagnosisTool.h
+    RplDiagnosisTool.h \
+    EventLog.h
 
 FORMS    += MainWindow.ui
 

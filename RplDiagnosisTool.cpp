@@ -8,6 +8,8 @@ RplDiagnosisTool::RplDiagnosisTool()
 
 	QObject::connect(mainWindow, SIGNAL(changeVersion(uint32_t)), wsnManager, SLOT(useVersion(uint32_t)));
 	QObject::connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), mainWindow, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
+	QObject::connect(wsnManager, SIGNAL(updateVersionCount(uint32_t)), mainWindow, SLOT(updateVersionCount(uint32_t)));
+	QObject::connect(wsnManager, SIGNAL(logMessage(int,QString,QString)), mainWindow, SLOT(addMessage(int,QString,QString)));
 
 	mainWindow->show();
 }

@@ -41,6 +41,8 @@ class Node : public QGraphicsItemGroup
 
 		void setSelected(bool selected);
 
+		virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 	public slots:
 		void updatePosition();
 		void onNodeChanged();

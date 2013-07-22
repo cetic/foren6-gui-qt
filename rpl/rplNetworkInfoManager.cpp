@@ -8,8 +8,26 @@
 namespace rpl
 {
 
+NetworkInfoManager *NetworkInfoManager::thisInstance = 0;
+
 NetworkInfoManager::NetworkInfoManager()
 {
+	rpl_event_callbacks_t callbacks = {
+		.onNodeCreated = &onNodeCreated,
+		.onNodeDeleted = 0,
+		.onNodeUpdate = 0,
+		.onDodagCreated = &onDodagCreated,
+		.onDodagDeleted = 0,
+		.onDodagUpdated = 0,
+		.onLinkCreated = 0,
+		.onLinkDeleted = 0,
+		.onLinkUpdated = 0,
+		.onRplInstanceCreated = 0,
+		.onRplInstanceUpdated = 0,
+		.onRplInstanceDeleted = 0
+	};
+	rpl_event_set_callbacks(&callbacks);
+	thisInstance = this;
 	currentVersion = 0;
 	selectedNode = 0;
 	_updateVersionTimer.setInterval(100);
@@ -19,6 +37,19 @@ NetworkInfoManager::NetworkInfoManager()
 }
 
 NetworkInfoManager::~NetworkInfoManager() {
+}
+
+void NetworkInfoManager::onNodeCreated(di_node_t *node) {
+	if(thisInstance)
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Node"), QString("Node created, wpan: ") + QString::number(node_get_key(node)->ref.wpan_address, 16));
+}
+
+void NetworkInfoManager::onDodagCreated(di_dodag_t *dodag) {
+	if(thisInstance) {
+		char buffer[INET6_ADDRSTRLEN];
+		inet_ntop(AF_INET6, &dodag_get_key(dodag)->ref.dodagid, buffer, INET6_ADDRSTRLEN);
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Dodag"), QString("Dodag created, dodagid: %1, dodag version: %2").arg(QString(buffer), QString::number(dodag_get_key(dodag)->ref.version)));
+	}
 }
 
 void NetworkInfoManager::selectNode(Node *node) {
@@ -162,6 +193,8 @@ void NetworkInfoManager::updateVersion() {
 
 		emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
 	}
+
+	emit updateVersionCount(rpldata_get_wsn_last_version());
 }
 
 }

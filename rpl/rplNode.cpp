@@ -76,6 +76,17 @@ QPointF Node::centerPos() const {
 	return QPointF(x() + boundingRect().width()/2, y() + boundingRect().height()/2);
 }
 
+void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+	QPen pen = _ellipse.pen();
+	if(node_get_rank(_nodeData) == 256) {
+		pen.setWidth(2);
+	} else {
+		pen.setWidth(1);
+	}
+	_ellipse.setPen(pen);
+	QGraphicsItemGroup::paint(painter, option, widget);
+}
+
 void Node::incSpeed(qreal x, qreal y) {
 	if(_isBeingMoved == false && _pinned == false) {
 		_dx += x;
@@ -128,6 +139,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 		_timeElapsedMouseMove.invalidate();
 		_isBeingMoved = true;
 	} else if(event->button() == Qt::RightButton) {
+		_timeElapsed.invalidate();
 		_pinned = !_pinned;
 	}
 }

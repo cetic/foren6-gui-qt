@@ -26,9 +26,14 @@ class NetworkInfoManager : public QObject
 
 	signals:
 		void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
+		void updateVersionCount(uint32_t versionCount);
+		void logMessage(int version, const QString& type, const QString& message);
 
 	protected slots:
 		void updateVersion();
+
+		static void onNodeCreated(di_node_t *node);
+		static void onDodagCreated(di_dodag_t *dodag);
 
 	private:
 		TreeScene _scene;
@@ -51,6 +56,7 @@ class NetworkInfoManager : public QObject
 		QTimer _updateVersionTimer;
 		uint32_t currentVersion;
 		Node *selectedNode;
+		static NetworkInfoManager *thisInstance;
 };
 
 }

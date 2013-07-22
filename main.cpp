@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 	w.loadInterface("../capture/bin/libinterface_pcap.so");
 	w.loadInterface("../capture/bin/libinterface_telos.so");
 
-	if(a.arguments().size() > 1)
-		w.openSnifferTarget(a.arguments().at(1));
+	//if(a.arguments().size() > 1)
+	//	w.openSnifferTarget(a.arguments().at(1));
 
 	
 	return a.exec();
