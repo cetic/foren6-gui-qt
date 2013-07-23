@@ -3,13 +3,12 @@
 
 #include <QDockWidget>
 #include <QModelIndex>
-#include "stdint.h"
+#include <stdint.h>
+#include "EventLog.h"
 
 namespace Ui {
 class InformationWidget;
 }
-
-class EventLog;
 
 class InformationWidget : public QDockWidget
 {
@@ -19,8 +18,9 @@ public:
 	explicit InformationWidget(QWidget *parent = 0);
 	~InformationWidget();
 
+
 public slots:
-	void addMessage(int version, const QString& type, const QString& message);
+	void addMessage(EventLog::Message* newMsg);
 
 signals:
 	void setCurrentVersion(int version);

@@ -19,8 +19,8 @@ InformationWidget::~InformationWidget()
 	delete ui;
 }
 
-void InformationWidget::addMessage(int version, const QString& type, const QString& message) {
-	messageLog->addMessage(version, type, message);
+void InformationWidget::addMessage(EventLog::Message *newMsg) {
+	messageLog->addMessage(newMsg);
 }
 
 void InformationWidget::onMessageLogDoubleClicked(QModelIndex index) {

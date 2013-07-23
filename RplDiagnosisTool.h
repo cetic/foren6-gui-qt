@@ -3,7 +3,6 @@
 
 #include "rpl/rplNetworkInfoManager.h"
 #include "MainWindow.h"
-#include "InformationWidget.h"
 #include "rpl_packet_parser.h"
 
 class RplDiagnosisTool
@@ -33,7 +32,6 @@ class RplDiagnosisTool
 
 		rpl::NetworkInfoManager *wsnManager;
 		MainWindow *mainWindow;
-		QList<InformationWidget*> infoWidgets;
 };
 
 #endif // RPLDIAGNOSISTOOL_H

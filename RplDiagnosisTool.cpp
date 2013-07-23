@@ -2,19 +2,14 @@
 
 RplDiagnosisTool::RplDiagnosisTool()
 {
-	InformationWidget *infoWidget;
 	rpl_tool_init();
 	wsnManager = new rpl::NetworkInfoManager;
 	mainWindow = new MainWindow(this);
-	infoWidget = new InformationWidget(mainWindow);
 
 	QObject::connect(mainWindow, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
 	QObject::connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), mainWindow, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
 	QObject::connect(wsnManager, SIGNAL(updateVersionCount(int)), mainWindow, SLOT(updateVersionCount(int)));
-	QObject::connect(wsnManager, SIGNAL(logMessage(int,QString,QString)), infoWidget, SLOT(addMessage(int,QString,QString)));
-	QObject::connect(infoWidget, SIGNAL(setCurrentVersion(int)), mainWindow, SLOT(changeCurrentVersion(int)));
-
-	infoWidgets.append(infoWidget);
+	QObject::connect(wsnManager, SIGNAL(logMessage(int,QString,QString)), mainWindow, SLOT(addMessage(int,QString,QString)));
 
 	mainWindow->show();
 }

@@ -99,7 +99,14 @@
     <addaction name="actionStop"/>
     <addaction name="actionOpenSniffer"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionNewInformationWindow"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuWindow"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="toolButtonStyle">
@@ -146,6 +153,11 @@
    </property>
    <property name="toolTip">
     <string>Open a sniffer interface</string>
+   </property>
+  </action>
+  <action name="actionNewInformationWindow">
+   <property name="text">
+    <string>New Information Window</string>
    </property>
   </action>
  </widget>

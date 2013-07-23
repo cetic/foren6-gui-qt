@@ -21,6 +21,7 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 	connect(ui->actionOpenSniffer, SIGNAL(triggered()), this, SLOT(onOpenSniffer()));
 	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
+	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
 
 
 	{
@@ -83,6 +84,44 @@ MainWindow::~MainWindow()
 {
 	rpl_tool_cleanup();
 	delete ui;
+}
+
+void MainWindow::createNewInformationWindow() {
+	InformationWidget *infoWidget;
+	EventLog::Message *message;
+
+	infoWidget = new InformationWidget(this);
+	infoWidget->setFloating(true);
+	infoWidget->show();
+
+	connect(infoWidget, SIGNAL(setCurrentVersion(int)), this, SLOT(changeCurrentVersion(int)));
+	connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
+
+	foreach(message, messages) {
+		infoWidget->addMessage(message);
+	}
+
+	infoWidgets.append(infoWidget);
+}
+
+void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
+
+	infoWidgets.removeAll((InformationWidget*)informationWindow);
+}
+
+void MainWindow::addMessage(int version, const QString& type, const QString& message) {
+	InformationWidget *infoWidget;
+
+	EventLog::Message *newMsg = new EventLog::Message;
+	newMsg->version = version;
+	newMsg->type = type;
+	newMsg->message = message;
+
+	messages.append(newMsg);
+
+	foreach(infoWidget, infoWidgets) {
+		infoWidget->addMessage(newMsg);
+	}
 }
 
 void MainWindow::onVersionSliderMove(int value) {
