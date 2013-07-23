@@ -3,6 +3,7 @@
 
 #include "rpl/rplNetworkInfoManager.h"
 #include "MainWindow.h"
+#include "InformationWidget.h"
 #include "rpl_packet_parser.h"
 
 class RplDiagnosisTool
@@ -12,7 +13,6 @@ class RplDiagnosisTool
 
 		bool loadInterface(const QString& soLocation);
 		bool openSnifferTarget(const QString& target);
-		void changeGraphVersion(uint64_t version);
 
 		void onStartSniffer();
 		void onStopSniffer();
@@ -33,6 +33,7 @@ class RplDiagnosisTool
 
 		rpl::NetworkInfoManager *wsnManager;
 		MainWindow *mainWindow;
+		QList<InformationWidget*> infoWidgets;
 };
 
 #endif // RPLDIAGNOSISTOOL_H

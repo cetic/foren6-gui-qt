@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     rpl/rplNetworkInfoManager.cpp \
     rpl/rplLink.cpp \
     RplDiagnosisTool.cpp \
-    EventLog.cpp
+    EventLog.cpp \
+    InformationWidget.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -42,9 +43,11 @@ HEADERS  += MainWindow.h \
     rpl/rplNetworkInfoManager.h \
     rpl/rplLink.h \
     RplDiagnosisTool.h \
-    EventLog.h
+    EventLog.h \
+    InformationWidget.h
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui \
+    InformationWidget.ui
 
 RESOURCES += \
     Resource.qrc

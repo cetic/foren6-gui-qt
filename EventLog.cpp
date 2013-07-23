@@ -11,9 +11,7 @@ void EventLog::addMessage(int version, const QString& type, const QString& messa
 	newMessage->message = message;
 	messages.append(newMessage);
 
-	qDebug("version = %d", version);
-
-	if(currentFilter.isEmpty() || type.contains(currentFilter) || message.contains(currentFilter)) {
+	if(currentFilter.isEmpty() || type.contains(currentFilter) || message.contains(currentFilter, Qt::CaseInsensitive)) {
 		beginInsertRows(QModelIndex(), filteredMessages.size()-1, filteredMessages.size()-1);
 		filteredMessages.append(newMessage);
 		endInsertRows();
@@ -30,7 +28,7 @@ void EventLog::setFilter(const QString& filter) {
 	filteredMessages.clear();
 
 	foreach(message, messages) {
-		if(message->type.contains(filter) || message->message.contains(filter)) {
+		if(message->type.contains(filter) || message->message.contains(filter, Qt::CaseInsensitive)) {
 			filteredMessages.append(message);
 		}
 	}

@@ -88,7 +88,7 @@ void NetworkInfoManager::selectNode(Node *node) {
 	emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
 }
 
-void NetworkInfoManager::useVersion(uint32_t version) {
+void NetworkInfoManager::useVersion(int version) {
 	hash_iterator_ptr it, itEnd;
 	hash_container_ptr node_container = rpldata_get_nodes(version);
 	hash_container_ptr link_container = rpldata_get_links(version);

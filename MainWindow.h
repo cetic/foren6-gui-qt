@@ -11,7 +11,6 @@ class MainWindow;
 
 class RplDiagnosisTool;
 class QTreeWidgetItem;
-class EventLog;
 
 class MainWindow : public QMainWindow
 {
@@ -23,25 +22,22 @@ public:
 
 
 signals:
-	void changeVersion(uint32_t newVersion);
+	void changeWsnVersion(int newVersion);
 
 public slots:
 	void setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
-	void updateVersionCount(uint32_t versionCount);
-	void addMessage(int version, const QString& type, const QString& message);
+	void updateVersionCount(int versionCount);
+	void changeCurrentVersion(int newVersion);
 
 protected slots:
 	void onStartSniffer();
 	void onStopSniffer();
 	void onOpenSniffer();
-	void onSliderMove(int value);
-	void onMessageLogDoubleClicked(QModelIndex index);
-	void onFilterTextChanged(QString newText);
+	void onVersionSliderMove(int value);
 
 private:
 	Ui::MainWindow *ui;
 	RplDiagnosisTool *rplDiagnosisTool;
-	EventLog *messageLog;
 
 	struct NodeInfoTree {
 		QTreeWidgetItem *rplInstanceMain;
