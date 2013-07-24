@@ -12,7 +12,6 @@ class RplDiagnosisTool
 
 		bool loadInterface(const QString& soLocation);
 		bool openSnifferTarget(const QString& target);
-		void changeGraphVersion(uint64_t version);
 
 		void onStartSniffer();
 		void onStopSniffer();

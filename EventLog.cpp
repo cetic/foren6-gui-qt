@@ -4,18 +4,12 @@ EventLog::EventLog(QObject *parent) : QAbstractTableModel(parent)
 {
 }
 
-void EventLog::addMessage(int version, const QString& type, const QString& message) {
-	Message *newMessage = new Message;
-	newMessage->version = version;
-	newMessage->type = type;
-	newMessage->message = message;
-	messages.append(newMessage);
+void EventLog::addMessage(Message *newMsg) {
+	messages.append(newMsg);
 
-	qDebug("version = %d", version);
-
-	if(currentFilter.isEmpty() || type.contains(currentFilter) || message.contains(currentFilter)) {
+	if(currentFilter.isEmpty() || newMsg->type.contains(currentFilter) || newMsg->message.contains(currentFilter, Qt::CaseInsensitive)) {
 		beginInsertRows(QModelIndex(), filteredMessages.size()-1, filteredMessages.size()-1);
-		filteredMessages.append(newMessage);
+		filteredMessages.append(newMsg);
 		endInsertRows();
 	}
 
@@ -30,7 +24,7 @@ void EventLog::setFilter(const QString& filter) {
 	filteredMessages.clear();
 
 	foreach(message, messages) {
-		if(message->type.contains(filter) || message->message.contains(filter)) {
+		if(message->type.contains(filter) || message->message.contains(filter, Qt::CaseInsensitive)) {
 			filteredMessages.append(message);
 		}
 	}
