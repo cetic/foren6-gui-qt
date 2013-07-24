@@ -56,10 +56,10 @@ QPainterPath Link::shape() const
 
 void Link::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	if (_from->collidesWithItem(_to))
+	if ((_from->centerPos() - _to->centerPos()).manhattanLength() < _to->radius())
 		return;
 
-	qreal arrowSize = 10;
+	qreal arrowSize = 6;
 	painter->setPen(pen());
 	painter->setBrush(pen().color());
 

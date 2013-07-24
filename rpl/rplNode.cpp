@@ -3,12 +3,15 @@
 #include <QBrush>
 #include "rplLink.h"
 #include <QGraphicsSceneMouseEvent>
+#include "rplNetworkInfoManager.h"
+#include <QApplication>
 
 namespace rpl
 {
 
-Node::Node(di_node_t *nodeData, QString label)
-	: _nodeData(nodeData),
+Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString label)
+	: _networkInfoManager(networkInfoManager),
+	  _nodeData(nodeData),
 	  _ellipse(this),
 	  _label(this),
 	  _dx(0),
@@ -16,15 +19,16 @@ Node::Node(di_node_t *nodeData, QString label)
 	  _isBeingMoved(false),
 	  _pinned(false)
 {
-	static int ugly_hack = 0;
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable );
 	setAcceptHoverEvents( true );
 
-	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
-	ugly_hack++;
+	QFont labelFont = QApplication::font();
+	labelFont.setPointSize(8);
+	_label.setFont(labelFont);
+	_label.setPlainText(QString::number((node_get_key(nodeData)->ref.wpan_address & 0xFF), 16));
 	this->addToGroup(&_label);
 
-	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 5;
+	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;
 
 	_ellipse.setRect(0, 0, maxSize, maxSize);
 	_ellipse.setBrush(QBrush(Qt::white));
@@ -72,9 +76,22 @@ QPointF Node::centerPos() const {
 	return QPointF(x() + boundingRect().width()/2, y() + boundingRect().height()/2);
 }
 
+void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+	QPen pen = _ellipse.pen();
+	if(node_get_rank(_nodeData) == 256) {
+		pen.setWidth(2);
+	} else {
+		pen.setWidth(1);
+	}
+	_ellipse.setPen(pen);
+	QGraphicsItemGroup::paint(painter, option, widget);
+}
+
 void Node::incSpeed(qreal x, qreal y) {
-	_dx += x;
-	_dy += y;
+	if(_isBeingMoved == false && _pinned == false) {
+		_dx += x;
+		_dy += y;
+	}
 //	if(_dx > 20)
 //		_dx = 20;
 //	if(_dx < -20)
@@ -89,7 +106,7 @@ void Node::incSpeed(qreal x, qreal y) {
 void Node::updatePosition() {
 	if(!_timeElapsed.isValid()) {
 		_timeElapsed.start();
-	} else {
+	} else if(_isBeingMoved == false && _pinned == false) {
 		qint64 interval = _timeElapsed.restart();
 		qreal newX = centerX() + _dx*interval/1000;
 		qreal newY = centerY() + _dy*interval/1000;
@@ -112,21 +129,48 @@ void Node::updatePosition() {
 			newY = 500;
 			_dy = - _dy/2;
 		}
-		if(_isBeingMoved == false && _pinned == false)
-			setCenterPos(newX, newY);
+		setCenterPos(newX, newY);
 	}
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsItemGroup::mousePressEvent(event);
-	_timeElapsedMouseMove.invalidate();
+	if(event->button() == Qt::LeftButton) {
+		_timeElapsedMouseMove.invalidate();
+		_isBeingMoved = true;
+	} else if(event->button() == Qt::RightButton) {
+		_timeElapsed.invalidate();
+		_pinned = !_pinned;
+	}
 }
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsItemGroup::mouseReleaseEvent(event);
-	if(_isBeingMoved == false)
-		_pinned = !_pinned;
-	else if(_timeElapsedMouseMove.isValid()) {
+	if(event->button() == Qt::LeftButton) {
+		if((event->buttonDownScenePos(Qt::LeftButton) - event->scenePos()).manhattanLength() < 4) {
+			_networkInfoManager->selectNode(this);
+		} else {
+			if(_timeElapsedMouseMove.isValid()) {
+				qint64 elapsedTime = _timeElapsedMouseMove.restart();
+				if(elapsedTime) {
+					_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
+					_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
+				}
+			}
+		}
+
+		_isBeingMoved = false;
+	}
+	if(event->button() == Qt::LeftButton || event->button() == Qt::RightButton)
+		_timeElapsed.invalidate();
+}
+
+void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+	if(_isBeingMoved) {
+		Link *link;
+		if(_timeElapsedMouseMove.isValid() == false)
+			_timeElapsedMouseMove.start();
+		else {
 			qint64 elapsedTime = _timeElapsedMouseMove.restart();
 			if(elapsedTime) {
 				_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
@@ -134,27 +178,19 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 			}
 		}
 
-	_isBeingMoved = false;
-}
+		QGraphicsItemGroup::mouseMoveEvent(event);
 
-void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-	Link *link;
-	_isBeingMoved = true;
-
-	if(_timeElapsedMouseMove.isValid() == false)
-		_timeElapsedMouseMove.start();
-	else {
-		qint64 elapsedTime = _timeElapsedMouseMove.restart();
-		if(elapsedTime) {
-			_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
-			_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
+		foreach(link, _links) {
+			link->updatePosition();
 		}
 	}
+}
 
-	QGraphicsItemGroup::mouseMoveEvent(event);
-
-	foreach(link, _links) {
-		link->updatePosition();
+void Node::setSelected(bool selected) {
+	if(selected) {
+		_ellipse.setPen(QPen(QColor(Qt::darkBlue)));
+	} else {
+		_ellipse.setPen(QPen(QColor(Qt::black)));
 	}
 }
 
