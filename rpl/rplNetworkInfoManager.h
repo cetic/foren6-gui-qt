@@ -33,7 +33,14 @@ class NetworkInfoManager : public QObject
 		void updateVersion();
 
 		static void onNodeCreated(di_node_t *node);
+		static void onNodeUpdated(di_node_t *node);
 		static void onDodagCreated(di_dodag_t *dodag);
+		static void onDodagUpdated(di_dodag_t *dodag);
+		static void onRplInstanceCreated(di_rpl_instance_t *rpl_instance);
+		static void onRplInstanceUpdated(di_rpl_instance_t *rpl_instance);
+		static void onLinkCreated(di_link_t *link);
+		static void onLinkUpdated(di_link_t *link);
+		static void onLinkDeleted(di_link_t *link);
 
 	private:
 		TreeScene _scene;

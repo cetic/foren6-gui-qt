@@ -4,27 +4,29 @@
 #include "rplNode.h"
 #include <QGraphicsWidget>
 #include <data_info/hash_container.h>
+#include <data_info/link.h>
 
 namespace rpl
 {
 
 NetworkInfoManager *NetworkInfoManager::thisInstance = 0;
 
+
 NetworkInfoManager::NetworkInfoManager()
 {
 	rpl_event_callbacks_t callbacks = {
-		.onNodeCreated = &onNodeCreated,
-		.onNodeDeleted = 0,
-		.onNodeUpdate = 0,
-		.onDodagCreated = &onDodagCreated,
-		.onDodagDeleted = 0,
-		.onDodagUpdated = 0,
-		.onLinkCreated = 0,
-		.onLinkDeleted = 0,
-		.onLinkUpdated = 0,
-		.onRplInstanceCreated = 0,
-		.onRplInstanceUpdated = 0,
-		.onRplInstanceDeleted = 0
+	/*	.onNodeCreated = */ &onNodeCreated,
+	/*	.onNodeUpdated = */ &onNodeUpdated,
+	/*	.onNodeDeleted = */ 0,
+	/*	.onDodagCreated = */ &onDodagCreated,
+	/*	.onDodagUpdated = */ &onDodagUpdated,
+	/*	.onDodagDeleted = */ 0,
+	/*	.onLinkCreated = */  &onLinkCreated,
+	/*	.onLinkUpdated = */  &onLinkUpdated,
+	/*	.onLinkDeleted = */  &onLinkDeleted,
+	/*	.onRplInstanceCreated = */ &onRplInstanceCreated,
+	/*	.onRplInstanceUpdated = */ &onRplInstanceUpdated,
+	/*	.onRplInstanceDeleted = */ 0
 	};
 	rpl_event_set_callbacks(&callbacks);
 	thisInstance = this;
@@ -44,11 +46,52 @@ void NetworkInfoManager::onNodeCreated(di_node_t *node) {
 		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Node"), QString("Node created, wpan: ") + QString::number(node_get_key(node)->ref.wpan_address, 16));
 }
 
+void NetworkInfoManager::onNodeUpdated(di_node_t *node) {
+	if(thisInstance)
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Node"), QString("Node updated, wpan: ") + QString::number(node_get_key(node)->ref.wpan_address, 16));
+}
+
 void NetworkInfoManager::onDodagCreated(di_dodag_t *dodag) {
 	if(thisInstance) {
 		char buffer[INET6_ADDRSTRLEN];
 		inet_ntop(AF_INET6, &dodag_get_key(dodag)->ref.dodagid, buffer, INET6_ADDRSTRLEN);
 		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Dodag"), QString("Dodag created, dodagid: %1, dodag version: %2").arg(QString(buffer), QString::number(dodag_get_key(dodag)->ref.version)));
+	}
+}
+
+void NetworkInfoManager::onDodagUpdated(di_dodag_t *dodag) {
+	if(thisInstance) {
+		char buffer[INET6_ADDRSTRLEN];
+		inet_ntop(AF_INET6, &dodag_get_key(dodag)->ref.dodagid, buffer, INET6_ADDRSTRLEN);
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Dodag"), QString("Dodag updated, dodagid: %1, dodag version: %2").arg(QString(buffer), QString::number(dodag_get_key(dodag)->ref.version)));
+	}
+}
+
+void NetworkInfoManager::onRplInstanceCreated(di_rpl_instance_t *rpl_instance) {
+	if(thisInstance)
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Rpl Instance"), QString("Rpl Instance created, instance: %1").arg(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
+}
+
+void NetworkInfoManager::onRplInstanceUpdated(di_rpl_instance_t *rpl_instance) {
+	if(thisInstance)
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Rpl Instance"), QString("Rpl Instance updated, instance: %1").arg(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
+}
+
+void NetworkInfoManager::onLinkCreated(di_link_t *link) {
+	if(thisInstance) {
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Link"), QString("Link created from %1 to %2").arg(link_get_key(link)->ref.child.wpan_address, 0, 16).arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
+	}
+}
+
+void NetworkInfoManager::onLinkUpdated(di_link_t *link) {
+	if(thisInstance) {
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Link"), QString("Link updated from %1 to %2").arg(link_get_key(link)->ref.child.wpan_address, 0, 16).arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
+	}
+}
+
+void NetworkInfoManager::onLinkDeleted(di_link_t *link) {
+	if(thisInstance) {
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version(), QString("Link"), QString("Link deleted from %1 to %2").arg(link_get_key(link)->ref.child.wpan_address, 0, 16).arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
 	}
 }
 
