@@ -3,6 +3,7 @@
 #include <rpl_packet_parser.h>
 #include "rpl/rplNetworkInfoManager.h"
 #include "RplDiagnosisTool.h"
+#include "utlist.h"
 #include <arpa/inet.h>
 
 #include <QFileDialog>
@@ -125,12 +126,10 @@ void MainWindow::addMessage(int version, const QString& type, const QString& mes
 }
 
 void MainWindow::onVersionSliderMove(int value) {
-	int version = qMin(value, ui->horizontalSlider->maximum());
+	int version = qMin(value, ui->horizontalSlider->maximum()) + 1;
 
-	if(version == ui->horizontalSlider->maximum())
+	if(version > ui->horizontalSlider->maximum())
 		version = 0;  //realtime mode
-	else if(version == 0 && rpldata_get_wsn_last_version() > 1)
-		version = 1; //When the slide is at left most, use the first version which is version 1 (version 0 is the realtime version)
 
 	emit changeWsnVersion(version);
 }
@@ -139,6 +138,10 @@ void MainWindow::changeCurrentVersion(int newVersion) {
 	if(newVersion == 0)
 		ui->horizontalSlider->setValue(ui->horizontalSlider->maximum());
 	else ui->horizontalSlider->setValue(newVersion - 1);
+
+	if(newVersion == 0)
+		ui->versionLabel->setText(QString("realtime/%2").arg(ui->horizontalSlider->maximum()));
+	else ui->versionLabel->setText(QString("%1/%2").arg(ui->horizontalSlider->value()+1).arg(ui->horizontalSlider->maximum()));
 
 	emit changeWsnVersion(newVersion);
 }
@@ -153,6 +156,10 @@ void MainWindow::updateVersionCount(int versionCount) {
 	ui->horizontalSlider->setMaximum(versionCount);
 	if(setRealtime)
 		ui->horizontalSlider->setValue(versionCount);
+
+	if(setRealtime)
+		ui->versionLabel->setText(QString("realtime/%2").arg(versionCount));
+	else ui->versionLabel->setText(QString("%1/%2").arg(ui->horizontalSlider->value()+1).arg(versionCount));
 }
 
 void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
