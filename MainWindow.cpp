@@ -4,9 +4,12 @@
 #include "rpl/rplNetworkInfoManager.h"
 #include "RplDiagnosisTool.h"
 #include "utlist.h"
+#include "utlist.h"
 #include <arpa/inet.h>
 
 #include <QFileDialog>
+
+#include <stdio.h>
 
 MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	QMainWindow(0),
@@ -76,6 +79,9 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 		nodeInfoTree.nodeRank->setText(0, "Rank");
 		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+
+		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+		nodeInfoTree.routeMain->setText(0, "Routing table");
 	}
 
 	ui->rplNodeInfoTree->expandAll();
@@ -114,6 +120,8 @@ void MainWindow::addMessage(int version, const QString& type, const QString& mes
 	InformationWidget *infoWidget;
 
 	EventLog::Message *newMsg = new EventLog::Message;
+	printf("%d\t%d\t%s\t%s\n", rpldata_wsn_version_get_packet_count(version), version, type.toLatin1().constData(), message.toLatin1().constData());
+
 	newMsg->version = version;
 	newMsg->type = type;
 	newMsg->message = message;
@@ -232,6 +240,23 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 	}
 	nodeInfoTree.nodeMetric->setText(1, metricValue);
 	nodeInfoTree.nodeRank->setText(1, QString::number(node_get_rank(node)));
+
+	di_route_list_t route_table;
+	di_route_el_t *route;
+	route_table = node_get_routes(node);
+
+	QList<QTreeWidgetItem *> routeChildren = nodeInfoTree.routeMain->takeChildren();
+	QTreeWidgetItem *child;
+	foreach(child, routeChildren)
+		delete child;
+
+	LL_FOREACH(route_table, route) {
+		QStringList routeInfo;
+		inet_ntop(AF_INET6, (const char*)&route->route_prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
+		routeInfo << QString(ipv6string) + "/" + QString::number(route->route_prefix.length) << QString::number(route->via_node, 16);
+		nodeInfoTree.routeMain->addChild(new QTreeWidgetItem(routeInfo));
+	}
+
 }
 
 void MainWindow::onStartSniffer() {
