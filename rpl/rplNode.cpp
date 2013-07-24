@@ -25,7 +25,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString 
 	QFont labelFont = QApplication::font();
 	labelFont.setPointSize(8);
 	_label.setFont(labelFont);
-	_label.setPlainText(QString::number(label.right(2).toInt(0, 16)));
+	_label.setPlainText(QString::number((node_get_key(nodeData)->ref.wpan_address & 0xFF), 16));
 	this->addToGroup(&_label);
 
 	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;

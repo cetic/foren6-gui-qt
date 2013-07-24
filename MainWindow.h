@@ -70,6 +70,8 @@ private:
 		QTreeWidgetItem *nodeLocalIp;
 		QTreeWidgetItem *nodeGlobalIp;
 		QTreeWidgetItem *nodeGrounded;
+
+		QTreeWidgetItem *routeMain;
 	} nodeInfoTree;
 };
 

@@ -55,6 +55,9 @@
       <property name="text">
        <string>realtime / 3:41</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="0" column="0" colspan="3">
