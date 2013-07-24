@@ -4,6 +4,7 @@
 #include "rpl/rplNetworkInfoManager.h"
 #include "RplDiagnosisTool.h"
 #include "EventLog.h"
+#include "utlist.h"
 #include <arpa/inet.h>
 
 #include <QFileDialog>
