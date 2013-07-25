@@ -3,7 +3,7 @@
 #include <rpl_packet_parser.h>
 #include "rpl/rplNetworkInfoManager.h"
 #include "RplDiagnosisTool.h"
-#include "EventLog.h"
+#include "utlist.h"
 #include "utlist.h"
 #include <arpa/inet.h>
 
@@ -19,18 +19,13 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	ui->setupUi(this);
 	ui->infoSplitter->setStretchFactor(0, 0);
 	ui->infoSplitter->setStretchFactor(1, 1);
-	ui->logSplitter->setStretchFactor(0, 3);
-	ui->logSplitter->setStretchFactor(1, 1);
-	messageLog = new EventLog(this);
-	ui->messageTable->setModel(messageLog);
 
 	ui->rplTreeView->setScene(rplDiagnosisTool->getScene());
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 	connect(ui->actionOpenSniffer, SIGNAL(triggered()), this, SLOT(onOpenSniffer()));
-	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onSliderMove(int)));
-	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));
-	connect(ui->filterEdit, SIGNAL(textChanged(QString)), this, SLOT(onFilterTextChanged(QString)));
+	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
+	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
 
 
 	{
@@ -98,23 +93,68 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
+void MainWindow::createNewInformationWindow() {
+	InformationWidget *infoWidget;
+	EventLog::Message *message;
+
+	infoWidget = new InformationWidget(this);
+	infoWidget->setFloating(true);
+	infoWidget->show();
+
+	connect(infoWidget, SIGNAL(setCurrentVersion(int)), this, SLOT(changeCurrentVersion(int)));
+	connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
+
+	foreach(message, messages) {
+		infoWidget->addMessage(message);
+	}
+
+	infoWidgets.append(infoWidget);
+}
+
+void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
+
+	infoWidgets.removeAll((InformationWidget*)informationWindow);
+}
+
 void MainWindow::addMessage(int version, const QString& type, const QString& message) {
-	messageLog->addMessage(version, type, message);
+	InformationWidget *infoWidget;
+
+	EventLog::Message *newMsg = new EventLog::Message;
 	printf("%d\t%d\t%s\t%s\n", rpldata_wsn_version_get_packet_count(version), version, type.toLatin1().constData(), message.toLatin1().constData());
 
+	newMsg->version = version;
+	newMsg->type = type;
+	newMsg->message = message;
+
+	messages.append(newMsg);
+
+	foreach(infoWidget, infoWidgets) {
+		infoWidget->addMessage(newMsg);
+	}
 }
 
-void MainWindow::onMessageLogDoubleClicked(QModelIndex index) {
-	uint32_t version = messageLog->getVersion(index.row());
-	ui->horizontalSlider->setValue(version);
-	emit changeVersion(version);
+void MainWindow::onVersionSliderMove(int value) {
+	int version = qMin(value, ui->horizontalSlider->maximum()) + 1;
+
+	if(version > ui->horizontalSlider->maximum())
+		version = 0;  //realtime mode
+
+	emit changeWsnVersion(version);
 }
 
-void MainWindow::onFilterTextChanged(QString newText) {
-	messageLog->setFilter(newText);
+void MainWindow::changeCurrentVersion(int newVersion) {
+	if(newVersion == 0)
+		ui->horizontalSlider->setValue(ui->horizontalSlider->maximum());
+	else ui->horizontalSlider->setValue(newVersion - 1);
+
+	if(newVersion == 0)
+		ui->versionLabel->setText(QString("realtime/%2").arg(ui->horizontalSlider->maximum()));
+	else ui->versionLabel->setText(QString("%1/%2").arg(ui->horizontalSlider->value()+1).arg(ui->horizontalSlider->maximum()));
+
+	emit changeWsnVersion(newVersion);
 }
 
-void MainWindow::updateVersionCount(uint32_t versionCount) {
+void MainWindow::updateVersionCount(int versionCount) {
 	bool setRealtime;
 
 	if(ui->horizontalSlider->value() == ui->horizontalSlider->maximum())
@@ -124,6 +164,10 @@ void MainWindow::updateVersionCount(uint32_t versionCount) {
 	ui->horizontalSlider->setMaximum(versionCount);
 	if(setRealtime)
 		ui->horizontalSlider->setValue(versionCount);
+
+	if(setRealtime)
+		ui->versionLabel->setText(QString("realtime/%2").arg(versionCount));
+	else ui->versionLabel->setText(QString("%1/%2").arg(ui->horizontalSlider->value()+1).arg(versionCount));
 }
 
 void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
@@ -228,15 +272,4 @@ void MainWindow::onOpenSniffer() {
 	if(!file.isNull()) {
 		rplDiagnosisTool->openSnifferTarget(file);
 	}
-}
-
-void MainWindow::onSliderMove(int value) {
-	uint32_t version = qMin(value, ui->horizontalSlider->maximum());
-
-	if(value == ui->horizontalSlider->maximum())
-		version = 0;  //realtime mode
-	else if(version == 0 && rpldata_get_wsn_last_version() > 1)
-		version = 1; //When the slide is at left most, use the first version which is version 1 (version 0 is the realtime version)
-
-	emit changeVersion(version);
 }

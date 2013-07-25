@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "rpl/rplNetworkInfoManager.h"
 #include "rpl_packet_parser.h"
+#include "InformationWidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -11,7 +12,6 @@ class MainWindow;
 
 class RplDiagnosisTool;
 class QTreeWidgetItem;
-class EventLog;
 
 class MainWindow : public QMainWindow
 {
@@ -23,25 +23,28 @@ public:
 
 
 signals:
-	void changeVersion(uint32_t newVersion);
+	void changeWsnVersion(int newVersion);
 
 public slots:
 	void setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
-	void updateVersionCount(uint32_t versionCount);
+	void updateVersionCount(int versionCount);
+	void changeCurrentVersion(int newVersion);
 	void addMessage(int version, const QString& type, const QString& message);
 
 protected slots:
 	void onStartSniffer();
 	void onStopSniffer();
 	void onOpenSniffer();
-	void onSliderMove(int value);
-	void onMessageLogDoubleClicked(QModelIndex index);
-	void onFilterTextChanged(QString newText);
+	void onVersionSliderMove(int value);
+	void createNewInformationWindow();
+	void onInformationWindowClosed(QObject *informationWindow);
 
 private:
 	Ui::MainWindow *ui;
 	RplDiagnosisTool *rplDiagnosisTool;
-	EventLog *messageLog;
+
+	QList<EventLog::Message*> messages;
+	QList<InformationWidget*> infoWidgets;
 
 	struct NodeInfoTree {
 		QTreeWidgetItem *rplInstanceMain;

@@ -11,7 +11,13 @@ class EventLog : public QAbstractTableModel
 public:
 	EventLog(QObject * parent = 0);
 
-	void addMessage(int version, const QString& type, const QString& message);
+	struct Message {
+		int version;
+		QString type;
+		QString message;
+	};
+
+	void addMessage(Message *newMsg);
 	void setFilter(const QString& filter);
 
 	int getVersion(int row);
@@ -24,12 +30,6 @@ public:
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 private:
-	struct Message {
-		int version;
-		QString type;
-		QString message;
-	};
-
 	QList<Message*> messages;
 	QList<Message*> filteredMessages;
 	QString currentFilter;
