@@ -23,6 +23,11 @@ TreeScene::TreeScene()
 	_updateDagsTimer.start();
 }
 
+void TreeScene::toggleNodeMovement() {
+	if(_updateDagsTimer.isActive())
+		_updateDagsTimer.stop();
+	else _updateDagsTimer.start();
+}
 
 void TreeScene::addNode(Node *node) {
 	//qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));

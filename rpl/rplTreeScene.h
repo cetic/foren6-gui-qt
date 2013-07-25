@@ -27,6 +27,7 @@ class TreeScene : public QGraphicsScene
 
 	protected slots:
 		void updateNodePositions();
+		void toggleNodeMovement();
 
 
 	private:

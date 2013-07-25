@@ -104,10 +104,8 @@ void Node::incSpeed(qreal x, qreal y) {
 }
 
 void Node::updatePosition() {
-	if(!_timeElapsed.isValid()) {
-		_timeElapsed.start();
-	} else if(_isBeingMoved == false && _pinned == false) {
-		qint64 interval = _timeElapsed.restart();
+	if(_isBeingMoved == false && _pinned == false) {
+		qint64 interval = 40;
 		qreal newX = centerX() + _dx*interval/1000;
 		qreal newY = centerY() + _dy*interval/1000;
 		_dx *= 0.9;
@@ -139,7 +137,6 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 		_timeElapsedMouseMove.invalidate();
 		_isBeingMoved = true;
 	} else if(event->button() == Qt::RightButton) {
-		_timeElapsed.invalidate();
 		_pinned = !_pinned;
 	}
 }
@@ -161,8 +158,6 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 		_isBeingMoved = false;
 	}
-	if(event->button() == Qt::LeftButton || event->button() == Qt::RightButton)
-		_timeElapsed.invalidate();
 }
 
 void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {

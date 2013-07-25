@@ -26,6 +26,7 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	connect(ui->actionOpenSniffer, SIGNAL(triggered()), this, SLOT(onOpenSniffer()));
 	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
+	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), this, SIGNAL(toggleNodeMovement()));
 
 
 	{
