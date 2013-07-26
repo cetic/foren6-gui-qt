@@ -130,6 +130,7 @@
    <addaction name="actionStart"/>
    <addaction name="actionStop"/>
    <addaction name="actionOpenSniffer"/>
+   <addaction name="actionToggleNodeMovement"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -167,6 +168,11 @@
   <action name="actionNewInformationWindow">
    <property name="text">
     <string>New Information Window</string>
+   </property>
+  </action>
+  <action name="actionToggleNodeMovement">
+   <property name="text">
+    <string>Toggle node movement</string>
    </property>
   </action>
  </widget>

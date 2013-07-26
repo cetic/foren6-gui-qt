@@ -54,7 +54,6 @@ class Node : public QGraphicsItemGroup
 
 	private:
 		NetworkInfoManager *_networkInfoManager;
-		QElapsedTimer _timeElapsed;    //Since last pos update
 		QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
 		di_node_t *_nodeData;
 		QGraphicsEllipseItem _ellipse;
