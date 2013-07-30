@@ -52,7 +52,7 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 		nodeInfoTree.dodagConfigDioIntervalMin = new QTreeWidgetItem(nodeInfoTree.dodagMain);
 		nodeInfoTree.dodagConfigDioIntervalMin->setText(0, "DIO Interval Min");
 		nodeInfoTree.dodagConfigDioIntervalMax = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-		nodeInfoTree.dodagConfigDioIntervalMax->setText(0, "DIO Interval Max");
+		nodeInfoTree.dodagConfigDioIntervalMax->setText(0, "DIO Interval Doublings");
 		nodeInfoTree.dodagConfigDioRedundancyConstant = new QTreeWidgetItem(nodeInfoTree.dodagMain);
 		nodeInfoTree.dodagConfigDioRedundancyConstant->setText(0, "DIO Redundancy Constant");
 		nodeInfoTree.dodagConfigMaxRankIncrease = new QTreeWidgetItem(nodeInfoTree.dodagMain);
