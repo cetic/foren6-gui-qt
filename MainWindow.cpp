@@ -2,7 +2,6 @@
 #include "ui_MainWindow.h"
 #include <rpl_packet_parser.h>
 #include "rpl/rplNetworkInfoManager.h"
-#include "RplDiagnosisTool.h"
 #include "utlist.h"
 #include "utlist.h"
 #include <arpa/inet.h>
@@ -14,24 +13,36 @@
 #include <stdio.h>
 #include <math.h>
 
-MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
-	QMainWindow(0),
-	ui(new Ui::MainWindow),
-	rplDiagnosisTool(rplDiagnosisTool)
+MainWindow::MainWindow(QWidget *parent) :
+	QMainWindow(parent),
+	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
 	ui->infoSplitter->setStretchFactor(0, 0);
 	ui->infoSplitter->setStretchFactor(1, 1);
 
+	rpl_tool_init();
+
+	wsnManager = new rpl::NetworkInfoManager;
+
 	snifferDialog = new SnifferDialog(this);
 
-	ui->rplTreeView->setScene(rplDiagnosisTool->getScene());
+	ui->rplTreeView->setScene(wsnManager->scene());
+
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 	connect(ui->actionOpenSnifferDialog, SIGNAL(triggered()), this, SLOT(onOpenSnifferDialog()));
 	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
-	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), this, SIGNAL(toggleNodeMovement()));
+	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
+
+	connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
+	connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
+
+	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
+	connect(wsnManager, SIGNAL(updateVersionCount(int)), this, SLOT(updateVersionCount(int)));
+	connect(wsnManager, SIGNAL(logMessage(int,QString,QString)), this, SLOT(addMessage(int,QString,QString)));
+
 
 
 	{

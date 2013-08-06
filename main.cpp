@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "RplDiagnosisTool.h"
+#include "MainWindow.h"
 
 interface_t *telos_interface;
 
@@ -9,12 +9,8 @@ int main(int argc, char *argv[])
 
 	a.setApplicationName("RPL Diagnosis Tool");
 
-
-	RplDiagnosisTool w;
-
-	//if(a.arguments().size() > 1)
-	//	w.openSnifferTarget(a.arguments().at(1));
-
+	MainWindow m;
+	m.show();
 	
 	return a.exec();
 }

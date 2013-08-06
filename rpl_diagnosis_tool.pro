@@ -33,7 +33,6 @@ SOURCES += main.cpp\
     rpl/rplNode.cpp \
     rpl/rplNetworkInfoManager.cpp \
     rpl/rplLink.cpp \
-    RplDiagnosisTool.cpp \
     EventLog.cpp \
     InformationWidget.cpp \
     SnifferDialog.cpp \
@@ -44,7 +43,6 @@ HEADERS  += MainWindow.h \
     rpl/rplNode.h \
     rpl/rplNetworkInfoManager.h \
     rpl/rplLink.h \
-    RplDiagnosisTool.h \
     EventLog.h \
     InformationWidget.h \
     SnifferDialog.h \

@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	MainWindow(RplDiagnosisTool *rplDiagnosisTool);
+	MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
 
@@ -43,7 +43,7 @@ protected slots:
 
 private:
 	Ui::MainWindow *ui;
-	RplDiagnosisTool *rplDiagnosisTool;
+	rpl::NetworkInfoManager *wsnManager;
 	SnifferDialog *snifferDialog;
 
 	QList<EventLog::Message*> messages;
