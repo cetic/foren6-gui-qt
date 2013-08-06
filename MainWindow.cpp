@@ -7,9 +7,12 @@
 #include "utlist.h"
 #include <arpa/inet.h>
 
+#include "SnifferDialog.h"
+
 #include <QFileDialog>
 
 #include <stdio.h>
+#include <math.h>
 
 MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	QMainWindow(0),
@@ -20,10 +23,12 @@ MainWindow::MainWindow(RplDiagnosisTool *rplDiagnosisTool) :
 	ui->infoSplitter->setStretchFactor(0, 0);
 	ui->infoSplitter->setStretchFactor(1, 1);
 
+	snifferDialog = new SnifferDialog(this);
+
 	ui->rplTreeView->setScene(rplDiagnosisTool->getScene());
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
-	connect(ui->actionOpenSniffer, SIGNAL(triggered()), this, SLOT(onOpenSniffer()));
+	connect(ui->actionOpenSnifferDialog, SIGNAL(triggered()), this, SLOT(onOpenSnifferDialog()));
 	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), this, SIGNAL(toggleNodeMovement()));
@@ -261,16 +266,13 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 }
 
 void MainWindow::onStartSniffer() {
-	rplDiagnosisTool->onStartSniffer();
+	snifferDialog->onStartSniffer();
 }
 
 void MainWindow::onStopSniffer() {
-	rplDiagnosisTool->onStopSniffer();
+	snifferDialog->onStopSniffer();
 }
 
-void MainWindow::onOpenSniffer() {
-	QString file = QFileDialog::getOpenFileName(this, "Choose interface file");
-	if(!file.isNull()) {
-		rplDiagnosisTool->openSnifferTarget(file);
-	}
+void MainWindow::onOpenSnifferDialog() {
+	snifferDialog->exec();
 }

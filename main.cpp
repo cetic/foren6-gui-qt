@@ -7,11 +7,10 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
+	a.setApplicationName("RPL Diagnosis Tool");
+
 
 	RplDiagnosisTool w;
-
-	w.loadInterface("../capture/bin/libinterface_pcap.so");
-	w.loadInterface("../capture/bin/libinterface_telos.so");
 
 	//if(a.arguments().size() > 1)
 	//	w.openSnifferTarget(a.arguments().at(1));

@@ -12,6 +12,7 @@ class MainWindow;
 
 class RplDiagnosisTool;
 class QTreeWidgetItem;
+class SnifferDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -35,7 +36,7 @@ public slots:
 protected slots:
 	void onStartSniffer();
 	void onStopSniffer();
-	void onOpenSniffer();
+	void onOpenSnifferDialog();
 	void onVersionSliderMove(int value);
 	void createNewInformationWindow();
 	void onInformationWindowClosed(QObject *informationWindow);
@@ -43,6 +44,7 @@ protected slots:
 private:
 	Ui::MainWindow *ui;
 	RplDiagnosisTool *rplDiagnosisTool;
+	SnifferDialog *snifferDialog;
 
 	QList<EventLog::Message*> messages;
 	QList<InformationWidget*> infoWidgets;
