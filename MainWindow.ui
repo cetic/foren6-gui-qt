@@ -106,7 +106,7 @@
     </property>
     <addaction name="actionStart"/>
     <addaction name="actionStop"/>
-    <addaction name="actionOpenSniffer"/>
+    <addaction name="actionOpenSnifferDialog"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -129,7 +129,7 @@
    </attribute>
    <addaction name="actionStart"/>
    <addaction name="actionStop"/>
-   <addaction name="actionOpenSniffer"/>
+   <addaction name="actionOpenSnifferDialog"/>
    <addaction name="actionToggleNodeMovement"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -157,12 +157,9 @@
     <string>Stop sniffing traffic</string>
    </property>
   </action>
-  <action name="actionOpenSniffer">
+  <action name="actionOpenSnifferDialog">
    <property name="text">
-    <string>Open Sniffer</string>
-   </property>
-   <property name="toolTip">
-    <string>Open a sniffer interface</string>
+    <string>Manage Sniffers</string>
    </property>
   </action>
   <action name="actionNewInformationWindow">

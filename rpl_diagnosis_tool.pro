@@ -35,7 +35,9 @@ SOURCES += main.cpp\
     rpl/rplLink.cpp \
     RplDiagnosisTool.cpp \
     EventLog.cpp \
-    InformationWidget.cpp
+    InformationWidget.cpp \
+    SnifferDialog.cpp \
+    OpenedSniffersModel.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -44,10 +46,13 @@ HEADERS  += MainWindow.h \
     rpl/rplLink.h \
     RplDiagnosisTool.h \
     EventLog.h \
-    InformationWidget.h
+    InformationWidget.h \
+    SnifferDialog.h \
+    OpenedSniffersModel.h
 
 FORMS    += MainWindow.ui \
-    InformationWidget.ui
+    InformationWidget.ui \
+    SnifferDialog.ui
 
 RESOURCES += \
     Resource.qrc

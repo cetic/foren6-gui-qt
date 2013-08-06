@@ -10,16 +10,10 @@ class RplDiagnosisTool
 	public:
 		RplDiagnosisTool();
 
-		bool loadInterface(const QString& soLocation);
-		bool openSnifferTarget(const QString& target);
-
-		void onStartSniffer();
-		void onStopSniffer();
 
 		QGraphicsScene *getScene();
 
 	protected:
-		void addInterfaceDescriptor(interface_t *interface, ifreader_t desc);
 
 
 	private:
