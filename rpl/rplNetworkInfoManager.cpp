@@ -15,18 +15,10 @@ NetworkInfoManager *NetworkInfoManager::thisInstance = 0;
 NetworkInfoManager::NetworkInfoManager()
 {
 	rpl_event_callbacks_t callbacks = {
-	/*	.onNodeCreated = */ &onNodeCreated,
-	/*	.onNodeUpdated = */ &onNodeUpdated,
-	/*	.onNodeDeleted = */ 0,
-	/*	.onDodagCreated = */ &onDodagCreated,
-	/*	.onDodagUpdated = */ &onDodagUpdated,
-	/*	.onDodagDeleted = */ 0,
-	/*	.onLinkCreated = */  &onLinkCreated,
-	/*	.onLinkUpdated = */  &onLinkUpdated,
-	/*	.onLinkDeleted = */  &onLinkDeleted,
-	/*	.onRplInstanceCreated = */ &onRplInstanceCreated,
-	/*	.onRplInstanceUpdated = */ &onRplInstanceUpdated,
-	/*	.onRplInstanceDeleted = */ 0
+	/*	.onNodeCreated = */ &onNodeEvent,
+	/*	.onDodagCreated = */ &onDodagEvent,
+	/*	.onLinkCreated = */  &onLinkEvent,
+	/*	.onRplInstanceCreated = */ &onRplInstanceEvent
 	};
 	rpl_event_set_callbacks(&callbacks);
 	thisInstance = this;
@@ -41,57 +33,61 @@ NetworkInfoManager::NetworkInfoManager()
 NetworkInfoManager::~NetworkInfoManager() {
 }
 
-void NetworkInfoManager::onNodeCreated(di_node_t *node) {
-	if(thisInstance)
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Node"), QString("Node created, wpan: ") + QString::number(node_get_key(node)->ref.wpan_address, 16));
+QString NetworkInfoManager::eventToString(rpl_event_type_e type) {
+	switch(type) {
+		case RET_Created: return "created";
+		case RET_Updated: return "updated";
+		case RET_Deleted: return "deleted";
+	}
+
+	return "updated";
 }
 
-void NetworkInfoManager::onNodeUpdated(di_node_t *node) {
-	if(thisInstance)
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Node"), QString("Node updated, wpan: ") + QString::number(node_get_key(node)->ref.wpan_address, 16));
+void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
+	if(!thisInstance)
+		return;
+
+	thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
+								  rpldata_wsn_version_get_packet_count(0),
+								  QString("Node"),
+								  QString("Node %1, wpan: %2")
+								  .arg(eventToString(type))
+								  .arg(node_get_key(node)->ref.wpan_address, 16));
 }
 
-void NetworkInfoManager::onDodagCreated(di_dodag_t *dodag) {
+void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) {
 	if(thisInstance) {
 		char buffer[INET6_ADDRSTRLEN];
 		inet_ntop(AF_INET6, &dodag_get_key(dodag)->ref.dodagid, buffer, INET6_ADDRSTRLEN);
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Dodag"), QString("Dodag created, dodagid: %1, dodag version: %2").arg(QString(buffer), QString::number(dodag_get_key(dodag)->ref.version)));
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
+									  rpldata_wsn_version_get_packet_count(0),
+									  QString("Dodag"),
+									  QString("Dodag %1, dodagid: %2, dodag version: %3")
+									  .arg(eventToString(type))
+									  .arg(QString(buffer))
+									  .arg(dodag_get_key(dodag)->ref.version));
 	}
 }
 
-void NetworkInfoManager::onDodagUpdated(di_dodag_t *dodag) {
-	if(thisInstance) {
-		char buffer[INET6_ADDRSTRLEN];
-		inet_ntop(AF_INET6, &dodag_get_key(dodag)->ref.dodagid, buffer, INET6_ADDRSTRLEN);
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Dodag"), QString("Dodag updated, dodagid: %1, dodag version: %2").arg(QString(buffer), QString::number(dodag_get_key(dodag)->ref.version)));
-	}
-}
-
-void NetworkInfoManager::onRplInstanceCreated(di_rpl_instance_t *rpl_instance) {
+void NetworkInfoManager::onRplInstanceEvent(di_rpl_instance_t *rpl_instance, rpl_event_type_e type) {
 	if(thisInstance)
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Rpl Instance"), QString("Rpl Instance created, instance: %1").arg(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
+									  rpldata_wsn_version_get_packet_count(0),
+									  QString("Rpl Instance"),
+									  QString("Rpl Instance %1, instance: %2")
+									  .arg(eventToString(type))
+									  .arg(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
 }
 
-void NetworkInfoManager::onRplInstanceUpdated(di_rpl_instance_t *rpl_instance) {
-	if(thisInstance)
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Rpl Instance"), QString("Rpl Instance updated, instance: %1").arg(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
-}
-
-void NetworkInfoManager::onLinkCreated(di_link_t *link) {
+void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	if(thisInstance) {
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Link"), QString("Link created from %1 to %2").arg(link_get_key(link)->ref.child.wpan_address, 0, 16).arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
-	}
-}
-
-void NetworkInfoManager::onLinkUpdated(di_link_t *link) {
-	if(thisInstance) {
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Link"), QString("Link updated from %1 to %2").arg(link_get_key(link)->ref.child.wpan_address, 0, 16).arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
-	}
-}
-
-void NetworkInfoManager::onLinkDeleted(di_link_t *link) {
-	if(thisInstance) {
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1, rpldata_wsn_version_get_packet_count(0), QString("Link"), QString("Link deleted from %1 to %2").arg(link_get_key(link)->ref.child.wpan_address, 0, 16).arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
+		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
+									  rpldata_wsn_version_get_packet_count(0),
+									  QString("Link"),
+									  QString("Link %1 from %2 to %3")
+									  .arg(eventToString(type))
+									  .arg(link_get_key(link)->ref.child.wpan_address, 0, 16)
+									  .arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
 	}
 }
 

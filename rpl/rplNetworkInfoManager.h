@@ -32,15 +32,11 @@ signals:
 protected slots:
 	void updateVersion();
 
-	static void onNodeCreated(di_node_t *node);
-	static void onNodeUpdated(di_node_t *node);
-	static void onDodagCreated(di_dodag_t *dodag);
-	static void onDodagUpdated(di_dodag_t *dodag);
-	static void onRplInstanceCreated(di_rpl_instance_t *rpl_instance);
-	static void onRplInstanceUpdated(di_rpl_instance_t *rpl_instance);
-	static void onLinkCreated(di_link_t *link);
-	static void onLinkUpdated(di_link_t *link);
-	static void onLinkDeleted(di_link_t *link);
+	static QString eventToString(rpl_event_type_e type);
+	static void onNodeEvent(di_node_t *node, rpl_event_type_e type);
+	static void onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type);
+	static void onRplInstanceEvent(di_rpl_instance_t *rpl_instance, rpl_event_type_e type);
+	static void onLinkEvent(di_link_t *link, rpl_event_type_e type);
 
 private:
 	TreeScene _scene;
