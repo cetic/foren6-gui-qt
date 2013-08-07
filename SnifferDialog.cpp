@@ -89,7 +89,19 @@ void SnifferDialog::onBrowseSniffer() {
 
 	ui->targetEdit->setText(target);
 
-	//ui->typeCombo->item
+	int index = target.lastIndexOf('.');
+	if(index != -1) {
+		index = target.size() - index - 1;
+		QString targetExt = target.right(index);
+		int i;
+
+		for(i = 0; i < ui->typeCombo->count(); i++) {
+			if(ui->typeCombo->itemText(i) == targetExt) {
+				ui->typeCombo->setCurrentIndex(i);
+				break;
+			}
+		}
+	}
 }
 
 
