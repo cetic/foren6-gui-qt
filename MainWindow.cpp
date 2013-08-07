@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
 	connect(wsnManager, SIGNAL(updateVersionCount(int)), this, SLOT(updateVersionCount(int)));
-	connect(wsnManager, SIGNAL(logMessage(int,QString,QString)), this, SLOT(addMessage(int,QString,QString)));
+	connect(wsnManager, SIGNAL(logMessage(int,int,QString,QString)), this, SLOT(addMessage(int,int,QString,QString)));
 
 
 
@@ -133,11 +133,12 @@ void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
 	infoWidgets.removeAll((InformationWidget*)informationWindow);
 }
 
-void MainWindow::addMessage(int version, const QString& type, const QString& message) {
+void MainWindow::addMessage(int version, int packet_count, const QString& type, const QString& message) {
 	InformationWidget *infoWidget;
 
 	EventLog::Message *newMsg = new EventLog::Message;
-	printf("%d\t%d\t%s\t%s\n", rpldata_wsn_version_get_packet_count(version), version, type.toLatin1().constData(), message.toLatin1().constData());
+
+	printf("%d\t%d\t%s\t%s\n", packet_count, version, type.toLatin1().constData(), message.toLatin1().constData());
 
 	newMsg->version = version;
 	newMsg->type = type;
