@@ -65,26 +65,6 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="5" column="0" colspan="2">
-    <widget class="QPushButton" name="closeButton">
-     <property name="text">
-      <string>Close Window</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" colspan="4">
     <widget class="QLabel" name="snifferLabel">
      <property name="text">
@@ -142,6 +122,26 @@
       <number>16</number>
      </attribute>
     </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="closeButton">
+     <property name="text">
+      <string>Close Window</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
