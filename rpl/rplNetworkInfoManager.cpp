@@ -207,8 +207,12 @@ void NetworkInfoManager::updateVersion() {
 	const di_rpl_instance_t *rpl_instance_data;
 	void *ptr;
 
-	if(currentVersion == 0)
+	static uint32_t last_latestversion = 0;
+
+	if(currentVersion == 0 && rpldata_get_wsn_last_version() != last_latestversion) {
 		useVersion(0);  //update only in realtime mode
+		last_latestversion = rpldata_get_wsn_last_version();
+	}
 
 	if(selectedNode) {
 		const di_dodag_ref_t *dodag_ref;
