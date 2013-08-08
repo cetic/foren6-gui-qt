@@ -6,6 +6,15 @@
 #include <data_info/hash_container.h>
 #include <data_info/link.h>
 
+template<typename T>
+T *memdup(const T *src, size_t size) {
+	T *dupptr = (T*)malloc(size);
+
+	memcpy(dupptr, src, size);
+
+	return dupptr;
+}
+
 namespace rpl
 {
 
@@ -20,10 +29,14 @@ NetworkInfoManager::NetworkInfoManager()
 	/*	.onLinkCreated = */  &onLinkEvent,
 	/*	.onRplInstanceCreated = */ &onRplInstanceEvent
 	};
+
 	rpl_event_set_callbacks(&callbacks);
 	thisInstance = this;
 	currentVersion = 0;
 	selectedNode = 0;
+	qRegisterMetaType<rpl::Event*>();
+
+
 	_updateVersionTimer.setInterval(100);
 	_updateVersionTimer.setSingleShot(false);
 	QObject::connect(&_updateVersionTimer, SIGNAL(timeout()), this, SLOT(updateVersion()));
@@ -33,62 +46,63 @@ NetworkInfoManager::NetworkInfoManager()
 NetworkInfoManager::~NetworkInfoManager() {
 }
 
-QString NetworkInfoManager::eventToString(rpl_event_type_e type) {
-	switch(type) {
-		case RET_Created: return "created";
-		case RET_Updated: return "updated";
-		case RET_Deleted: return "deleted";
-	}
-
-	return "updated";
-}
+//todo:
+//move transformation from enum & data to string later in the program
+//add support for packet in info model
 
 void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	if(!thisInstance)
 		return;
+	Event *event = new Event;
+	event->type = type;
+	event->object = Event::EO_Node;
+	event->as_node = memdup(node, node_sizeof());
+	event->packed_id = rpldata_wsn_version_get_packet_count(0);
+	event->version = rpldata_get_wsn_last_version()+1;
 
-	thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
-								  rpldata_wsn_version_get_packet_count(0),
-								  QString("Node"),
-								  QString("Node %1, wpan: %2")
-								  .arg(eventToString(type))
-								  .arg(node_get_key(node)->ref.wpan_address, 16));
+	thisInstance->emit logMessage(event);
 }
 
 void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) {
-	if(thisInstance) {
-		char buffer[INET6_ADDRSTRLEN];
-		inet_ntop(AF_INET6, &dodag_get_key(dodag)->ref.dodagid, buffer, INET6_ADDRSTRLEN);
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
-									  rpldata_wsn_version_get_packet_count(0),
-									  QString("Dodag"),
-									  QString("Dodag %1, dodagid: %2, dodag version: %3")
-									  .arg(eventToString(type))
-									  .arg(QString(buffer))
-									  .arg(dodag_get_key(dodag)->ref.version));
-	}
+	if(!thisInstance)
+		return;
+
+	Event *event = new Event;
+	event->type = type;
+	event->object = Event::EO_Dodag;
+	event->as_dodag = memdup(dodag, dodag_sizeof());
+	event->packed_id = rpldata_wsn_version_get_packet_count(0);
+	event->version = rpldata_get_wsn_last_version()+1;
+
+	thisInstance->emit logMessage(event);
 }
 
 void NetworkInfoManager::onRplInstanceEvent(di_rpl_instance_t *rpl_instance, rpl_event_type_e type) {
-	if(thisInstance)
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
-									  rpldata_wsn_version_get_packet_count(0),
-									  QString("Rpl Instance"),
-									  QString("Rpl Instance %1, instance: %2")
-									  .arg(eventToString(type))
-									  .arg(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
+	if(!thisInstance)
+		return;
+
+	Event *event = new Event;
+	event->type = type;
+	event->object = Event::EO_RplInstance;
+	event->as_instance = memdup(rpl_instance, rpl_instance_sizeof());
+	event->packed_id = rpldata_wsn_version_get_packet_count(0);
+	event->version = rpldata_get_wsn_last_version()+1;
+
+	thisInstance->emit logMessage(event);
 }
 
 void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
-	if(thisInstance) {
-		thisInstance->emit logMessage(rpldata_get_wsn_last_version()+1,
-									  rpldata_wsn_version_get_packet_count(0),
-									  QString("Link"),
-									  QString("Link %1 from %2 to %3")
-									  .arg(eventToString(type))
-									  .arg(link_get_key(link)->ref.child.wpan_address, 0, 16)
-									  .arg(link_get_key(link)->ref.parent.wpan_address, 0, 16));
-	}
+	if(!thisInstance)
+		return;
+
+	Event *event = new Event;
+	event->type = type;
+	event->object = Event::EO_Link;
+	event->as_link = memdup(link, rpl_instance_sizeof());
+	event->packed_id = rpldata_wsn_version_get_packet_count(0);
+	event->version = rpldata_get_wsn_last_version()+1;
+
+	thisInstance->emit logMessage(event);
 }
 
 void NetworkInfoManager::selectNode(Node *node) {

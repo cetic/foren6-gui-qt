@@ -5,19 +5,15 @@
 #include <QList>
 #include <QAbstractTableModel>
 
+#include "rpl/rplNetworkInfoManager.h"
+
 class EventLog : public QAbstractTableModel
 {
 	Q_OBJECT
 public:
 	EventLog(QObject * parent = 0);
 
-	struct Message {
-		int version;
-		QString type;
-		QString message;
-	};
-
-	void addMessage(Message *newMsg);
+	void addMessage(rpl::Event *newMsg);
 	void setFilter(const QString& filter);
 
 	int getVersion(int row);
@@ -29,9 +25,12 @@ public:
 	virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+protected:
+	QString getEventString(int column, rpl::Event *event) const;
+
 private:
-	QList<Message*> messages;
-	QList<Message*> filteredMessages;
+	QList<rpl::Event*> messages;
+	QList<rpl::Event*> filteredMessages;
 	QString currentFilter;
 };
 
