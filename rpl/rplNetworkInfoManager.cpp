@@ -58,7 +58,7 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	event->object = Event::EO_Node;
 	event->as_node = memdup(node, node_sizeof());
 	event->packed_id = rpldata_wsn_version_get_packet_count(0);
-	event->version = rpldata_get_wsn_last_version()+1;
+	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
 }
@@ -72,7 +72,7 @@ void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) 
 	event->object = Event::EO_Dodag;
 	event->as_dodag = memdup(dodag, dodag_sizeof());
 	event->packed_id = rpldata_wsn_version_get_packet_count(0);
-	event->version = rpldata_get_wsn_last_version()+1;
+	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
 }
@@ -86,7 +86,7 @@ void NetworkInfoManager::onRplInstanceEvent(di_rpl_instance_t *rpl_instance, rpl
 	event->object = Event::EO_RplInstance;
 	event->as_instance = memdup(rpl_instance, rpl_instance_sizeof());
 	event->packed_id = rpldata_wsn_version_get_packet_count(0);
-	event->version = rpldata_get_wsn_last_version()+1;
+	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
 }
@@ -100,7 +100,7 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	event->object = Event::EO_Link;
 	event->as_link = memdup(link, rpl_instance_sizeof());
 	event->packed_id = rpldata_wsn_version_get_packet_count(0);
-	event->version = rpldata_get_wsn_last_version()+1;
+	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
 }
