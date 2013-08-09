@@ -6,6 +6,7 @@
 #include <QAbstractTableModel>
 
 #include "rpl/rplNetworkInfoManager.h"
+#include <pcap_reader.h>
 
 class EventLog : public QAbstractTableModel
 {

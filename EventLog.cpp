@@ -1,5 +1,7 @@
 #include "EventLog.h"
 
+#include <pcap_reader.h>
+
 EventLog::EventLog(QObject *parent) : QAbstractTableModel(parent)
 {
 }
@@ -12,7 +14,6 @@ void EventLog::addMessage(rpl::Event *newMsg) {
 		filteredMessages.append(newMsg);
 		endInsertRows();
 	}
-
 }
 
 void EventLog::setFilter(const QString& filter) {
@@ -133,8 +134,19 @@ QString EventLog::getEventString(int column, rpl::Event *event) const {
 						.arg(link_get_key(event->as_link)->ref.child.wpan_address, 0, 16)
 						.arg(link_get_key(event->as_link)->ref.parent.wpan_address, 0, 16);
 
-			case rpl::Event::EO_Packet:
-				return QString("Packet");
+			case rpl::Event::EO_Packet: {
+				char *buffer;
+				int data_size = 0;
+				pcap_file_t pcap_handle;
+				pcap_handle = pcap_parser_open("out.pcap");
+				pcap_parser_get(pcap_handle, event->packed_id, NULL, &data_size);
+				buffer = (char*)malloc(data_size);
+				pcap_parser_get(pcap_handle, event->packed_id, buffer, &data_size);
+				pcap_parser_close(pcap_handle);
+				pcap_handle = 0;
+
+				return QString("id=%1, data=%2").arg(event->packed_id).arg(QString::fromAscii(QByteArray(buffer, data_size).toHex()));
+			}
 
 			default:
 				return QString("");
