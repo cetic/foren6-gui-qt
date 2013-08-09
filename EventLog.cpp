@@ -110,7 +110,7 @@ QString EventLog::getEventString(int column, rpl::Event *event) const {
 			case rpl::Event::EO_Node:
 				return QString("Node %1, wpan id = %2")
 						.arg(eventType)
-						.arg(node_get_mac64(event->as_node));
+						.arg(node_get_mac64(event->as_node), 0, 16);
 
 			case rpl::Event::EO_Dodag: {
 				char buffer[INET6_ADDRSTRLEN];
