@@ -24,10 +24,11 @@ NetworkInfoManager *NetworkInfoManager::thisInstance = 0;
 NetworkInfoManager::NetworkInfoManager()
 {
 	rpl_event_callbacks_t callbacks = {
-	/*	.onNodeCreated = */ &onNodeEvent,
-	/*	.onDodagCreated = */ &onDodagEvent,
-	/*	.onLinkCreated = */  &onLinkEvent,
-	/*	.onRplInstanceCreated = */ &onRplInstanceEvent
+		&onNodeEvent,
+		&onDodagEvent,
+		&onLinkEvent,
+		&onRplInstanceEvent,
+		&onPacketEvent
 	};
 
 	rpl_event_set_callbacks(&callbacks);
@@ -100,6 +101,19 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	event->object = Event::EO_Link;
 	event->as_link = memdup(link, rpl_instance_sizeof());
 	event->packed_id = rpldata_wsn_version_get_packet_count(0);
+	event->version = rpldata_get_wsn_last_version();
+
+	thisInstance->emit logMessage(event);
+}
+
+void NetworkInfoManager::onPacketEvent(int packet_id) {
+	if(!thisInstance)
+		return;
+
+	Event *event = new Event;
+	event->type = RET_Created;
+	event->object = Event::EO_Packet;
+	event->packed_id = packet_id;
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
