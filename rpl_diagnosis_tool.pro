@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     EventLog.cpp \
     InformationWidget.cpp \
     SnifferDialog.cpp \
-    OpenedSniffersModel.cpp
+    OpenedSniffersModel.cpp \
+    VersionSlider.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -46,11 +47,13 @@ HEADERS  += MainWindow.h \
     EventLog.h \
     InformationWidget.h \
     SnifferDialog.h \
-    OpenedSniffersModel.h
+    OpenedSniffersModel.h \
+    VersionSlider.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \
-    SnifferDialog.ui
+    SnifferDialog.ui \
+    VersionSlider.ui
 
 RESOURCES += \
     Resource.qrc

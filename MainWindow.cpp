@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 	connect(ui->actionOpenSnifferDialog, SIGNAL(triggered()), this, SLOT(onOpenSnifferDialog()));
-	connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
+	connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), this, SIGNAL(changeWsnVersion(int)));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 
@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 
 	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
-	connect(wsnManager, SIGNAL(updateVersionCount(int)), this, SLOT(updateVersionCount(int)));
+	connect(wsnManager, SIGNAL(updateVersionCount(int)), ui->versionSlider, SLOT(onUpdateVersionCount(int)));
 	connect(wsnManager, SIGNAL(logMessage(int,QString,QString)), this, SLOT(addMessage(int,QString,QString)));
 
 
@@ -118,7 +118,7 @@ void MainWindow::createNewInformationWindow() {
 	infoWidget->setFloating(true);
 	infoWidget->show();
 
-	connect(infoWidget, SIGNAL(setCurrentVersion(int)), this, SLOT(changeCurrentVersion(int)));
+	connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
 	connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
 
 	foreach(message, messages) {
@@ -148,43 +148,6 @@ void MainWindow::addMessage(int version, const QString& type, const QString& mes
 	foreach(infoWidget, infoWidgets) {
 		infoWidget->addMessage(newMsg);
 	}
-}
-
-void MainWindow::onVersionSliderMove(int value) {
-	int version = qMin(value, ui->horizontalSlider->maximum()) + 1;
-
-	if(version > ui->horizontalSlider->maximum())
-		version = 0;  //realtime mode
-
-	emit changeWsnVersion(version);
-}
-
-void MainWindow::changeCurrentVersion(int newVersion) {
-	if(newVersion == 0)
-		ui->horizontalSlider->setValue(ui->horizontalSlider->maximum());
-	else ui->horizontalSlider->setValue(newVersion - 1);
-
-	if(newVersion == 0)
-		ui->versionLabel->setText(QString("realtime/%2").arg(ui->horizontalSlider->maximum()));
-	else ui->versionLabel->setText(QString("%1/%2").arg(ui->horizontalSlider->value()+1).arg(ui->horizontalSlider->maximum()));
-
-	emit changeWsnVersion(newVersion);
-}
-
-void MainWindow::updateVersionCount(int versionCount) {
-	bool setRealtime;
-
-	if(ui->horizontalSlider->value() == ui->horizontalSlider->maximum())
-		setRealtime = true;
-	else setRealtime = false;
-
-	ui->horizontalSlider->setMaximum(versionCount);
-	if(setRealtime)
-		ui->horizontalSlider->setValue(versionCount);
-
-	if(setRealtime)
-		ui->versionLabel->setText(QString("realtime/%2").arg(versionCount));
-	else ui->versionLabel->setText(QString("%1/%2").arg(ui->horizontalSlider->value()+1).arg(versionCount));
 }
 
 void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {

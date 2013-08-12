@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VersionSlider</class>
+ <widget class="QWidget" name="VersionSlider">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>31</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QLabel" name="timeLabel">
+     <property name="text">
+      <string>Time:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QSlider" name="versionSlider">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QSpinBox" name="versionSpin">
+     <property name="suffix">
+      <string>/0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="currentTimeLabel">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
