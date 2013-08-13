@@ -19,7 +19,7 @@ InformationWidget::~InformationWidget()
 	delete ui;
 }
 
-void InformationWidget::addMessage(EventLog::Message *newMsg) {
+void InformationWidget::addMessage(rpl::Event *newMsg) {
 	messageLog->addMessage(newMsg);
 }
 

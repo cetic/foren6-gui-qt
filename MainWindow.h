@@ -31,7 +31,7 @@ public slots:
 	void setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
 	void updateVersionCount(int versionCount);
 	void changeCurrentVersion(int newVersion);
-	void addMessage(int version, const QString& type, const QString& message);
+	void addMessage(rpl::Event *event);
 
 protected slots:
 	void onStartSniffer();
@@ -46,7 +46,7 @@ private:
 	rpl::NetworkInfoManager *wsnManager;
 	SnifferDialog *snifferDialog;
 
-	QList<EventLog::Message*> messages;
+	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;
 
 	struct NodeInfoTree {

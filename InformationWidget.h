@@ -20,7 +20,7 @@ public:
 
 
 public slots:
-	void addMessage(EventLog::Message* newMsg);
+	void addMessage(rpl::Event *newMsg);
 
 signals:
 	void setCurrentVersion(int version);
