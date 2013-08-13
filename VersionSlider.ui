@@ -38,7 +38,14 @@
    <item>
     <widget class="QLabel" name="currentTimeLabel">
      <property name="text">
-      <string/>
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>sec</string>
      </property>
     </widget>
    </item>
