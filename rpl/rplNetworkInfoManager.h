@@ -42,6 +42,7 @@ public:
 
 	void selectNode(Node *node);
 	IOverlayModel* overlay() { return _overlay; }
+	void changeOverlay(IOverlayModel* newOverlay);
 
 public slots:
 	void useVersion(int version);

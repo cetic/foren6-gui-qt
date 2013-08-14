@@ -14,8 +14,8 @@
    <string>RPL Diagnosis Tool</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="2">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
      <widget class="QSplitter" name="infoSplitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -35,10 +35,10 @@
         </property>
        </column>
       </widget>
-      <widget class="QGraphicsView" name="rplTreeView"/>
+      <widget class="GraphView" name="graphView" native="true"/>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="1" column="0">
      <widget class="VersionSlider" name="versionSlider" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -138,6 +138,12 @@
    <class>VersionSlider</class>
    <extends>QWidget</extends>
    <header>VersionSlider.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GraphView</class>
+   <extends>QWidget</extends>
+   <header>GraphView.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

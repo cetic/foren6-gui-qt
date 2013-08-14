@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     OpenedSniffersModel.cpp \
     VersionSlider.cpp \
     overlays/NormalOverlay.cpp \
-    overlays/DodagOverlay.cpp
+    overlays/DodagOverlay.cpp \
+    GraphView.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -53,12 +54,14 @@ HEADERS  += MainWindow.h \
     VersionSlider.h \
     IOverlayModel.h \
     overlays/NormalOverlay.h \
-    overlays/DodagOverlay.h
+    overlays/DodagOverlay.h \
+    GraphView.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \
     SnifferDialog.ui \
-    VersionSlider.ui
+    VersionSlider.ui \
+    GraphView.ui
 
 RESOURCES += \
     Resource.qrc

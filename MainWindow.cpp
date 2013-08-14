@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	snifferDialog = new SnifferDialog(this);
 
-	ui->rplTreeView->setScene(wsnManager->scene());
+	ui->graphView->setNetworkManager(wsnManager);
 
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));

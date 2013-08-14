@@ -7,7 +7,6 @@
 #include <data_info/link.h>
 
 #include "overlays/NormalOverlay.h"
-#include "overlays/DodagOverlay.h"
 
 template<typename T>
 T *memdup(const T *src, size_t size) {
@@ -39,7 +38,7 @@ NetworkInfoManager::NetworkInfoManager()
 	currentVersion = 0;
 	selectedNode = 0;
 	qRegisterMetaType<rpl::Event*>();
-	_overlay = new DodagOverlay;
+	_overlay = new NormalOverlay;
 
 
 	_updateVersionTimer.setInterval(100);
@@ -310,6 +309,23 @@ void NetworkInfoManager::updateVersion() {
 	}
 
 	emit updateVersionCount(rpldata_get_wsn_last_version());
+}
+
+void NetworkInfoManager::changeOverlay(IOverlayModel* newOverlay) {
+	QGraphicsItem *currentItem;
+	Node *currentNode;
+	Link *currentLink;
+
+	delete _overlay;
+	_overlay = newOverlay;
+
+	foreach(currentItem, _scene.items()) {
+		if((currentNode = dynamic_cast<Node*>(currentItem))) {
+			updateNodeOverlay(currentNode);
+		} else if((currentLink = dynamic_cast<Link*>(currentItem))) {
+			updateLinkOverlay(currentLink);
+		}
+	}
 }
 
 }
