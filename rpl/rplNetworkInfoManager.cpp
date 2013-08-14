@@ -6,6 +6,8 @@
 #include <data_info/hash_container.h>
 #include <data_info/link.h>
 
+#include "overlays/NormalOverlay.h"
+
 template<typename T>
 T *memdup(const T *src, size_t size) {
 	T *dupptr = (T*)malloc(size);
@@ -36,6 +38,7 @@ NetworkInfoManager::NetworkInfoManager()
 	currentVersion = 0;
 	selectedNode = 0;
 	qRegisterMetaType<rpl::Event*>();
+	_overlay = new NormalOverlay;
 
 
 	_updateVersionTimer.setInterval(100);
@@ -62,6 +65,11 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
+
+	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
+	if(associatedNode)
+		QMetaObject::invokeMethod(thisInstance, "updateNodeOverlay", Qt::QueuedConnection,
+								  Q_ARG(void*, associatedNode));
 }
 
 void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) {
@@ -104,6 +112,11 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
+
+	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
+	if(associatedLink)
+		QMetaObject::invokeMethod(thisInstance, "updateLinkOverlay", Qt::QueuedConnection,
+								  Q_ARG(void*, associatedLink));
 }
 
 void NetworkInfoManager::onPacketEvent(int packet_id) {
@@ -119,6 +132,33 @@ void NetworkInfoManager::onPacketEvent(int packet_id) {
 	thisInstance->emit logMessage(event);
 }
 
+
+
+void NetworkInfoManager::updateNodeOverlay(Node *node) {
+	QPen nodePen;
+	QBrush nodeBrush;
+	QFont nodeFont;
+	QColor nodeFontColor;
+
+	if(_overlay->nodeCirclePen(node, &nodePen, &nodeBrush)) {
+		node->setPen(nodePen);
+		node->setBrush(nodeBrush);
+	}
+
+	if(_overlay->nodeTextPen(node, &nodeFont, &nodeFontColor)) {
+		node->setFont(nodeFont);
+		node->setTextColor(nodeFontColor);
+	}
+}
+
+void NetworkInfoManager::updateLinkOverlay(Link *link) {
+	QPen linkPen;
+
+	if(_overlay->linkPen(link, &linkPen)) {
+		link->setPen(linkPen);
+	}
+}
+
 void NetworkInfoManager::selectNode(Node *node) {
 	const di_node_t *node_data;
 	const di_dodag_t *dodag_data;
@@ -127,10 +167,13 @@ void NetworkInfoManager::selectNode(Node *node) {
 	const di_rpl_instance_ref_t *rpl_instance_ref;
 	void *ptr;
 
-	if(selectedNode)
+	if(selectedNode) {
 		selectedNode->setSelected(false);
+		updateNodeOverlay(selectedNode);
+	}
 	selectedNode = node;
 	selectedNode->setSelected(true);
+	updateNodeOverlay(selectedNode);
 
 	node_data = selectedNode->getNodeData();
 
@@ -191,11 +234,11 @@ void NetworkInfoManager::useVersion(int version) {
 			if(newnode) {
 				presentNodes.remove(node_get_mac64(node));
 			} else {
-				newnode = new Node(this, node, QString::number(node_get_mac64(node), 16));
+				newnode = new Node(this, node);
 				_scene.addNode(newnode);
 			}
-			node_set_user_data(node, newnode);
 			newnode->setNodeData(node);
+			updateNodeOverlay(newnode);
 		}
 	}
 
@@ -209,7 +252,7 @@ void NetworkInfoManager::useVersion(int version) {
 			to =   (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
 
 			linkNodes = new Link(link, from, to);
-			link_set_user_data(link, linkNodes);
+			updateLinkOverlay(linkNodes);
 			_scene.addLink(linkNodes);
 		}
 	}

@@ -41,6 +41,7 @@ public:
 	TreeScene *scene() { return &_scene; }
 
 	void selectNode(Node *node);
+	IOverlayModel* overlay() { return _overlay; }
 
 public slots:
 	void useVersion(int version);
@@ -52,15 +53,22 @@ signals:
 
 protected slots:
 	void updateVersion();
+	void updateNodeOverlay(void *node) { updateNodeOverlay(reinterpret_cast<Node*>(node)); }
+	void updateLinkOverlay(void *link) { updateLinkOverlay(reinterpret_cast<Link*>(link)); }
 
+protected:
 	static void onNodeEvent(di_node_t *node, rpl_event_type_e type);
 	static void onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type);
 	static void onRplInstanceEvent(di_rpl_instance_t *rpl_instance, rpl_event_type_e type);
 	static void onLinkEvent(di_link_t *link, rpl_event_type_e type);
 	static void onPacketEvent(int packet_id);
 
+	void updateNodeOverlay(Node *node);
+	void updateLinkOverlay(Link *link);
+
 private:
 	TreeScene _scene;
+	IOverlayModel* _overlay;
 
 	QTimer _updateVersionTimer;
 	int currentVersion;

@@ -9,29 +9,26 @@
 namespace rpl
 {
 
-Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString label)
+Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData)
 	: _networkInfoManager(networkInfoManager),
-	  _nodeData(nodeData),
 	  _ellipse(this),
 	  _label(this),
 	  _dx(0),
 	  _dy(0),
 	  _isBeingMoved(false),
-	  _pinned(false)
+	  _pinned(false),
+	  _isSelected(false)
 {
-	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable );
+	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable);
 	setAcceptHoverEvents( true );
+	setNodeData(nodeData);
 
-	QFont labelFont = QApplication::font();
-	labelFont.setPointSize(8);
-	_label.setFont(labelFont);
 	_label.setPlainText(QString::number((node_get_key(nodeData)->ref.wpan_address & 0xFF), 16));
 	this->addToGroup(&_label);
 
 	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;
 
 	_ellipse.setRect(0, 0, maxSize, maxSize);
-	_ellipse.setBrush(QBrush(Qt::white));
 	this->addToGroup(&_ellipse);
 
 	_label.setPos(maxSize/2 - _label.boundingRect().width()/2, maxSize/2 - _label.boundingRect().height()/2);
@@ -68,23 +65,8 @@ void Node::setPos(qreal x, qreal y) {
 	}
 }
 
-void Node::onNodeChanged() {
-
-}
-
 QPointF Node::centerPos() const {
 	return QPointF(x() + boundingRect().width()/2, y() + boundingRect().height()/2);
-}
-
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-	QPen pen = _ellipse.pen();
-	if(node_get_rank(_nodeData) == 256) {
-		pen.setWidth(2);
-	} else {
-		pen.setWidth(1);
-	}
-	_ellipse.setPen(pen);
-	QGraphicsItemGroup::paint(painter, option, widget);
 }
 
 void Node::incSpeed(qreal x, qreal y) {
@@ -92,15 +74,6 @@ void Node::incSpeed(qreal x, qreal y) {
 		_dx += x;
 		_dy += y;
 	}
-//	if(_dx > 20)
-//		_dx = 20;
-//	if(_dx < -20)
-//		_dx = -20;
-
-//	if(_dy > 20)
-//		_dy = 20;
-//	if(_dy < -20)
-//		_dy = -20;
 }
 
 void Node::updatePosition() {
@@ -181,12 +154,9 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	}
 }
 
-void Node::setSelected(bool selected) {
-	if(selected) {
-		_ellipse.setPen(QPen(QColor(Qt::darkBlue)));
-	} else {
-		_ellipse.setPen(QPen(QColor(Qt::black)));
-	}
+void Node::setNodeData(di_node_t *data) {
+	_nodeData = data;
+	node_set_user_data(data, this);
 }
 
 }

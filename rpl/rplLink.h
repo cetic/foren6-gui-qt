@@ -31,7 +31,6 @@ class Link : public QGraphicsLineItem
 		di_link_t *_link;
 		Node *_from;
 		Node *_to;
-		QPen _pen;
 		QPolygonF _arrowHead;
 };
 

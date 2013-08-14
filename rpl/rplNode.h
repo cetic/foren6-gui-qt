@@ -4,6 +4,10 @@
 #include <QGraphicsItem>
 #include <data_info/node.h>
 #include <QElapsedTimer>
+#include <QPen>
+#include <QBrush>
+#include <QFont>
+#include <QColor>
 
 namespace rpl
 {
@@ -14,7 +18,7 @@ class NetworkInfoManager;
 class Node : public QGraphicsItemGroup
 {
 	public:
-		Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, QString label);
+		Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData);
 		~Node();
 
 		void addLink(Link *link) { _links.append(link); }
@@ -36,16 +40,19 @@ class Node : public QGraphicsItemGroup
 		qreal radius() { return _ellipse.rect().width() / 2; }
 
 		di_node_t *getNodeData() { return _nodeData; }
-		void setNodeData(di_node_t *data) { _nodeData = data; }
+		void setNodeData(di_node_t *data);
 		QList<Link*> links() { return _links; }
 
-		void setSelected(bool selected);
+		void setPen(QPen pen) { _ellipse.setPen(pen); }
+		void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
+		void setFont(QFont font) { _label.setFont(font); }
+		void setTextColor(QColor color) { _label.setDefaultTextColor(color); }
 
-		virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+		bool isSelected() { return _isSelected; }
+		void setSelected(bool selected) { _isSelected = selected; }
 
 	public slots:
 		void updatePosition();
-		void onNodeChanged();
 
 	protected:
 		void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -60,10 +67,10 @@ class Node : public QGraphicsItemGroup
 		QGraphicsTextItem _label;
 		qreal _dx, _dy;
 		QList<Link*> _links;
-		bool _isSelected;
 
 		bool _isBeingMoved;
 		bool _pinned;
+		bool _isSelected;
 };
 
 }
