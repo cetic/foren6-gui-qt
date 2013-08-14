@@ -7,6 +7,7 @@
 #include <data_info/link.h>
 
 #include "overlays/NormalOverlay.h"
+#include "overlays/DodagOverlay.h"
 
 template<typename T>
 T *memdup(const T *src, size_t size) {
@@ -38,7 +39,7 @@ NetworkInfoManager::NetworkInfoManager()
 	currentVersion = 0;
 	selectedNode = 0;
 	qRegisterMetaType<rpl::Event*>();
-	_overlay = new NormalOverlay;
+	_overlay = new DodagOverlay;
 
 
 	_updateVersionTimer.setInterval(100);

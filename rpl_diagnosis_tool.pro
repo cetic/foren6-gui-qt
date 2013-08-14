@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     SnifferDialog.cpp \
     OpenedSniffersModel.cpp \
     VersionSlider.cpp \
-    overlays/NormalOverlay.cpp
+    overlays/NormalOverlay.cpp \
+    overlays/DodagOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -51,7 +52,8 @@ HEADERS  += MainWindow.h \
     OpenedSniffersModel.h \
     VersionSlider.h \
     IOverlayModel.h \
-    overlays/NormalOverlay.h
+    overlays/NormalOverlay.h \
+    overlays/DodagOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \
