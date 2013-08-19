@@ -40,7 +40,9 @@ SOURCES += main.cpp\
     VersionSlider.cpp \
     overlays/NormalOverlay.cpp \
     overlays/DodagOverlay.cpp \
-    GraphView.cpp
+    GraphView.cpp \
+    overlays/RplInstanceOverlay.cpp \
+    overlays/ParentChildrenOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -55,7 +57,9 @@ HEADERS  += MainWindow.h \
     IOverlayModel.h \
     overlays/NormalOverlay.h \
     overlays/DodagOverlay.h \
-    GraphView.h
+    GraphView.h \
+    overlays/RplInstanceOverlay.h \
+    overlays/ParentChildrenOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \

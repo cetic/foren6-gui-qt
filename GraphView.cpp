@@ -3,6 +3,8 @@
 
 #include "overlays/DodagOverlay.h"
 #include "overlays/NormalOverlay.h"
+#include "overlays/RplInstanceOverlay.h"
+#include "overlays/ParentChildrenOverlay.h"
 
 GraphView::GraphView(QWidget *parent) :
     QWidget(parent),
@@ -30,6 +32,14 @@ void GraphView::onLayoutComboChange(int index) {
 
 		case 1:
 			networkMgr->changeOverlay(new DodagOverlay);
+			break;
+
+		case 2:
+			networkMgr->changeOverlay(new RplInstanceOverlay);
+			break;
+
+		case 3:
+			networkMgr->changeOverlay(new ParentChildrenOverlay);
 			break;
 	}
 }
