@@ -3,10 +3,6 @@
 #include "rpl/rplLink.h"
 #include <QApplication>
 
-NormalOverlay::NormalOverlay()
-{
-}
-
 bool NormalOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
 	if(!newPen || !newBrush)
 		return false;

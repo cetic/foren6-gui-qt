@@ -44,8 +44,17 @@ public:
 	IOverlayModel* overlay() { return _overlay; }
 	void changeOverlay(IOverlayModel* newOverlay);
 
+	int getVersion();
+	di_node_t* getNode(const di_node_ref_t* node_ref);
+	di_dodag_t* getDodag(const di_dodag_ref_t* dodag_ref);
+	di_link_t* getLink(const di_link_ref_t* link_ref);
+	di_rpl_instance_t* getRplInstance(const di_rpl_instance_ref_t* rpl_instance_ref);
+
+	static NetworkInfoManager* getInstance() { return thisInstance; }
+
 public slots:
 	void useVersion(int version);
+	void updateOverlay();
 
 signals:
 	void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
@@ -54,8 +63,6 @@ signals:
 
 protected slots:
 	void updateVersion();
-	void updateNodeOverlay(void *node) { updateNodeOverlay(reinterpret_cast<Node*>(node)); }
-	void updateLinkOverlay(void *link) { updateLinkOverlay(reinterpret_cast<Link*>(link)); }
 
 protected:
 	static void onNodeEvent(di_node_t *node, rpl_event_type_e type);

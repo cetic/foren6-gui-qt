@@ -4,10 +4,6 @@
 #include <QApplication>
 #include <QCryptographicHash>
 
-DodagOverlay::DodagOverlay()
-{
-}
-
 QColor DodagOverlay::dodagToColor(const void *dodagid, int16_t version) {
 	unsigned char color[3] = {0};
 	char rawDodagId[18];
@@ -22,7 +18,7 @@ QColor DodagOverlay::dodagToColor(const void *dodagid, int16_t version) {
 		color[i%3] += dodagHash.at(i);
 	}
 
-	return QColor(color[0], color[1], color[2]);
+	return QColor(color[0]/2, color[1]/2, color[2]/2);
 }
 
 bool DodagOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {

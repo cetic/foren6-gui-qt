@@ -156,7 +156,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 void Node::setNodeData(di_node_t *data) {
 	_nodeData = data;
-	node_set_user_data(data, this);
+	if(data)
+		node_set_user_data(data, this);
 }
 
 }
