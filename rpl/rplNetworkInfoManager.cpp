@@ -213,6 +213,9 @@ void NetworkInfoManager::useVersion(int version) {
 	QGraphicsItem *currentItem;
 	Node *currentNode;
 
+	if(version == 0)
+		version = rpldata_get_wsn_last_version();
+
 	if(version && version == currentVersion)
 		return;  //already at that version, nothing to do. Version 0 is a dynamic version and always change
 
@@ -281,11 +284,8 @@ void NetworkInfoManager::updateVersion() {
 	const di_rpl_instance_t *rpl_instance_data;
 	void *ptr;
 
-	static uint32_t last_latestversion = 0;
-
-	if(currentVersion == 0 && rpldata_get_wsn_last_version() != last_latestversion) {
-		useVersion(0);  //update only in realtime mode
-		last_latestversion = rpldata_get_wsn_last_version();
+	if(currentVersion == 0 ) {
+		useVersion(0);
 	}
 
 	if(selectedNode) {

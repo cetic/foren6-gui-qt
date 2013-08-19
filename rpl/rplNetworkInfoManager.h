@@ -71,9 +71,6 @@ protected:
 	static void onLinkEvent(di_link_t *link, rpl_event_type_e type);
 	static void onPacketEvent(int packet_id);
 
-	void updateNodeOverlay(Node *node);
-	void updateLinkOverlay(Link *link);
-
 private:
 	TreeScene _scene;
 	IOverlayModel* _overlay;
