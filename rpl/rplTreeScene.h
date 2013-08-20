@@ -6,9 +6,10 @@
 #include <rpl_packet_parser.h>
 #include <QTimer>
 
+class IOverlayModel;
+
 namespace rpl
 {
-
 class Node;
 class Link;
 

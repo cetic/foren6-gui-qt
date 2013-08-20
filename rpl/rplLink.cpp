@@ -12,6 +12,8 @@ static const qreal Pi = 3.14159;
 
 Link::Link(di_link_t *link, Node *from, Node *to) : _link(link)
 {
+	link_set_user_data(link, this);
+
 	_from = from;
 	_to = to;
 	Q_ASSERT(_from);
@@ -20,7 +22,7 @@ Link::Link(di_link_t *link, Node *from, Node *to) : _link(link)
 	_from->addLink(this);
 	_to->addLink(this);
 
-	setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	setZValue(0);
 
 	updatePosition();
 }
@@ -87,6 +89,8 @@ void Link::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 	painter->drawLine(centerLine);
 	painter->drawPolygon(_arrowHead);
+
+
 	if (isSelected()) {
 		painter->setPen(QPen(pen().color(), 1, Qt::DashLine));
 		QLineF myLine = line();

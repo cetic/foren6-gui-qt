@@ -6,6 +6,8 @@
 #include <data_info/hash_container.h>
 #include <data_info/link.h>
 
+#include "overlays/NormalOverlay.h"
+
 template<typename T>
 T *memdup(const T *src, size_t size) {
 	T *dupptr = (T*)malloc(size);
@@ -36,6 +38,7 @@ NetworkInfoManager::NetworkInfoManager()
 	currentVersion = 0;
 	selectedNode = 0;
 	qRegisterMetaType<rpl::Event*>();
+	_overlay = new NormalOverlay;
 
 
 	_updateVersionTimer.setInterval(100);
@@ -62,6 +65,14 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
+
+	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
+	if(type != RET_Deleted && associatedNode) {
+		qDebug("Node %p change %d", associatedNode, type);
+		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
+	} else if(associatedNode) {
+		associatedNode->setNodeData(0);
+	}
 }
 
 void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) {
@@ -104,6 +115,14 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
+
+	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
+	if(type != RET_Deleted && associatedLink) {
+		qDebug("Link %p change %d", associatedLink, type);
+		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
+	} else if(associatedLink) {
+		associatedLink->setLinkData(0);
+	}
 }
 
 void NetworkInfoManager::onPacketEvent(int packet_id) {
@@ -119,6 +138,36 @@ void NetworkInfoManager::onPacketEvent(int packet_id) {
 	thisInstance->emit logMessage(event);
 }
 
+
+
+void NetworkInfoManager::updateOverlay() {
+	QPen pen;
+	QBrush brush;
+	QFont font;
+	QColor fontColor;
+	QGraphicsItem* currentItem;
+	Node *currentNode;
+	Link *currentLink;
+
+	foreach(currentItem, _scene.items()) {
+		if((currentNode = dynamic_cast<Node*>(currentItem))) {
+			if(_overlay->nodeCirclePen(currentNode, &pen, &brush)) {
+				currentNode->setPen(pen);
+				currentNode->setBrush(brush);
+			}
+
+			if(_overlay->nodeTextPen(currentNode, &font, &fontColor)) {
+				currentNode->setFont(font);
+				currentNode->setTextColor(fontColor);
+			}
+		} else if((currentLink = dynamic_cast<Link*>(currentItem))) {
+			if(_overlay->linkPen(currentLink, &pen)) {
+				currentLink->setPen(pen);
+			}
+		}
+	}
+}
+
 void NetworkInfoManager::selectNode(Node *node) {
 	const di_node_t *node_data;
 	const di_dodag_t *dodag_data;
@@ -131,6 +180,7 @@ void NetworkInfoManager::selectNode(Node *node) {
 		selectedNode->setSelected(false);
 	selectedNode = node;
 	selectedNode->setSelected(true);
+	updateOverlay();
 
 	node_data = selectedNode->getNodeData();
 
@@ -163,6 +213,9 @@ void NetworkInfoManager::useVersion(int version) {
 	QGraphicsItem *currentItem;
 	Node *currentNode;
 
+	if(version == 0)
+		version = rpldata_get_wsn_last_version();
+
 	if(version && version == currentVersion)
 		return;  //already at that version, nothing to do. Version 0 is a dynamic version and always change
 
@@ -191,10 +244,9 @@ void NetworkInfoManager::useVersion(int version) {
 			if(newnode) {
 				presentNodes.remove(node_get_mac64(node));
 			} else {
-				newnode = new Node(this, node, QString::number(node_get_mac64(node), 16));
+				newnode = new Node(this, node);
 				_scene.addNode(newnode);
 			}
-			node_set_user_data(node, newnode);
 			newnode->setNodeData(node);
 		}
 	}
@@ -209,7 +261,6 @@ void NetworkInfoManager::useVersion(int version) {
 			to =   (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
 
 			linkNodes = new Link(link, from, to);
-			link_set_user_data(link, linkNodes);
 			_scene.addLink(linkNodes);
 		}
 	}
@@ -221,6 +272,8 @@ void NetworkInfoManager::useVersion(int version) {
 		delete currentNode;
 	}
 
+	updateOverlay();
+
 	hash_it_destroy(it);
 	hash_it_destroy(itEnd);
 }
@@ -231,11 +284,8 @@ void NetworkInfoManager::updateVersion() {
 	const di_rpl_instance_t *rpl_instance_data;
 	void *ptr;
 
-	static uint32_t last_latestversion = 0;
-
-	if(currentVersion == 0 && rpldata_get_wsn_last_version() != last_latestversion) {
-		useVersion(0);  //update only in realtime mode
-		last_latestversion = rpldata_get_wsn_last_version();
+	if(currentVersion == 0 ) {
+		useVersion(0);
 	}
 
 	if(selectedNode) {
@@ -266,6 +316,60 @@ void NetworkInfoManager::updateVersion() {
 	}
 
 	emit updateVersionCount(rpldata_get_wsn_last_version());
+}
+
+void NetworkInfoManager::changeOverlay(IOverlayModel* newOverlay) {
+	delete _overlay;
+	_overlay = newOverlay;
+
+	updateOverlay();
+}
+
+
+di_node_t* NetworkInfoManager::getNode(const di_node_ref_t* node_ref) {
+	void *ptr;
+
+	ptr = hash_value(rpldata_get_nodes(getVersion()), hash_key_make(*node_ref), HVM_FailIfNonExistant, 0);
+	if(ptr)
+		return *(di_node_t**)ptr;
+
+	return 0;
+}
+
+di_dodag_t* NetworkInfoManager::getDodag(const di_dodag_ref_t* dodag_ref) {
+	void *ptr;
+
+	ptr = hash_value(rpldata_get_dodags(getVersion()), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
+	if(ptr)
+		return *(di_dodag_t**)ptr;
+
+	return 0;
+}
+
+di_link_t* NetworkInfoManager::getLink(const di_link_ref_t* link_ref) {
+	void *ptr;
+
+	ptr = hash_value(rpldata_get_links(getVersion()), hash_key_make(*link_ref), HVM_FailIfNonExistant, 0);
+	if(ptr)
+		return *(di_link_t**)ptr;
+
+	return 0;
+}
+
+di_rpl_instance_t* NetworkInfoManager::getRplInstance(const di_rpl_instance_ref_t* rpl_instance_ref) {
+	void *ptr;
+
+	ptr = hash_value(rpldata_get_rpl_instances(getVersion()), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
+	if(ptr)
+		return *(di_rpl_instance_t**)ptr;
+
+	return 0;
+}
+
+int NetworkInfoManager::getVersion() {
+	if(currentVersion)
+		return currentVersion;
+	else return currentVersion;
 }
 
 }

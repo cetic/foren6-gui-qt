@@ -37,7 +37,12 @@ SOURCES += main.cpp\
     InformationWidget.cpp \
     SnifferDialog.cpp \
     OpenedSniffersModel.cpp \
-    VersionSlider.cpp
+    VersionSlider.cpp \
+    overlays/NormalOverlay.cpp \
+    overlays/DodagOverlay.cpp \
+    GraphView.cpp \
+    overlays/RplInstanceOverlay.cpp \
+    overlays/ParentChildrenOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -48,12 +53,19 @@ HEADERS  += MainWindow.h \
     InformationWidget.h \
     SnifferDialog.h \
     OpenedSniffersModel.h \
-    VersionSlider.h
+    VersionSlider.h \
+    IOverlayModel.h \
+    overlays/NormalOverlay.h \
+    overlays/DodagOverlay.h \
+    GraphView.h \
+    overlays/RplInstanceOverlay.h \
+    overlays/ParentChildrenOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \
     SnifferDialog.ui \
-    VersionSlider.ui
+    VersionSlider.ui \
+    GraphView.ui
 
 RESOURCES += \
     Resource.qrc
