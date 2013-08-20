@@ -16,7 +16,7 @@ public:
 	~VersionSlider();
 
 	void setMaximum(int max);
-	void setValue(int newValue);
+	void setValue(int version);
 	int maximum();
 	int value();
 

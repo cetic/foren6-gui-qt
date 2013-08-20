@@ -77,6 +77,7 @@ private:
 
 	QTimer _updateVersionTimer;
 	int currentVersion;
+	bool realtimeMode;
 	Node *selectedNode;
 	static NetworkInfoManager *thisInstance;
 };

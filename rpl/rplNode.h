@@ -18,7 +18,7 @@ class NetworkInfoManager;
 class Node : public QGraphicsItemGroup
 {
 	public:
-		Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData);
+		Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int version);
 		~Node();
 
 		void addLink(Link *link) { _links.append(link); }
@@ -40,8 +40,9 @@ class Node : public QGraphicsItemGroup
 		qreal radius() { return _ellipse.rect().width() / 2; }
 
 		di_node_t *getNodeData() { return _nodeData; }
-		void setNodeData(di_node_t *data);
+		void setNodeData(di_node_t *data, int version);
 		QList<Link*> links() { return _links; }
+		int getVersion() { return _version; }
 
 		void setPen(QPen pen) { _ellipse.setPen(pen); }
 		void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
@@ -71,6 +72,9 @@ class Node : public QGraphicsItemGroup
 		bool _isBeingMoved;
 		bool _pinned;
 		bool _isSelected;
+
+		//debug
+		int _version;  //the version of the node data
 };
 
 }

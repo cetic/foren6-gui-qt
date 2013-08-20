@@ -9,7 +9,7 @@
 namespace rpl
 {
 
-Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData)
+Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int version)
 	: _networkInfoManager(networkInfoManager),
 	  _ellipse(this),
 	  _label(this),
@@ -21,7 +21,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData)
 {
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable);
 	setAcceptHoverEvents( true );
-	setNodeData(nodeData);
+	setNodeData(nodeData, version);
 
 	_label.setPlainText(QString::number((node_get_key(nodeData)->ref.wpan_address & 0xFF), 16));
 	this->addToGroup(&_label);
@@ -154,8 +154,9 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	}
 }
 
-void Node::setNodeData(di_node_t *data) {
+void Node::setNodeData(di_node_t *data, int version) {
 	_nodeData = data;
+	_version = version;
 	if(data)
 		node_set_user_data(data, this);
 }

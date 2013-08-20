@@ -78,17 +78,17 @@ bool ParentChildrenOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 
 	toNode = rpl::NetworkInfoManager::getInstance()->getNode(&link_get_key(link->getLinkData())->ref.parent);
 	if(!toNode) {
-		qDebug("Wrong link parent: %llx", link_get_key(link->getLinkData())->ref.parent.wpan_address);
+		qDebug("Wrong link parent: %llx, version %d", link_get_key(link->getLinkData())->ref.parent.wpan_address, link->getVersion());
 		return false;
 	}
 	fromNode = rpl::NetworkInfoManager::getInstance()->getNode(&link_get_key(link->getLinkData())->ref.child);
 	if(!fromNode) {
-		qDebug("Wrong link parent: %llx", link_get_key(link->getLinkData())->ref.child.wpan_address);
+		qDebug("Wrong link parent: %llx, version %d", link_get_key(link->getLinkData())->ref.child.wpan_address, link->getVersion());
 		return false;
 	}
 	from = (rpl::Node*) node_get_user_data(fromNode);
 	to = (rpl::Node*) node_get_user_data(toNode);
-	if(to && to->isSelected() || from && from->isSelected())
+	if((to && to->isSelected()) || (from && from->isSelected()))
 		*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 	else
 		*newPen = QPen(Qt::gray, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);

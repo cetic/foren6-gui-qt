@@ -23,6 +23,15 @@
    </item>
    <item>
     <widget class="QSlider" name="versionSlider">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>1</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -32,6 +41,12 @@
     <widget class="QSpinBox" name="versionSpin">
      <property name="suffix">
       <string>/0</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>1</number>
      </property>
     </widget>
    </item>

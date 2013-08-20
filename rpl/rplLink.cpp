@@ -10,7 +10,7 @@ namespace rpl
 static const qreal Pi = 3.14159;
 
 
-Link::Link(di_link_t *link, Node *from, Node *to) : _link(link)
+Link::Link(di_link_t *link, int version, Node *from, Node *to) : _link(link), _version(version)
 {
 	link_set_user_data(link, this);
 

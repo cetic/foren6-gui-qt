@@ -36,6 +36,7 @@ NetworkInfoManager::NetworkInfoManager()
 	rpl_event_set_callbacks(&callbacks);
 	thisInstance = this;
 	currentVersion = 0;
+	realtimeMode = true;
 	selectedNode = 0;
 	qRegisterMetaType<rpl::Event*>();
 	_overlay = new NormalOverlay;
@@ -68,10 +69,9 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 
 	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
 	if(type != RET_Deleted && associatedNode) {
-		qDebug("Node %p change %d", associatedNode, type);
 		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
 	} else if(associatedNode) {
-		associatedNode->setNodeData(0);
+		associatedNode->setNodeData(0, -1);
 	}
 }
 
@@ -118,10 +118,9 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 
 	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
 	if(type != RET_Deleted && associatedLink) {
-		qDebug("Link %p change %d", associatedLink, type);
 		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
 	} else if(associatedLink) {
-		associatedLink->setLinkData(0);
+		associatedLink->setLinkData(0, -1);
 	}
 }
 
@@ -207,19 +206,28 @@ void NetworkInfoManager::selectNode(Node *node) {
 
 void NetworkInfoManager::useVersion(int version) {
 	hash_iterator_ptr it, itEnd;
-	hash_container_ptr node_container = rpldata_get_nodes(version);
-	hash_container_ptr link_container = rpldata_get_links(version);
+	hash_container_ptr node_container;
+	hash_container_ptr link_container;
 	QHash<addr_wpan_t, Node*> presentNodes;
 	QGraphicsItem *currentItem;
 	Node *currentNode;
 
-	if(version == 0)
+	if(version == 0) {
 		version = rpldata_get_wsn_last_version();
+		realtimeMode = true;
+	} else {
+		realtimeMode = false;
+	}
 
 	if(version && version == currentVersion)
 		return;  //already at that version, nothing to do. Version 0 is a dynamic version and always change
 
+	if(version == 0)  //rpldata_get_wsn_last_version return 0, so there is no version
+		return;
+
 	currentVersion = version;
+	node_container = rpldata_get_nodes(currentVersion);
+	link_container = rpldata_get_links(version);
 
 	foreach(currentItem, _scene.items()) {
 		currentNode = dynamic_cast<Node*>(currentItem);
@@ -244,10 +252,10 @@ void NetworkInfoManager::useVersion(int version) {
 			if(newnode) {
 				presentNodes.remove(node_get_mac64(node));
 			} else {
-				newnode = new Node(this, node);
+				newnode = new Node(this, node, currentVersion);
 				_scene.addNode(newnode);
 			}
-			newnode->setNodeData(node);
+			newnode->setNodeData(node, currentVersion);
 		}
 	}
 
@@ -260,7 +268,7 @@ void NetworkInfoManager::useVersion(int version) {
 			from = (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.child), HVM_FailIfNonExistant, NULL));
 			to =   (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
 
-			linkNodes = new Link(link, from, to);
+			linkNodes = new Link(link, currentVersion, from, to);
 			_scene.addLink(linkNodes);
 		}
 	}
@@ -284,7 +292,7 @@ void NetworkInfoManager::updateVersion() {
 	const di_rpl_instance_t *rpl_instance_data;
 	void *ptr;
 
-	if(currentVersion == 0 ) {
+	if(realtimeMode) {
 		useVersion(0);
 	}
 
@@ -328,48 +336,58 @@ void NetworkInfoManager::changeOverlay(IOverlayModel* newOverlay) {
 
 di_node_t* NetworkInfoManager::getNode(const di_node_ref_t* node_ref) {
 	void *ptr;
+	int version = getVersion();
 
-	ptr = hash_value(rpldata_get_nodes(getVersion()), hash_key_make(*node_ref), HVM_FailIfNonExistant, 0);
-	if(ptr)
-		return *(di_node_t**)ptr;
+	if(version) {
+		ptr = hash_value(rpldata_get_nodes(version), hash_key_make(*node_ref), HVM_FailIfNonExistant, 0);
+		if(ptr)
+			return *(di_node_t**)ptr;
+	}
 
 	return 0;
 }
 
 di_dodag_t* NetworkInfoManager::getDodag(const di_dodag_ref_t* dodag_ref) {
 	void *ptr;
+	int version = getVersion();
 
-	ptr = hash_value(rpldata_get_dodags(getVersion()), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
-	if(ptr)
-		return *(di_dodag_t**)ptr;
+	if(version) {
+		ptr = hash_value(rpldata_get_dodags(version), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
+		if(ptr)
+			return *(di_dodag_t**)ptr;
+	}
 
 	return 0;
 }
 
 di_link_t* NetworkInfoManager::getLink(const di_link_ref_t* link_ref) {
 	void *ptr;
+	int version = getVersion();
 
-	ptr = hash_value(rpldata_get_links(getVersion()), hash_key_make(*link_ref), HVM_FailIfNonExistant, 0);
-	if(ptr)
-		return *(di_link_t**)ptr;
+	if(version) {
+		ptr = hash_value(rpldata_get_links(version), hash_key_make(*link_ref), HVM_FailIfNonExistant, 0);
+		if(ptr)
+			return *(di_link_t**)ptr;
+	}
 
 	return 0;
 }
 
 di_rpl_instance_t* NetworkInfoManager::getRplInstance(const di_rpl_instance_ref_t* rpl_instance_ref) {
 	void *ptr;
+	int version = getVersion();
 
-	ptr = hash_value(rpldata_get_rpl_instances(getVersion()), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
-	if(ptr)
-		return *(di_rpl_instance_t**)ptr;
+	if(version) {
+		ptr = hash_value(rpldata_get_rpl_instances(version), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
+		if(ptr)
+			return *(di_rpl_instance_t**)ptr;
+	}
 
 	return 0;
 }
 
 int NetworkInfoManager::getVersion() {
-	if(currentVersion)
-		return currentVersion;
-	else return currentVersion;
+	return currentVersion;
 }
 
 }
