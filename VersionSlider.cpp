@@ -24,9 +24,11 @@ void VersionSlider::setMaximum(int max) {
 	ui->versionSpin->setSuffix(QString("/%1").arg(max));
 }
 
-void VersionSlider::setValue(int newValue) {
-	ui->versionSlider->setValue(newValue);
-	ui->versionSpin->setValue(newValue);
+void VersionSlider::setValue(int version) {
+	ui->versionSlider->setValue(version);
+	ui->versionSpin->setValue(version);
+	double timestamp = rpldata_wsn_version_get_timestamp(version);
+	ui->currentTimeLabel->setText(QString::number(timestamp));
 }
 
 int VersionSlider::maximum() {
@@ -40,10 +42,7 @@ int VersionSlider::value() {
 void VersionSlider::onChangeCurrentVersion(int newVersion) {
 	if(newVersion == 0) {
 		setValue(maximum());
-	} else setValue(newVersion - 1);
-
-	double timestamp = rpldata_wsn_version_get_timestamp(newVersion);
-	ui->currentTimeLabel->setText(QString::number(timestamp));
+	} else setValue(newVersion);
 }
 
 void VersionSlider::onUpdateVersionCount(int versionCount) {
@@ -56,21 +55,18 @@ void VersionSlider::onUpdateVersionCount(int versionCount) {
 	setMaximum(versionCount);
 	if(setRealtime) {
 		setValue(versionCount);
-
-		double timestamp = rpldata_wsn_version_get_timestamp(0);
-		ui->currentTimeLabel->setText(QString::number(timestamp));
 	}
 }
 
 void VersionSlider::onVersionSliderMove(int value) {
-	int version = qMin(value, maximum()) + 1;
-	setValue(value);
-
-	double timestamp = rpldata_wsn_version_get_timestamp(version);
-	ui->currentTimeLabel->setText(QString::number(timestamp));
+	int version = qMax(qMin(value, maximum()), 1);
 
 	if(version > maximum())
 		version = 0;  //realtime mode
+	if(version < 1)
+		version = 1;
+
+	setValue(version);
 
 	emit changeWsnVersion(version);
 }
