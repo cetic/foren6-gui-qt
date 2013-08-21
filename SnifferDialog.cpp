@@ -59,7 +59,7 @@ void SnifferDialog::onAddSniffer() {
 
 	if(interface == 0) {
 		qWarning("Could not get interface !");
-		QMessageBox::warning(this, QCoreApplication::applicationName(), QString("Cannot open interface type %1. Known interfaces are pcap and snif.").arg(interfaceType));
+		QMessageBox::warning(this, QCoreApplication::applicationName(), QString("Cannot open interface type \"%1\". Known interfaces are pcap and snif.").arg(interfaceType));
 		return;
 	}
 
@@ -67,7 +67,7 @@ void SnifferDialog::onAddSniffer() {
 
 	if(sniffer_handle == 0) {
 		qWarning("Could not open target interface !");
-		QMessageBox::warning(this, QCoreApplication::applicationName(), QString("Cannot open interface %1 with channel %2. Maybe the file does not exist ?").arg(snifferUrl.path()).arg(interfaceChanned));
+		QMessageBox::warning(this, QCoreApplication::applicationName(), QString("Cannot open interface \"%1\" with channel %2. Maybe the file does not exist ?").arg(snifferUrl.path()).arg(interfaceChanned));
 		return;
 	}
 

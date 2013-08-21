@@ -30,7 +30,7 @@ bool RplInstanceOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *ne
 	} else dodagColor = QColor(Qt::black);
 
 	if(node->isSelected())
-		*newPen = QPen(dodagColor.lighter());
+		*newPen = QPen(QColor(Qt::darkBlue));
 	else
 		*newPen = QPen(dodagColor);
 

@@ -33,7 +33,7 @@ bool DodagOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush
 	else dodagColor = QColor(Qt::black);
 
 	if(node->isSelected())
-		*newPen = QPen(dodagColor.lighter());
+		*newPen = QPen(QColor(Qt::darkBlue));
 	else
 		*newPen = QPen(dodagColor);
 

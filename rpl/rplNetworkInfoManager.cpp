@@ -68,7 +68,6 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 
 	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
 	if(type != RET_Deleted && associatedNode) {
-		qDebug("Node %p change %d", associatedNode, type);
 		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
 	} else if(associatedNode) {
 		associatedNode->setNodeData(0);
@@ -118,7 +117,6 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 
 	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
 	if(type != RET_Deleted && associatedLink) {
-		qDebug("Link %p change %d", associatedLink, type);
 		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
 	} else if(associatedLink) {
 		associatedLink->setLinkData(0);
