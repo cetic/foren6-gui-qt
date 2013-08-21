@@ -59,7 +59,6 @@ void VersionSlider::onUpdateVersionCount(int versionCount) {
 }
 
 void VersionSlider::onVersionSliderMove(int value) {
-	qDebug("Slider at %d", value);
 	int version = qMax(qMin(value, maximum()), 1);
 
 	if(version > maximum())

@@ -14,7 +14,7 @@ QColor RplInstanceOverlay::rplInstanceToColor(int16_t instance) {
 		color[i%3] += md5Hash.at(i);
 	}
 
-	return QColor(color[0]/2, color[1]/2, color[2]/2);
+	return QColor(color[0]/2+64, color[1]/2+64, color[2]/2+64);
 }
 
 bool RplInstanceOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
@@ -30,14 +30,14 @@ bool RplInstanceOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *ne
 	} else dodagColor = QColor(Qt::black);
 
 	if(node->isSelected())
-		*newPen = QPen(dodagColor.lighter());
+		*newPen = QPen(QColor(Qt::darkBlue));
 	else
 		*newPen = QPen(dodagColor);
 
 	if(node_get_rank(node->getNodeData()) == 256) {
-		newPen->setWidth(2);
+		newPen->setWidth(3);
 	} else {
-		newPen->setWidth(1);
+		newPen->setWidth(2);
 	}
 
 	newBrush->setStyle(Qt::SolidPattern);

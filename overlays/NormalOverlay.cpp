@@ -13,9 +13,9 @@ bool NormalOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrus
 		*newPen = QPen(QColor(Qt::black));
 
 	if(node_get_rank(node->getNodeData()) == 256) {
-		newPen->setWidth(2);
+		newPen->setWidth(3);
 	} else {
-		newPen->setWidth(1);
+		newPen->setWidth(2);
 	}
 
 	newBrush->setStyle(Qt::SolidPattern);

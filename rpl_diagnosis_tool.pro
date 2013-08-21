@@ -42,7 +42,8 @@ SOURCES += main.cpp\
     overlays/DodagOverlay.cpp \
     GraphView.cpp \
     overlays/RplInstanceOverlay.cpp \
-    overlays/ParentChildrenOverlay.cpp
+    overlays/ParentChildrenOverlay.cpp \
+    overlays/RankDepthOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -59,7 +60,8 @@ HEADERS  += MainWindow.h \
     overlays/DodagOverlay.h \
     GraphView.h \
     overlays/RplInstanceOverlay.h \
-    overlays/ParentChildrenOverlay.h
+    overlays/ParentChildrenOverlay.h \
+    overlays/RankDepthOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \

@@ -18,7 +18,7 @@ QColor DodagOverlay::dodagToColor(const void *dodagid, int16_t version) {
 		color[i%3] += dodagHash.at(i);
 	}
 
-	return QColor(color[0]/2, color[1]/2, color[2]/2);
+	return QColor(color[0]/2+64, color[1]/2+64, color[2]/2+64);
 }
 
 bool DodagOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
@@ -33,14 +33,14 @@ bool DodagOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush
 	else dodagColor = QColor(Qt::black);
 
 	if(node->isSelected())
-		*newPen = QPen(dodagColor.lighter());
+		*newPen = QPen(QColor(Qt::darkBlue));
 	else
 		*newPen = QPen(dodagColor);
 
 	if(node_get_rank(node->getNodeData()) == 256) {
-		newPen->setWidth(2);
+		newPen->setWidth(3);
 	} else {
-		newPen->setWidth(1);
+		newPen->setWidth(2);
 	}
 
 	newBrush->setStyle(Qt::SolidPattern);
