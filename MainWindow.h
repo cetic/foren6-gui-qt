@@ -37,6 +37,7 @@ protected slots:
 	void onOpenSnifferDialog();
 	void createNewInformationWindow();
 	void onInformationWindowClosed(QObject *informationWindow);
+	void onClear();
 
 private:
 	Ui::MainWindow *ui;

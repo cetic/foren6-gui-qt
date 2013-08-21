@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), this, SIGNAL(changeWsnVersion(int)));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
+	connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
 
 	connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
 	connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
@@ -242,4 +243,8 @@ void MainWindow::onStopSniffer() {
 
 void MainWindow::onOpenSnifferDialog() {
 	snifferDialog->exec();
+}
+
+void MainWindow::onClear() {
+	rpldata_clear();
 }
