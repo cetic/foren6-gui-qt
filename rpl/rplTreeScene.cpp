@@ -108,39 +108,16 @@ void TreeScene::updateNodePositions() {
 				dy += vy / dist;
 			}
 		}
-//		qreal vx1 = 0 - n1->centerPos().x();
-//		vx1 *= vx1;
-//		qreal vy1 = 0 - n1->centerPos().y();
-//		vy1 *= vy1;
-//		qreal vx2 = 500 - n1->centerPos().x();
-//		vx2 *= vx2;
-//		qreal vy2 = 500 - n1->centerPos().y();
-//		vy2 *= vy2;
 
-
-//		if(vx1 > 0)
-//			dx += 1/vx1;
-//		else dx += 1;
-//		if(qAbs(vx2) > 0)
-//			dx += 1/vx2;
-//		else dx += -1;
-//		if(qAbs(vy1) > 0)
-//			dx += 1/vy1;
-//		else dx += 1;
-//		if(qAbs(vy2) > 0)
-//			dx += 1/vy2;
-//		else dx += -1;
-
-//		if(dx == 0 && dy == 0) {
-//			dx += (qrand() * 1.0) / RAND_MAX;
-//			dy += (qrand() * 1.0) / RAND_MAX;
-//		}
 		qreal dist = dx*dx + dy*dy;
 		if(dist > 0) {
 			dist = sqrt(dist) /2;
 			n1->incSpeed(10 * dx / dist, 10 * dy / dist);
 		}
-		n1->incSpeed(0, 1);
+
+		//Gravity
+		//n1->incSpeed(0, 1);
+
 		n1->updatePosition();
 	}
 }
