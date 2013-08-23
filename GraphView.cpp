@@ -6,6 +6,7 @@
 #include "overlays/RplInstanceOverlay.h"
 #include "overlays/ParentChildrenOverlay.h"
 #include "overlays/RankDepthOverlay.h"
+#include "overlays/TrafficOverlay.h"
 
 GraphView::GraphView(QWidget *parent) :
     QWidget(parent),
@@ -45,6 +46,10 @@ void GraphView::onLayoutComboChange(int index) {
 
 		case 4:
 			networkMgr->changeOverlay(new RankDepthOverlay);
+			break;
+
+		case 5:
+			networkMgr->changeOverlay(new TrafficOverlay);
 			break;
 	}
 }

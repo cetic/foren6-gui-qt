@@ -73,6 +73,7 @@ private:
 		QTreeWidgetItem *nodeLocalIp;
 		QTreeWidgetItem *nodeGlobalIp;
 		QTreeWidgetItem *nodeGrounded;
+		QTreeWidgetItem *nodeTraffic;
 
 		QTreeWidgetItem *routeMain;
 	} nodeInfoTree;

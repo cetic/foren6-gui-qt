@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     GraphView.cpp \
     overlays/RplInstanceOverlay.cpp \
     overlays/ParentChildrenOverlay.cpp \
-    overlays/RankDepthOverlay.cpp
+    overlays/RankDepthOverlay.cpp \
+    overlays/TrafficOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -61,7 +62,8 @@ HEADERS  += MainWindow.h \
     GraphView.h \
     overlays/RplInstanceOverlay.h \
     overlays/ParentChildrenOverlay.h \
-    overlays/RankDepthOverlay.h
+    overlays/RankDepthOverlay.h \
+    overlays/TrafficOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \

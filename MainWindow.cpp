@@ -96,6 +96,8 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeRank->setText(0, "Rank");
 		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+		nodeInfoTree.nodeTraffic = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeTraffic->setText(0, "Transmited Packets");
 
 		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
 		nodeInfoTree.routeMain->setText(0, "Routing table");
@@ -213,6 +215,8 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 	}
 	nodeInfoTree.nodeMetric->setText(1, metricValue);
 	nodeInfoTree.nodeRank->setText(1, QString::number(node_get_rank(node)));
+
+	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;
