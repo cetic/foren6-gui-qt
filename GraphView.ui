@@ -59,6 +59,11 @@
        <string>Node traffic</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Max DAO Interval</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
