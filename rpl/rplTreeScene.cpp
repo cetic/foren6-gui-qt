@@ -47,6 +47,14 @@ void TreeScene::removeNode(Node *node) {
 	_nodes.removeAll(node);
 }
 
+void TreeScene::removeAllNodes() {
+	Node *node;
+	foreach(node, _nodes) {
+		_nodes.removeAll(node);
+		delete node;
+	}
+}
+
 void TreeScene::removeLink(Link *link) {
 	//qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
 	removeItem(link);
@@ -62,8 +70,9 @@ void TreeScene::removeAllLinks() {
 }
 
 void TreeScene::clear() {
+	removeAllLinks();
+	removeAllNodes();
 	QGraphicsScene::clear();
-	_nodes.clear();
 }
 
 void TreeScene::updateNodePositions() {

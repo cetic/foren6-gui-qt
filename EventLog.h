@@ -15,6 +15,7 @@ public:
 	EventLog(QObject * parent = 0);
 
 	void addMessage(rpl::Event *newMsg);
+	void clear();
 	void setFilter(const QString& filter);
 
 	int getVersion(int row);

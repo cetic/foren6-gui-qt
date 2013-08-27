@@ -24,6 +24,7 @@ class TreeScene : public QGraphicsScene
 		void removeNode(Node *node);
 		void removeLink(Link *link);
 		void removeAllLinks();
+		void removeAllNodes();
 		void clear();
 
 	protected slots:

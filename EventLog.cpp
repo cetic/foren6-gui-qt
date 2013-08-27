@@ -16,6 +16,13 @@ void EventLog::addMessage(rpl::Event *newMsg) {
 	}
 }
 
+void EventLog::clear() {
+	beginResetModel();
+	filteredMessages.clear();
+	messages.clear();
+	endResetModel();
+}
+
 void EventLog::setFilter(const QString& filter) {
 	rpl::Event *message;
 

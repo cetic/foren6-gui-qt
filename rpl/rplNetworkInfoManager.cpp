@@ -30,7 +30,8 @@ NetworkInfoManager::NetworkInfoManager()
 		&onDodagEvent,
 		&onLinkEvent,
 		&onRplInstanceEvent,
-		&onPacketEvent
+		&onPacketEvent,
+		&onClear
 	};
 
 	rpl_event_set_callbacks(&callbacks);
@@ -137,6 +138,10 @@ void NetworkInfoManager::onPacketEvent(int packet_id) {
 	thisInstance->emit logMessage(event);
 }
 
+void NetworkInfoManager::onClear() {
+	thisInstance->emit clearMessages();
+}
+
 
 
 void NetworkInfoManager::updateOverlay() {
@@ -222,8 +227,10 @@ void NetworkInfoManager::useVersion(int version) {
 	if(version && version == currentVersion)
 		return;  //already at that version, nothing to do. Version 0 is a dynamic version and always change
 
-	if(version == 0)  //rpldata_get_wsn_last_version return 0, so there is no version
+	if(version == 0) {  //rpldata_get_wsn_last_version return 0, so there is no version
+		_scene.clear();
 		return;
+	}
 
 	currentVersion = version;
 	node_container = rpldata_get_nodes(currentVersion);

@@ -23,6 +23,10 @@ void InformationWidget::addMessage(rpl::Event *newMsg) {
 	messageLog->addMessage(newMsg);
 }
 
+void InformationWidget::clearMessages() {
+	messageLog->clear();
+}
+
 void InformationWidget::onMessageLogDoubleClicked(QModelIndex index) {
 	emit setCurrentVersion(messageLog->getVersion(index.row()));
 }

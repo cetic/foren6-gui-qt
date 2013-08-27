@@ -131,6 +131,7 @@ void MainWindow::createNewInformationWindow() {
 
 	connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
 	connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
+	connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
 
 	foreach(message, messages) {
 		infoWidget->addMessage(message);

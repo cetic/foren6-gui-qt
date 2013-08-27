@@ -60,6 +60,7 @@ signals:
 	void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
 	void updateVersionCount(int versionCount);
 	void logMessage(rpl::Event *action);
+	void clearMessages();
 
 protected slots:
 	void updateVersion();
@@ -70,6 +71,7 @@ protected:
 	static void onRplInstanceEvent(di_rpl_instance_t *rpl_instance, rpl_event_type_e type);
 	static void onLinkEvent(di_link_t *link, rpl_event_type_e type);
 	static void onPacketEvent(int packet_id);
+	static void onClear();
 
 private:
 	TreeScene _scene;

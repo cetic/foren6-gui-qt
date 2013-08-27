@@ -21,6 +21,7 @@ public:
 
 public slots:
 	void addMessage(rpl::Event *newMsg);
+	void clearMessages();
 
 signals:
 	void setCurrentVersion(int version);
