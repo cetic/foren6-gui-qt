@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
 	connect(wsnManager, SIGNAL(updateVersionCount(int)), ui->versionSlider, SLOT(onUpdateVersionCount(int)));
 	connect(wsnManager, SIGNAL(logMessage(rpl::Event*)), this, SLOT(addMessage(rpl::Event*)));
+	connect(wsnManager, SIGNAL(clearMessages()), this, SLOT(clearMessages()));
 
 
 
@@ -153,6 +154,16 @@ void MainWindow::addMessage(rpl::Event *event) {
 	foreach(infoWidget, infoWidgets) {
 		infoWidget->addMessage(event);
 	}
+}
+
+void MainWindow::clearMessages() {
+	rpl::Event *message;
+
+	foreach(message, messages) {
+		delete message;
+	}
+	messages.clear();
+
 }
 
 void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
