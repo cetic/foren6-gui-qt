@@ -90,6 +90,7 @@
    <addaction name="actionStop"/>
    <addaction name="actionOpenSnifferDialog"/>
    <addaction name="actionToggleNodeMovement"/>
+   <addaction name="actionClear"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -129,6 +130,11 @@
   <action name="actionToggleNodeMovement">
    <property name="text">
     <string>Toggle node movement</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>Clear</string>
    </property>
   </action>
  </widget>
