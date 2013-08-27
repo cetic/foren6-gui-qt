@@ -1,5 +1,6 @@
 #include "VersionSlider.h"
 #include "ui_VersionSlider.h"
+#include <math.h>
 
 #include "data_info/rpl_data.h"
 
@@ -9,8 +10,10 @@ VersionSlider::VersionSlider(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	connect(ui->versionSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
-	connect(ui->versionSpin, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderMove(int)));
+	settingCurrentVersion = false;
+
+	connect(ui->versionSlider, SIGNAL(valueChanged(int)), this, SLOT(onVersionSliderChange(int)));
+	connect(ui->versionSpin, SIGNAL(valueChanged(int)), this, SLOT(onVersionSpinChange(int)));
 }
 
 VersionSlider::~VersionSlider()
@@ -19,24 +22,31 @@ VersionSlider::~VersionSlider()
 }
 
 void VersionSlider::setMaximum(int max) {
-	ui->versionSlider->setMaximum(max);
+	maxTimestamp = rpldata_wsn_version_get_timestamp(max);
+
+	settingCurrentVersion = true;
+	ui->versionSlider->setMaximum(ceil(maxTimestamp*100));
 	ui->versionSpin->setMaximum(max);
+	settingCurrentVersion = false;
 	ui->versionSpin->setSuffix(QString("/%1").arg(max));
 }
 
 void VersionSlider::setValue(int version) {
-	ui->versionSlider->setValue(version);
-	ui->versionSpin->setValue(version);
 	double timestamp = rpldata_wsn_version_get_timestamp(version);
+
+	settingCurrentVersion = true;
+	ui->versionSlider->setValue(ceil(timestamp*100));
+	ui->versionSpin->setValue(version);
+	settingCurrentVersion = false;
 	ui->currentTimeLabel->setText(QString::number(timestamp));
 }
 
 int VersionSlider::maximum() {
-	return ui->versionSlider->maximum();
+	return ui->versionSpin->maximum();
 }
 
 int VersionSlider::value() {
-	return ui->versionSlider->value();
+	return ui->versionSpin->value();
 }
 
 void VersionSlider::onChangeCurrentVersion(int newVersion) {
@@ -46,27 +56,62 @@ void VersionSlider::onChangeCurrentVersion(int newVersion) {
 }
 
 void VersionSlider::onUpdateVersionCount(int versionCount) {
-	bool setRealtime;
+	bool setRealtime, versionChange = false;
 
 	if(value() == maximum())
 		setRealtime = true;
 	else setRealtime = false;
 
+	if(value() > versionCount || setRealtime)
+		versionChange = true;
+
 	setMaximum(versionCount);
 	if(setRealtime) {
 		setValue(versionCount);
 	}
+
+	if(versionChange)
+		emit changeWsnVersion(value());
 }
 
-void VersionSlider::onVersionSliderMove(int value) {
+void VersionSlider::onVersionSliderChange(int value) {
+	int version, i;
+	double wantedTimestamp = (double)value / 100.0;
+
+	if(settingCurrentVersion)
+		return;
+
+	//i < maximum(): if the timestamp is greater than any version before the last (maximum()) then we don't check for the last and will take that one.
+	for(i = 1; i < maximum(); i++) {
+		if(rpldata_wsn_version_get_timestamp(i) > wantedTimestamp) {
+			if(i > 1 && (wantedTimestamp - rpldata_wsn_version_get_timestamp(i-1)) < (rpldata_wsn_version_get_timestamp(i) - wantedTimestamp))
+				i--;
+			break;
+		}
+	}
+
+	version = i;
+
+	setValue(version);
+
+	emit changeWsnVersion(version);
+}
+
+void VersionSlider::onVersionSpinChange(int value) {
 	int version = qMax(qMin(value, maximum()), 1);
+
+	if(settingCurrentVersion)
+		return;
 
 	if(version > maximum())
 		version = 0;  //realtime mode
 	if(version < 1)
 		version = 1;
 
-	setValue(version);
+	if(version == 0)
+		setValue(maximum());
+	else
+		setValue(version);
 
 	emit changeWsnVersion(version);
 }
