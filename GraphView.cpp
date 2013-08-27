@@ -8,6 +8,7 @@
 #include "overlays/RankDepthOverlay.h"
 #include "overlays/TrafficOverlay.h"
 #include "overlays/MaxDaoIntervalOverlay.h"
+#include "overlays/MaxDioIntervalOverlay.h"
 
 GraphView::GraphView(QWidget *parent) :
     QWidget(parent),
@@ -55,6 +56,10 @@ void GraphView::onLayoutComboChange(int index) {
 
 		case 6:
 			networkMgr->changeOverlay(new MaxDaoIntervalOverlay);
+			break;
+
+		case 7:
+			networkMgr->changeOverlay(new MaxDioIntervalOverlay);
 			break;
 	}
 }

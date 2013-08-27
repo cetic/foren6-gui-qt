@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     overlays/ParentChildrenOverlay.cpp \
     overlays/RankDepthOverlay.cpp \
     overlays/TrafficOverlay.cpp \
-    overlays/MaxDaoIntervalOverlay.cpp
+    overlays/MaxDaoIntervalOverlay.cpp \
+    overlays/MaxDioIntervalOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -65,7 +66,8 @@ HEADERS  += MainWindow.h \
     overlays/ParentChildrenOverlay.h \
     overlays/RankDepthOverlay.h \
     overlays/TrafficOverlay.h \
-    overlays/MaxDaoIntervalOverlay.h
+    overlays/MaxDaoIntervalOverlay.h \
+    overlays/MaxDioIntervalOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \

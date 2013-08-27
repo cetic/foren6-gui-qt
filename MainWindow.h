@@ -76,6 +76,7 @@ private:
 		QTreeWidgetItem *nodeGrounded;
 		QTreeWidgetItem *nodeTraffic;
 		QTreeWidgetItem *nodeMaxDaoInterval;
+		QTreeWidgetItem *nodeMaxDioInterval;
 		QTreeWidgetItem *nodeLastDtsn;
 		QTreeWidgetItem *nodeLastDaoSeq;
 

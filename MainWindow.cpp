@@ -101,6 +101,8 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeTraffic->setText(0, "Transmited Packets");
 		nodeInfoTree.nodeMaxDaoInterval = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeMaxDaoInterval->setText(0, "Max DAO Interval");
+		nodeInfoTree.nodeMaxDioInterval = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeMaxDioInterval->setText(0, "Max DIO Interval");
 		nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
 		nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.nodeMain);
@@ -225,7 +227,8 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 
 	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
 
-	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)));
+	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)) + " sec");
+	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(node_get_max_dio_interval(node)) + " sec");
 	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(node_get_dtsn(node)));
 	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
 

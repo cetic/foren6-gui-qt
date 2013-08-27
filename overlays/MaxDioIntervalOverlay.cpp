@@ -1,26 +1,26 @@
-#include "MaxDaoIntervalOverlay.h"
+#include "MaxDioIntervalOverlay.h"
 #include "rpl/rplNode.h"
 #include "rpl/rplLink.h"
 #include <QApplication>
 
-MaxDaoIntervalOverlay::MaxDaoIntervalOverlay()
+MaxDioIntervalOverlay::MaxDioIntervalOverlay()
 {
-	max_dao_interval = 0;
+	max_dio_interval = 0;
 }
 
-bool MaxDaoIntervalOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
+bool MaxDioIntervalOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
 	if(!newPen || !newBrush)
 		return false;
 
-	if(node_get_max_dao_interval(node->getNodeData()) > max_dao_interval) {
-		max_dao_interval = node_get_max_dao_interval(node->getNodeData());
+	if(node_get_max_dio_interval(node->getNodeData()) > max_dio_interval) {
+		max_dio_interval = node_get_max_dio_interval(node->getNodeData());
 		//invalidate();
 	}
 
 	if(node->isSelected())
 		*newPen = QPen(QColor(Qt::darkBlue));
-	else if(max_dao_interval > 0) {
-		int color = qMin(static_cast<int>(node_get_max_dao_interval(node->getNodeData())*240/max_dao_interval), 240);
+	else if(max_dio_interval > 0) {
+		int color = qMin(static_cast<int>(node_get_max_dio_interval(node->getNodeData())*240/max_dio_interval), 240);
 		*newPen = QPen(QColor(color, color, color));
 	} else {
 		*newPen = QPen(QColor(Qt::black));
@@ -38,7 +38,7 @@ bool MaxDaoIntervalOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush 
 	return true;
 }
 
-bool MaxDaoIntervalOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
+bool MaxDioIntervalOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
 	Q_UNUSED(node);
 	Q_UNUSED(newColor);
 
@@ -50,7 +50,7 @@ bool MaxDaoIntervalOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor 
 	return true;
 }
 
-bool MaxDaoIntervalOverlay::linkPen(rpl::Link *link, QPen *newPen) {
+bool MaxDioIntervalOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 	Q_UNUSED(link);
 
 	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
