@@ -74,6 +74,10 @@ private:
 		QTreeWidgetItem *nodeLocalIp;
 		QTreeWidgetItem *nodeGlobalIp;
 		QTreeWidgetItem *nodeGrounded;
+		QTreeWidgetItem *nodeTraffic;
+		QTreeWidgetItem *nodeMaxDaoInterval;
+		QTreeWidgetItem *nodeLastDtsn;
+		QTreeWidgetItem *nodeLastDaoSeq;
 
 		QTreeWidgetItem *routeMain;
 	} nodeInfoTree;

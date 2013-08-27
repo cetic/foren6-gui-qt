@@ -97,6 +97,14 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeRank->setText(0, "Rank");
 		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+		nodeInfoTree.nodeTraffic = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeTraffic->setText(0, "Transmited Packets");
+		nodeInfoTree.nodeMaxDaoInterval = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeMaxDaoInterval->setText(0, "Max DAO Interval");
+		nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
+		nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeLastDaoSeq->setText(0, "Last DAO Sequence");
 
 		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
 		nodeInfoTree.routeMain->setText(0, "Routing table");
@@ -214,6 +222,12 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 	}
 	nodeInfoTree.nodeMetric->setText(1, metricValue);
 	nodeInfoTree.nodeRank->setText(1, QString::number(node_get_rank(node)));
+
+	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
+
+	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)));
+	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(node_get_dtsn(node)));
+	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;
