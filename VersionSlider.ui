@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QSlider" name="versionSlider">
+    <widget class="Timeline" name="versionSlider">
      <property name="minimum">
       <number>1</number>
      </property>
@@ -81,6 +81,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Timeline</class>
+   <extends>QSlider</extends>
+   <header>Timeline.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

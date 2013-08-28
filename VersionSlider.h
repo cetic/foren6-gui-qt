@@ -28,11 +28,14 @@ signals:
 	void changeWsnVersion(int version);
 
 protected slots:
-	void onVersionSliderMove(int value);
+	void onVersionSliderChange(int value);
+	void onVersionSpinChange(int value);
 
 	
 private:
 	Ui::VersionSlider *ui;
+	double maxTimestamp;
+	bool settingCurrentVersion;  //avoid recursive loop setValue -> onVersion*Change -> setValue ...
 };
 
 #endif // VERSIONSLIDER_H
