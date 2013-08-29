@@ -28,8 +28,8 @@ void Timeline::paintEvent(QPaintEvent *ev) {
 
 	painter.begin(this);
 	painter.setPen(QColor(0, 0, 0, 64));
-	while(version <= maxVersion && (timestamp = rpldata_wsn_version_get_timestamp(version)) < max) {
-
+	while(version <= maxVersion) {
+		timestamp = rpldata_wsn_version_get_timestamp(version);
 		int position = QStyle::sliderPositionFromValue(min, max, ceil(timestamp*100), w-offset) + offset/2;
 		painter.drawLine(position, 0, position, h);
 		version++;
