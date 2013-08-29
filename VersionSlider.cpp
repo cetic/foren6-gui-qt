@@ -22,7 +22,12 @@ VersionSlider::~VersionSlider()
 }
 
 void VersionSlider::setMaximum(int max) {
-	maxTimestamp = rpldata_wsn_version_get_timestamp(max);
+	maxTimestamp = 0;
+
+	for(int i = 0; i < max; i++) {
+		if(maxTimestamp < rpldata_wsn_version_get_timestamp(i))
+			maxTimestamp = rpldata_wsn_version_get_timestamp(i);
+	}
 
 	settingCurrentVersion = true;
 	ui->versionSlider->setMaximum(ceil(maxTimestamp*100));

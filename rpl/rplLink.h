@@ -20,7 +20,7 @@ class Link : public QGraphicsLineItem
 		Node *to() { return _to; }
 		Node *from() { return _from; }
 		di_link_t *getLinkData() { return _link; }
-		void setLinkData(di_link *link, int version) { _link = link; _version = version; }
+		void setLinkData(di_link_t *link, int version) { _link = link; _version = version; }
 		int getVersion() { return _version; }
 
 		void updatePosition();
