@@ -80,6 +80,8 @@ private:
 		QTreeWidgetItem *nodeMaxDioInterval;
 		QTreeWidgetItem *nodeLastDtsn;
 		QTreeWidgetItem *nodeLastDaoSeq;
+		QTreeWidgetItem *nodeUpwardRankErrorCount;
+		QTreeWidgetItem *nodeDownwardRankErrorCount;
 
 		QTreeWidgetItem *routeMain;
 	} nodeInfoTree;
