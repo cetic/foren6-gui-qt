@@ -17,64 +17,66 @@ class NetworkInfoManager;
 
 class Node : public QGraphicsItemGroup
 {
-	public:
-		Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int version);
-		~Node();
+public:
+	Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int version);
+	~Node();
 
-		void addLink(Link *link) { _links.append(link); }
-		void removeLink(Link *link) { _links.removeOne(link); }
+	void addLink(Link *link) { _links.append(link); }
+	void removeLink(Link *link) { _links.removeOne(link); }
 
-		void setCenterPos(QPointF newpos);
-		void setCenterPos(qreal x, qreal y);
+	void setCenterPos(QPointF newpos);
+	void setCenterPos(qreal x, qreal y);
 
-		QPointF centerPos() const;
-		qreal centerX() const { return centerPos().x(); }
-		qreal centerY() const { return centerPos().y(); }
+	QPointF centerPos() const;
+	qreal centerX() const { return centerPos().x(); }
+	qreal centerY() const { return centerPos().y(); }
 
-		void setPos(qreal x, qreal y);
+	void setPos(qreal x, qreal y);
 
-		void incSpeed(qreal x, qreal y);
-		qreal speedX() { return _dx; }
-		qreal speedY() { return _dy; }
+	void incSpeed(qreal x, qreal y);
+	qreal speedX() { return _dx; }
+	qreal speedY() { return _dy; }
 
-		qreal radius() { return _ellipse.rect().width() / 2; }
+	qreal radius() { return _ellipse.rect().width() / 2; }
 
-		di_node_t *getNodeData() { return _nodeData; }
-		void setNodeData(di_node_t *data, int version);
-		QList<Link*> links() { return _links; }
-		int getVersion() { return _version; }
+	di_node_t *getNodeData() { return _nodeData; }
+	void setNodeData(di_node_t *data, int version);
+	QList<Link*> links() { return _links; }
+	int getVersion() { return _version; }
 
-		void setPen(QPen pen) { _ellipse.setPen(pen); }
-		void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
-		void setFont(QFont font) { _label.setFont(font); }
-		void setTextColor(QColor color) { _label.setDefaultTextColor(color); }
+	void setPen(QPen pen) { _ellipse.setPen(pen); }
+	void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
+	void setFont(QFont font) { _label.setFont(font); }
+	void setTextColor(QColor color) { _label.setDefaultTextColor(color); }
 
-		bool isSelected() { return _isSelected; }
-		void setSelected(bool selected) { _isSelected = selected; }
+	bool isSelected() { return _isSelected; }
+	void setSelected(bool selected) { _isSelected = selected; }
 
-	public slots:
-		void updatePosition();
+public slots:
+	void updatePosition();
 
-	protected:
-		void mousePressEvent(QGraphicsSceneMouseEvent *event);
-		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+protected:
+	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
-	private:
-		NetworkInfoManager *_networkInfoManager;
-		QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
-		di_node_t *_nodeData;
-		QGraphicsEllipseItem _ellipse;
-		QGraphicsTextItem _label;
-		qreal _dx, _dy;
-		QList<Link*> _links;
+private:
+	NetworkInfoManager *_networkInfoManager;
+	QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
+	di_node_t *_nodeData;
+	QGraphicsEllipseItem _ellipse;
+	QGraphicsTextItem _label;
+	qreal _dx, _dy;
+	QList<Link*> _links;
 
-		bool _isBeingMoved;
-		bool _pinned;
-		bool _isSelected;
+	bool _isBeingMoved;
+	bool _pinned;
+	bool _isSelected;
 
-		//debug
-		int _version;  //the version of the node data
+public:
+	//debug
+	int _version;  //the version of the node data
+	char guard[5];
 };
 
 }

@@ -11,6 +11,7 @@ namespace rpl
 
 Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int version)
 	: _networkInfoManager(networkInfoManager),
+	  _nodeData(0),
 	  _ellipse(this),
 	  _label(this),
 	  _dx(0),
@@ -35,6 +36,8 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 
 	setCenterPos(qrand()%500, qrand()%500);
 	setZValue(1);
+
+	qstrcpy(guard, "node");
 }
 
 Node::~Node() {
@@ -45,6 +48,9 @@ Node::~Node() {
 	}
 
 	_links.clear();
+
+	qstrcpy(guard, "edon");
+	setNodeData(0, -21);
 }
 
 void Node::setCenterPos(QPointF newpos) {
@@ -155,6 +161,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Node::setNodeData(di_node_t *data, int version) {
+	if(_nodeData)
+		node_set_user_data(_nodeData, 0);
 	_nodeData = data;
 	_version = version;
 	if(data)

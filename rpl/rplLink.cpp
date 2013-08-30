@@ -25,12 +25,16 @@ Link::Link(di_link_t *link, int version, Node *from, Node *to) : _link(link), _v
 	setZValue(0);
 
 	updatePosition();
+
+	qstrcpy(guard, "link");
 }
 
 Link::~Link()
 {
 	_to->removeLink(this);
 	_from->removeLink(this);
+	qstrcpy(guard, "knil");
+	setLinkData(0, -20);
 }
 
 void Link::updatePosition()
@@ -99,6 +103,15 @@ void Link::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 		myLine.translate(0,-8.0);
 		painter->drawLine(myLine);
 	}
+}
+
+void Link::setLinkData(di_link_t *link, int version) {
+	if(_link)
+		link_set_user_data(_link, 0);
+	_link = link;
+	_version = version;
+	if(link)
+		link_set_user_data(link, this);
 }
 
 }

@@ -19,9 +19,9 @@ void Timeline::paintEvent(QPaintEvent *ev) {
 	int maxVersion = rpldata_get_wsn_last_version();
 	int version = 1;
 	double timestamp;
-	static int offset = -1;
+	static int offset = -12;
 
-	if(offset == -1)
+	if(offset < 0)
 		offset = style()->pixelMetric(QStyle::PM_SliderLength);
 
 
