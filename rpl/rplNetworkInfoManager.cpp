@@ -159,21 +159,26 @@ void NetworkInfoManager::updateOverlay() {
 	QGraphicsItem* currentItem;
 	Node *currentNode;
 	Link *currentLink;
+	int passes = _overlay->neededPasses();
 
-	foreach(currentItem, _scene.items()) {
-		if((currentNode = dynamic_cast<Node*>(currentItem))) {
-			if(_overlay->nodeCirclePen(currentNode, &pen, &brush)) {
-				currentNode->setPen(pen);
-				currentNode->setBrush(brush);
-			}
+	_overlay->initPasses();
 
-			if(_overlay->nodeTextPen(currentNode, &font, &fontColor)) {
-				currentNode->setFont(font);
-				currentNode->setTextColor(fontColor);
-			}
-		} else if((currentLink = dynamic_cast<Link*>(currentItem))) {
-			if(_overlay->linkPen(currentLink, &pen)) {
-				currentLink->setPen(pen);
+	for(int i = 0; i < passes; i++) {
+		foreach(currentItem, _scene.items()) {
+			if((currentNode = dynamic_cast<Node*>(currentItem))) {
+				if(_overlay->nodeCirclePen(currentNode, &pen, &brush)) {
+					currentNode->setPen(pen);
+					currentNode->setBrush(brush);
+				}
+
+				if(_overlay->nodeTextPen(currentNode, &font, &fontColor)) {
+					currentNode->setFont(font);
+					currentNode->setTextColor(fontColor);
+				}
+			} else if((currentLink = dynamic_cast<Link*>(currentItem))) {
+				if(_overlay->linkPen(currentLink, &pen)) {
+					currentLink->setPen(pen);
+				}
 			}
 		}
 	}
