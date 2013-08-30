@@ -108,6 +108,10 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
 		nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeLastDaoSeq->setText(0, "Last DAO Sequence");
+		nodeInfoTree.nodeUpwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeUpwardRankErrorCount->setText(0, "Upward rank errors");
+		nodeInfoTree.nodeDownwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeDownwardRankErrorCount->setText(0, "Downward rank errors");
 
 		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
 		nodeInfoTree.routeMain->setText(0, "Routing table");
@@ -243,6 +247,8 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(node_get_max_dio_interval(node)) + " sec");
 	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(node_get_dtsn(node)));
 	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
+	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
+	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;
