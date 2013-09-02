@@ -10,6 +10,7 @@
 #include "overlays/MaxDaoIntervalOverlay.h"
 #include "overlays/MaxDioIntervalOverlay.h"
 #include "overlays/RankErrorOverlay.h"
+#include "overlays/RouteLoopErrorOverlay.h"
 
 GraphView::GraphView(QWidget *parent) :
     QWidget(parent),
@@ -65,6 +66,10 @@ void GraphView::onLayoutComboChange(int index) {
 
 		case 8:
 			networkMgr->changeOverlay(new RankErrorOverlay);
+			break;
+
+		case 9:
+			networkMgr->changeOverlay(new RouteLoopErrorOverlay);
 			break;
 	}
 }

@@ -1,13 +1,13 @@
-#include "RankErrorOverlay.h"
+#include "RouteLoopErrorOverlay.h"
 #include "rpl/rplNode.h"
 #include "rpl/rplLink.h"
 #include <QApplication>
 
-RankErrorOverlay::RankErrorOverlay() {
+RouteLoopErrorOverlay::RouteLoopErrorOverlay() {
 	maxErrorCount = 0;
 }
 
-bool RankErrorOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
+bool RouteLoopErrorOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
 	di_node_t *node_data = node->getNodeData();
 	if(!newPen || !newBrush)
 		return false;
@@ -15,7 +15,7 @@ bool RankErrorOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newB
 	if(!node_data)
 		return false;
 
-	int errorCount = node_get_upward_error_count(node->getNodeData()) + node_get_downward_error_count(node->getNodeData());
+	int errorCount = node_get_route_error_count(node_data);
 
 	if(maxErrorCount < errorCount)
 		maxErrorCount = errorCount;
@@ -29,6 +29,7 @@ bool RankErrorOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newB
 			color = qMin(errorCount*192/maxErrorCount, 192) + 63;
 		else
 			color = 0;
+
 		*newPen = QPen(QColor(color, 0, 0));
 	}
 
@@ -44,7 +45,7 @@ bool RankErrorOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newB
 	return true;
 }
 
-bool RankErrorOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
+bool RouteLoopErrorOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
 	Q_UNUSED(node);
 	Q_UNUSED(newColor);
 
@@ -56,9 +57,10 @@ bool RankErrorOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newC
 	return true;
 }
 
-bool RankErrorOverlay::linkPen(rpl::Link *link, QPen *newPen) {
+bool RouteLoopErrorOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 	Q_UNUSED(link);
 
 	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 	return true;
 }
+
