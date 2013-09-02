@@ -58,6 +58,8 @@ void VersionSlider::onChangeCurrentVersion(int newVersion) {
 	if(newVersion == 0) {
 		setValue(maximum());
 	} else setValue(newVersion);
+
+	emit changeWsnVersion(value());
 }
 
 void VersionSlider::onUpdateVersionCount(int versionCount) {

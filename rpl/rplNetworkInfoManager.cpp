@@ -185,40 +185,53 @@ void NetworkInfoManager::updateOverlay() {
 }
 
 void NetworkInfoManager::selectNode(Node *node) {
+	Node *oldSelectedNode = selectedNode;
+
+	if(oldSelectedNode)
+		oldSelectedNode->setSelected(false);
+
+	if(oldSelectedNode != node) {
+		selectedNode = node;
+		selectedNode->setSelected(true);
+		updateSelectedNodeInfo();
+	} else {
+		selectedNode = 0;
+	}
+	updateOverlay();
+}
+
+void NetworkInfoManager::updateSelectedNodeInfo() {
 	const di_node_t *node_data;
 	const di_dodag_t *dodag_data;
 	const di_rpl_instance_t *rpl_instance_data;
-	const di_dodag_ref_t *dodag_ref;
-	const di_rpl_instance_ref_t *rpl_instance_ref;
 	void *ptr;
 
-	if(selectedNode)
-		selectedNode->setSelected(false);
-	selectedNode = node;
-	selectedNode->setSelected(true);
-	updateOverlay();
+	if(selectedNode) {
+		const di_dodag_ref_t *dodag_ref;
+		const di_rpl_instance_ref_t *rpl_instance_ref;
 
-	node_data = selectedNode->getNodeData();
+		node_data = selectedNode->getNodeData();
 
-	dodag_ref = node_get_dodag(node_data);
+		dodag_ref = node_get_dodag(node_data);
 
-	if(dodag_ref) {
-		ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
-		if(ptr)
-			dodag_data = *(di_dodag_t**)ptr;
-		else dodag_data = 0;
-	} else dodag_data = 0;
+		if(dodag_ref) {
+			ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
+			if(ptr)
+				dodag_data = *(di_dodag_t**)ptr;
+			else dodag_data = 0;
+		} else dodag_data = 0;
 
-	rpl_instance_ref = dodag_get_rpl_instance(dodag_data);
+		rpl_instance_ref = dodag_get_rpl_instance(dodag_data);
 
-	if(dodag_data && rpl_instance_ref) {
-		ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
-		if(ptr)
-			rpl_instance_data = *(di_rpl_instance_t**)ptr;
-		else rpl_instance_data = 0;
-	} else rpl_instance_data = 0;
+		if(dodag_data && rpl_instance_ref) {
+			ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
+			if(ptr)
+				rpl_instance_data = *(di_rpl_instance_t**)ptr;
+			else rpl_instance_data = 0;
+		} else rpl_instance_data = 0;
 
-	emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
+		emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
+	}
 }
 
 void NetworkInfoManager::useVersion(int version) {
@@ -300,49 +313,26 @@ void NetworkInfoManager::useVersion(int version) {
 	}
 
 	updateOverlay();
+	updateSelectedNodeInfo();
 
 	hash_it_destroy(it);
 	hash_it_destroy(itEnd);
 }
 
 void NetworkInfoManager::updateVersion() {
-	const di_node_t *node_data;
-	const di_dodag_t *dodag_data;
-	const di_rpl_instance_t *rpl_instance_data;
-	void *ptr;
+	static int lastVersionCount = -1;
+	int versionCount;
 
 	if(realtimeMode) {
 		useVersion(0);
 	}
 
-	if(selectedNode) {
-		const di_dodag_ref_t *dodag_ref;
-		const di_rpl_instance_ref_t *rpl_instance_ref;
+	versionCount = rpldata_get_wsn_last_version();
 
-		node_data = selectedNode->getNodeData();
-
-		dodag_ref = node_get_dodag(node_data);
-
-		if(dodag_ref) {
-			ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
-			if(ptr)
-				dodag_data = *(di_dodag_t**)ptr;
-			else dodag_data = 0;
-		} else dodag_data = 0;
-
-		rpl_instance_ref = dodag_get_rpl_instance(dodag_data);
-
-		if(dodag_data && rpl_instance_ref) {
-			ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
-			if(ptr)
-				rpl_instance_data = *(di_rpl_instance_t**)ptr;
-			else rpl_instance_data = 0;
-		} else rpl_instance_data = 0;
-
-		emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
+	if(versionCount != lastVersionCount) {
+		lastVersionCount = versionCount;
+		emit updateVersionCount(versionCount);
 	}
-
-	emit updateVersionCount(rpldata_get_wsn_last_version());
 }
 
 void NetworkInfoManager::changeOverlay(IOverlayModel* newOverlay) {

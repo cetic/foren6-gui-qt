@@ -64,6 +64,7 @@ signals:
 
 protected slots:
 	void updateVersion();
+	void updateSelectedNodeInfo();
 
 protected:
 	static void onNodeEvent(di_node_t *node, rpl_event_type_e type);
