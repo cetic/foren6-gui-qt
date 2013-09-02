@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="timeLabel">
      <property name="text">
-      <string>Time:</string>
+      <string>Timeline:</string>
      </property>
     </widget>
    </item>
