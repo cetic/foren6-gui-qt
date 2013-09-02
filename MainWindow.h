@@ -82,6 +82,7 @@ private:
 		QTreeWidgetItem *nodeLastDaoSeq;
 		QTreeWidgetItem *nodeUpwardRankErrorCount;
 		QTreeWidgetItem *nodeDownwardRankErrorCount;
+		QTreeWidgetItem *nodeRouteLoopErrorCount;
 
 		QTreeWidgetItem *routeMain;
 	} nodeInfoTree;
