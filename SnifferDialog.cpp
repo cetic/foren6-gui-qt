@@ -24,8 +24,11 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 	connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(onBrowseSniffer()));
 	connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(accept()));
 
-	QDir captureDir("../capture/bin/");
-	QFileInfoList captureInterfaces = captureDir.entryInfoList(QStringList("*.so") << QString("*.dylib"), QDir::Files, QDir::Name);
+	QFileInfoList captureInterfaces;
+
+	captureInterfaces.append(QDir("../capture/bin/").entryInfoList(QStringList("*.so") << QString("*.dylib"), QDir::Files, QDir::Name));
+	captureInterfaces.append(QDir(QApplication::applicationDirPath()).entryInfoList(QStringList("*.so") << QString("*.dylib"), QDir::Files, QDir::Name));
+
 	QFileInfo captureInterface;
 
 	foreach(captureInterface, captureInterfaces) {
