@@ -24,8 +24,11 @@ LIBS += -L$$PWD/../analyzer/dist/Debug/GNU-Linux-x86/
 LIBS += -lanalyzer
 
 INCLUDEPATH += $$PWD/../analyzer/
-QMAKE_BUNDLE_DATA += ../capture/bin/libinterface_pcap.so
-QMAKE_BUNDLE_DATA += ../capture/bin/libinterface_snif.so
+
+APP_CAPTURE_BUNDLE.files = ../capture/bin/libinterface_pcap.so ../capture/bin/libinterface_snif.so
+APP_CAPTURE_BUNDLE.path = Contents/MacOs
+
+QMAKE_BUNDLE_DATA += APP_CAPTURE_BUNDLE
 
 
 
