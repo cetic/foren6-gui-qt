@@ -24,6 +24,8 @@ LIBS += -L$$PWD/../analyzer/dist/Debug/GNU-Linux-x86/
 LIBS += -lanalyzer
 
 INCLUDEPATH += $$PWD/../analyzer/
+QMAKE_BUNDLE_DATA += ../capture/bin/libinterface_pcap.so
+QMAKE_BUNDLE_DATA += ../capture/bin/libinterface_snif.so
 
 
 
