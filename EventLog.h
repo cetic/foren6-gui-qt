@@ -28,7 +28,7 @@ public:
 	virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 protected:
-	QString getEventString(int column, rpl::Event *event) const;
+	QString getEventString(int column, rpl::Event *event, bool for_search) const;
 
 private:
 	QList<rpl::Event*> messages;

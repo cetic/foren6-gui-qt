@@ -9,7 +9,7 @@ EventLog::EventLog(QObject *parent) : QAbstractTableModel(parent)
 void EventLog::addMessage(rpl::Event *newMsg) {
 	messages.append(newMsg);
 
-	if(currentFilter.isEmpty() || getEventString(0, newMsg).contains(currentFilter) || getEventString(1, newMsg).contains(currentFilter, Qt::CaseInsensitive)) {
+	if(currentFilter.isEmpty() || getEventString(0, newMsg, true).contains(currentFilter) || getEventString(1, newMsg, true).contains(currentFilter, Qt::CaseInsensitive)) {
 		beginInsertRows(QModelIndex(), filteredMessages.size()-1, filteredMessages.size()-1);
 		filteredMessages.append(newMsg);
 		endInsertRows();
@@ -32,7 +32,7 @@ void EventLog::setFilter(const QString& filter) {
 	filteredMessages.clear();
 
 	foreach(message, messages) {
-		if(getEventString(0, message).contains(filter) || getEventString(1, message).contains(filter, Qt::CaseInsensitive)) {
+		if(getEventString(0, message, true).contains(filter) || getEventString(1, message, true).contains(filter, Qt::CaseInsensitive)) {
 			filteredMessages.append(message);
 		}
 	}
@@ -53,7 +53,7 @@ Qt::ItemFlags EventLog::flags(const QModelIndex& index) const {
 int EventLog::columnCount(const QModelIndex& parent) const {
 	if(parent.isValid())
 		return 0;
-	else return 2;
+	else return 3;
 }
 
 int EventLog::rowCount(const QModelIndex& parent) const {
@@ -70,7 +70,7 @@ QVariant EventLog::data(const QModelIndex& index, int role) const {
 
 	currentEvent = filteredMessages.at(index.row());
 
-	return getEventString(index.column(), currentEvent);
+	return getEventString(index.column(), currentEvent, false);
 }
 
 QVariant EventLog::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -81,13 +81,15 @@ QVariant EventLog::headerData(int section, Qt::Orientation orientation, int role
 		if(section == 0)
 			return QString("Type");
 		else if(section == 1)
+			return QString("Version");
+		else if(section == 2)
 			return QString("Message");
 		else return QVariant();
 	} else return QVariant::fromValue(section);
 }
 
 
-QString EventLog::getEventString(int column, rpl::Event *event) const {
+QString EventLog::getEventString(int column, rpl::Event *event, bool for_search) const {
 	QString eventType;
 
 	switch(event->type) {
@@ -114,6 +116,8 @@ QString EventLog::getEventString(int column, rpl::Event *event) const {
 			default: return QString("");
 		}
 	} else if(column == 1) {
+		return QString::number(event->version);
+	} else if(column == 2) {
 		switch(event->object) {
 			case rpl::Event::EO_Node:
 				return QString("Node %1, wpan id = %2")
@@ -145,15 +149,20 @@ QString EventLog::getEventString(int column, rpl::Event *event) const {
 				char *buffer;
 				int data_size = 0;
 				pcap_file_t pcap_handle;
-				pcap_handle = pcap_parser_open("out.pcap");
-				pcap_parser_get(pcap_handle, event->packed_id, NULL, &data_size);
-				buffer = (char*)malloc(data_size);
-				pcap_parser_get(pcap_handle, event->packed_id, buffer, &data_size);
-				pcap_parser_close(pcap_handle);
-				pcap_handle = 0;
 
-				//packet_id + 1 to start from 1 as wireshark
-				return QString("id=%1, data=%2").arg(event->packed_id+1).arg(QString::fromAscii(QByteArray(buffer, data_size).toHex()));
+				if(for_search == false) {
+					pcap_handle = pcap_parser_open("out.pcap");
+					pcap_parser_get(pcap_handle, event->packed_id, NULL, &data_size);
+					buffer = (char*)malloc(data_size);
+					pcap_parser_get(pcap_handle, event->packed_id, buffer, &data_size);
+					pcap_parser_close(pcap_handle);
+					pcap_handle = 0;
+					//packet_id + 1 to start from 1 as wireshark
+					return QString("Frame: %1, data=%2").arg(event->packed_id+1).arg(QString::fromAscii(QByteArray(buffer, data_size).toHex()));
+				} else {
+					return QString("Frame: %1").arg(event->packed_id+1);
+				}
+
 			}
 
 			default:
