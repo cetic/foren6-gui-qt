@@ -24,8 +24,18 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 	connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(onBrowseSniffer()));
 	connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(accept()));
 
-	QDir captureDir("../capture/bin/");
-	QFileInfoList captureInterfaces = captureDir.entryInfoList(QStringList("*.so") << QString("*.dylib"), QDir::Files, QDir::Name);
+	QFileInfoList captureInterfaces;
+	QDir searchPath;
+	QStringList extensions;
+
+	extensions << QString("*.so") << QString("*.dylib");
+
+	searchPath = QDir(QApplication::applicationDirPath() + "/capture");
+	if(!searchPath.exists())
+		searchPath = QDir(QApplication::applicationDirPath());
+
+	captureInterfaces.append(searchPath.entryInfoList(extensions, QDir::Files, QDir::Name));
+
 	QFileInfo captureInterface;
 
 	foreach(captureInterface, captureInterfaces) {
@@ -86,6 +96,9 @@ void SnifferDialog::onRemoveSniffer() {
 
 void SnifferDialog::onBrowseSniffer() {
 	QString target = QFileDialog::getOpenFileName(this, "Select a sniffer device or a file");
+
+	if(target.isEmpty())
+		return;
 
 	ui->targetEdit->setText(target);
 
