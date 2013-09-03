@@ -25,7 +25,7 @@ LIBS += -lanalyzer
 
 INCLUDEPATH += $$PWD/../analyzer/
 
-APP_CAPTURE_BUNDLE.files = ../capture/bin/libinterface_pcap.so ../capture/bin/libinterface_snif.so
+APP_CAPTURE_BUNDLE.files = ../capture/bin/libinterface_pcap.dylib ../capture/bin/libinterface_snif.dylib
 APP_CAPTURE_BUNDLE.path = Contents/MacOs
 
 QMAKE_BUNDLE_DATA += APP_CAPTURE_BUNDLE
