@@ -268,6 +268,7 @@ void NetworkInfoManager::useVersion(int version) {
 
 	if(version == 0) {  //rpldata_get_wsn_last_version return 0, so there is no version
 		selectedNode = 0;
+		updateSelectedNodeInfo();
 		_scene.clear();
 		return;
 	}
