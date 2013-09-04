@@ -146,7 +146,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 			_timeElapsedMouseMove.start();
 		else {
 			qint64 elapsedTime = _timeElapsedMouseMove.restart();
-			if(elapsedTime) {
+			if(elapsedTime && !_pinned) {
 				_dx = (event->scenePos().x() - event->lastScenePos().x()) * 1000 / elapsedTime;
 				_dy = (event->scenePos().y() - event->lastScenePos().y()) * 1000 / elapsedTime;
 			}
