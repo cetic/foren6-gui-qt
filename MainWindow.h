@@ -28,7 +28,8 @@ signals:
 	void toggleNodeMovement();
 
 public slots:
-	void setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
+	void setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
+	void clearTargetNodeInfo();
 	void addMessage(rpl::Event *event);
 	void clearMessages();
 

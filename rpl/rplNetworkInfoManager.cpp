@@ -193,10 +193,10 @@ void NetworkInfoManager::selectNode(Node *node) {
 	if(oldSelectedNode != node) {
 		selectedNode = node;
 		selectedNode->setSelected(true);
-		updateSelectedNodeInfo();
 	} else {
 		selectedNode = 0;
 	}
+	updateSelectedNodeInfo();
 	updateOverlay();
 }
 
@@ -231,6 +231,8 @@ void NetworkInfoManager::updateSelectedNodeInfo() {
 		} else rpl_instance_data = 0;
 
 		emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
+	} else {
+		emit nodeUpdateSelected(0, 0, 0);
 	}
 }
 
@@ -253,6 +255,7 @@ void NetworkInfoManager::useVersion(int version) {
 		return;  //already at that version, nothing to do. Version 0 is a dynamic version and always change
 
 	if(version == 0) {  //rpldata_get_wsn_last_version return 0, so there is no version
+		selectedNode = 0;
 		_scene.clear();
 		return;
 	}

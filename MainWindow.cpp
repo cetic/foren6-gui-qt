@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
 	connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 
-	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setNodeInfoTarget(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
+	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setTargetNodeInfo(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
 	connect(wsnManager, SIGNAL(updateVersionCount(int)), ui->versionSlider, SLOT(onUpdateVersionCount(int)));
 	connect(wsnManager, SIGNAL(logMessage(rpl::Event*)), this, SLOT(addMessage(rpl::Event*)));
 	connect(wsnManager, SIGNAL(clearMessages()), this, SLOT(clearMessages()));
@@ -176,11 +176,13 @@ void MainWindow::clearMessages() {
 
 }
 
-void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
+void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
 	char ipv6string[INET6_ADDRSTRLEN];
 
-	if(!node)
+	if(!node) {
+		clearTargetNodeInfo();
 		return;
+	}
 
 	if(rpl_instance) {
 		nodeInfoTree.rplInstanceId->setText(1, QString::number(rpl_instance_get_key(rpl_instance)->ref.rpl_instance));
@@ -275,6 +277,47 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 		nodeInfoTree.routeMain->addChild(new QTreeWidgetItem(routeInfo));
 	}
 
+}
+
+void MainWindow::clearTargetNodeInfo() {
+	nodeInfoTree.rplInstanceId->setText(1, "");
+	nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
+
+	nodeInfoTree.dodagVersion->setText(1, "");
+	nodeInfoTree.dodagId->setText(1, "");
+	nodeInfoTree.dodagPrefix->setText(1, "");
+	nodeInfoTree.dodagConfigAuthEnabled->setText(1, "");
+	nodeInfoTree.dodagConfigPathControlSize->setText(1, "");
+	nodeInfoTree.dodagConfigDioIntervalMin->setText(1, "");
+	nodeInfoTree.dodagConfigDioIntervalMax->setText(1, "");
+	nodeInfoTree.dodagConfigDioRedundancyConstant->setText(1, "");
+	nodeInfoTree.dodagConfigMaxRankIncrease->setText(1, "");
+	nodeInfoTree.dodagConfigMinHopRankIncrease->setText(1, "");
+	nodeInfoTree.dodagConfigDefaultLifetime->setText(1, "");
+	nodeInfoTree.dodagConfigLifetimeUnit->setText(1, "");
+	nodeInfoTree.dodagConfigObjectiveFunction->setText(1, "");
+
+	nodeInfoTree.nodeMacAddress->setText(1, "");
+	nodeInfoTree.nodeLocalIp->setText(1, "");
+	nodeInfoTree.nodeGlobalIp->setText(1, "");
+	nodeInfoTree.nodeMetric->setText(1, "");
+	nodeInfoTree.nodeRank->setText(1, "");
+	nodeInfoTree.nodeGrounded->setText(1, "");
+	nodeInfoTree.nodeTraffic->setText(1, "");
+	nodeInfoTree.nodeMaxDaoInterval->setText(1, "");
+	nodeInfoTree.nodeMaxDioInterval->setText(1, "");
+	nodeInfoTree.nodeLastDtsn->setText(1, "");
+	nodeInfoTree.nodeLastDaoSeq->setText(1, "");
+	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, "");
+	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, "");
+	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, "");
+	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, "");
+	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, "");
+
+	QList<QTreeWidgetItem *> routeChildren = nodeInfoTree.routeMain->takeChildren();
+	QTreeWidgetItem *child;
+	foreach(child, routeChildren)
+		delete child;
 }
 
 void MainWindow::onStartSniffer() {
