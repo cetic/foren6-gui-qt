@@ -29,6 +29,9 @@ void VersionSlider::setMaximum(int max) {
 			maxTimestamp = rpldata_wsn_version_get_timestamp(i);
 	}
 
+	if(maxTimestamp > 20000000)
+		maxTimestamp = 20000000;
+
 	settingCurrentVersion = true;
 	ui->versionSlider->setMaximum(ceil(maxTimestamp*100));
 	ui->versionSpin->setMaximum(max);
@@ -38,6 +41,9 @@ void VersionSlider::setMaximum(int max) {
 
 void VersionSlider::setValue(int version) {
 	double timestamp = rpldata_wsn_version_get_timestamp(version);
+
+	if(timestamp > 20000000)
+		timestamp = 20000000;
 
 	settingCurrentVersion = true;
 	ui->versionSlider->setValue(ceil(timestamp*100));
