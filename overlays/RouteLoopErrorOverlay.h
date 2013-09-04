@@ -1,18 +1,12 @@
 #ifndef ROUTELOOPERROROVERLAY_H
 #define ROUTELOOPERROROVERLAY_H
 
-#include "IOverlayModel.h"
+#include "ErrorsOverlay.h"
 
-class RouteLoopErrorOverlay : public IOverlayModel
+class RouteLoopErrorOverlay : public ErrorsOverlay
 {
 public:
-	RouteLoopErrorOverlay();
-	virtual bool nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush);
-	virtual bool nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor);
-	virtual bool linkPen(rpl::Link *link, QPen *newPen);
-
-private:
-	int maxErrorCount;
+	virtual int getErrorCount(rpl::Node *node);
 };
 
 #endif // ROUTELOOPERROROVERLAY_H

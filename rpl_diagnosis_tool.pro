@@ -54,7 +54,10 @@ SOURCES += main.cpp\
     overlays/MaxDioIntervalOverlay.cpp \
     Timeline.cpp \
     overlays/RankErrorOverlay.cpp \
-    overlays/RouteLoopErrorOverlay.cpp
+    overlays/RouteLoopErrorOverlay.cpp \
+    overlays/ErrorsOverlay.cpp \
+    overlays/IPMismatchErrorOverlay.cpp \
+    overlays/DodagMismatchErrorOverlay.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -78,7 +81,10 @@ HEADERS  += MainWindow.h \
     overlays/MaxDioIntervalOverlay.h \
     Timeline.h \
     overlays/RankErrorOverlay.h \
-    overlays/RouteLoopErrorOverlay.h
+    overlays/RouteLoopErrorOverlay.h \
+    overlays/ErrorsOverlay.h \
+    overlays/IPMismatchErrorOverlay.h \
+    overlays/DodagMismatchErrorOverlay.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \

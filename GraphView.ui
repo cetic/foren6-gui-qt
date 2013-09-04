@@ -41,7 +41,7 @@
      </item>
      <item>
       <property name="text">
-       <string>RplInstance</string>
+       <string>Rpl Instance</string>
       </property>
      </item>
      <item>
@@ -76,7 +76,17 @@
      </item>
      <item>
       <property name="text">
-       <string>Route loop errors</string>
+       <string>Route loop Errors</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>IP mismatch Errors in DAO destination</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Dodag mismatch Errors in DAO</string>
       </property>
      </item>
     </widget>

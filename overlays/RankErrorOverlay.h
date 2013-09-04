@@ -1,20 +1,12 @@
 #ifndef RANKERROROVERLAY_H
 #define RANKERROROVERLAY_H
 
-#include "IOverlayModel.h"
+#include "ErrorsOverlay.h"
 
-class RankErrorOverlay : public IOverlayModel
+class RankErrorOverlay : public ErrorsOverlay
 {
 public:
-	RankErrorOverlay();
-	virtual int neededPasses() { return 2; }
-	virtual void initPasses() { maxErrorCount = 0; }
-	virtual bool nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush);
-	virtual bool nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor);
-	virtual bool linkPen(rpl::Link *link, QPen *newPen);
-
-private:
-	int maxErrorCount;
+	virtual int getErrorCount(rpl::Node *node);
 };
 
 #endif // RANKERROROVERLAY_H

@@ -11,6 +11,8 @@
 #include "overlays/MaxDioIntervalOverlay.h"
 #include "overlays/RankErrorOverlay.h"
 #include "overlays/RouteLoopErrorOverlay.h"
+#include "overlays/IPMismatchErrorOverlay.h"
+#include "overlays/DodagMismatchErrorOverlay.h"
 
 GraphView::GraphView(QWidget *parent) :
     QWidget(parent),
@@ -70,6 +72,14 @@ void GraphView::onLayoutComboChange(int index) {
 
 		case 9:
 			networkMgr->changeOverlay(new RouteLoopErrorOverlay);
+			break;
+
+		case 10:
+			networkMgr->changeOverlay(new IPMismatchErrorOverlay);
+			break;
+
+		case 11:
+			networkMgr->changeOverlay(new DodagMismatchErrorOverlay);
 			break;
 	}
 }

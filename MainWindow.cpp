@@ -114,6 +114,10 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeDownwardRankErrorCount->setText(0, "Downward rank errors");
 		nodeInfoTree.nodeRouteLoopErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
 		nodeInfoTree.nodeRouteLoopErrorCount->setText(0, "Route loop errors");
+		nodeInfoTree.nodeIpMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeIpMismatchErrorCount->setText(0, "IP mismatch errors");
+		nodeInfoTree.nodeDodagMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeDodagMismatchErrorCount->setText(0, "Dodag mismatch errors");
 
 		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
 		nodeInfoTree.routeMain->setText(0, "Routing table");
@@ -252,6 +256,8 @@ void MainWindow::setNodeInfoTarget(const di_node_t* node, const di_dodag_t* doda
 	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, QString::number(node_get_route_error_count(node)));
+	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, QString::number(node_get_ip_mismatch_error_count(node)));
+	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(node_get_dodag_mismatch_error_count(node)));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;

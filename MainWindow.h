@@ -83,6 +83,8 @@ private:
 		QTreeWidgetItem *nodeUpwardRankErrorCount;
 		QTreeWidgetItem *nodeDownwardRankErrorCount;
 		QTreeWidgetItem *nodeRouteLoopErrorCount;
+		QTreeWidgetItem *nodeDodagMismatchErrorCount;
+		QTreeWidgetItem *nodeIpMismatchErrorCount;
 
 		QTreeWidgetItem *routeMain;
 	} nodeInfoTree;
