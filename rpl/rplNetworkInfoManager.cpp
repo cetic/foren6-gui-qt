@@ -69,8 +69,14 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	thisInstance->emit logMessage(event);
 
 	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
-	if(associatedNode)
-		Q_ASSERT(qstrcmp(associatedNode->guard, "node") == 0);
+	if(associatedNode) {
+		if(qstrcmp(associatedNode->guard, "node") != 0) {
+			fprintf(stderr, "FATAL: casted node is NOT a rpl::Node, guard missing !!!! crashing ...\n");
+			while(1) {
+				//Attach the running instance with gdb
+			}
+		}
+	}
 
 	if(type != RET_Deleted && associatedNode) {
 		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
@@ -122,8 +128,14 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 
 	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
 
-	if(associatedLink)
-		Q_ASSERT(qstrcmp(associatedLink->guard, "link") == 0);
+	if(associatedLink) {
+		if(qstrcmp(associatedLink->guard, "link") != 0) {
+			fprintf(stderr, "FATAL: casted link is NOT a rpl::Link, guard missing !!!! crashing ...\n");
+			while(1) {
+				//Attach the running instance with gdb
+			}
+		}
+	}
 
 	if(type != RET_Deleted && associatedLink) {
 		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
