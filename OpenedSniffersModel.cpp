@@ -17,6 +17,14 @@ void OpenedSniffersModel::append(QUrl url, interface_t *interface, ifreader_t sn
 	endInsertRows();
 }
 
+interface_t *OpenedSniffersModel::getInterface(int index) {
+	return openedSniffers.at(index).interface;
+}
+
+ifreader_t OpenedSniffersModel::getHandle(int index) {
+	return openedSniffers.at(index).sniffer_handle;
+}
+
 void OpenedSniffersModel::remove(int index) {
 	beginRemoveRows(QModelIndex(), index, index);
 	openedSniffers.removeAt(index);

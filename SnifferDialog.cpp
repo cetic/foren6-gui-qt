@@ -90,6 +90,10 @@ void SnifferDialog::onRemoveSniffer() {
 	QModelIndex sniffer;
 
 	foreach(sniffer, selectedSniffers) {
+		interface_t *iface = openedSniffersModel->getInterface(sniffer.row());
+		ifreader_t sniffer_handle = openedSniffersModel->getHandle(sniffer.row());
+
+		iface->close(sniffer_handle);
 		openedSniffersModel->remove(sniffer.row());
 	}
 }

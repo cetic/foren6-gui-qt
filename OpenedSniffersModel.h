@@ -20,6 +20,8 @@ public:
 	OpenedSniffersModel(QObject *parent = 0);
 
 	void append(QUrl url, interface_t *interface, ifreader_t sniffer_handle);
+	interface_t *getInterface(int index);
+	ifreader_t getHandle(int index);
 	void remove(int index);
 	QList<SnifferInterface> getOpenedSniffers() { return openedSniffers; }
 
