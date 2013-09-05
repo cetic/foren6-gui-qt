@@ -74,6 +74,7 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 			fprintf(stderr, "FATAL: casted node is NOT a rpl::Node, guard missing !!!! crashing ...\n");
 			while(1) {
 				//Attach the running instance with gdb
+				asm volatile ("nop" : : : "memory");
 			}
 		}
 	}
@@ -133,6 +134,7 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 			fprintf(stderr, "FATAL: casted link is NOT a rpl::Link, guard missing !!!! crashing ...\n");
 			while(1) {
 				//Attach the running instance with gdb
+				asm volatile ("nop" : : : "memory");
 			}
 		}
 	}
