@@ -69,7 +69,7 @@ void SnifferDialog::onAddSniffer() {
 
 	if(interface == 0) {
 		qWarning("Could not get interface !");
-		QMessageBox::warning(this, QCoreApplication::applicationName(), QString("Cannot open interface type \"%1\". Known interfaces are pcap and snif.").arg(interfaceType));
+		QMessageBox::warning(this, QCoreApplication::applicationName(), QString("Cannot open interface type \"%1\". Choose an interface type before loading a file.").arg(interfaceType));
 		return;
 	}
 
