@@ -18,7 +18,6 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 	openedSniffersModel = new OpenedSniffersModel;
 	ui->snifferTable->setModel(openedSniffersModel);
 
-	connect(ui->targetEdit, SIGNAL(returnPressed()), ui->addButton, SLOT(click()));
 	connect(ui->addButton, SIGNAL(clicked()), this, SLOT(onAddSniffer()));
 	connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(onRemoveSniffer()));
 	connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(onBrowseSniffer()));

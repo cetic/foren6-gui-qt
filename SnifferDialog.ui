@@ -32,6 +32,12 @@
      <property name="text">
       <string>Add</string>
      </property>
+     <property name="autoDefault">
+      <bool>true</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="3" column="1" colspan="2">
@@ -45,6 +51,9 @@
     <widget class="QPushButton" name="browseButton">
      <property name="text">
       <string>Browse</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -62,6 +71,12 @@
     <widget class="QPushButton" name="removeButton">
      <property name="text">
       <string>Remove</string>
+     </property>
+     <property name="shortcut">
+      <string>Del</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -127,6 +142,9 @@
     <widget class="QPushButton" name="closeButton">
      <property name="text">
       <string>Close Window</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
