@@ -21,9 +21,9 @@ TARGET = rpl_diagnosis_tool
 TEMPLATE = app
 
 LIBS += -L$$PWD/../analyzer/dist/Debug/GNU-Linux-x86/
-LIBS += -lanalyzer
+LIBS += -lrplanalyzer
 
-INCLUDEPATH += $$PWD/../analyzer/
+INCLUDEPATH += $$PWD/../analyzer/src/
 
 APP_CAPTURE_BUNDLE.files = ../capture/bin/libinterface_pcap.dylib ../capture/bin/libinterface_snif.dylib
 APP_CAPTURE_BUNDLE.path = Contents/MacOs
