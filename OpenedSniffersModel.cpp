@@ -1,5 +1,9 @@
 #include "OpenedSniffersModel.h"
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+#include <QUrlQuery>
+#endif
+
 OpenedSniffersModel::OpenedSniffersModel(QObject *parent) :
 	QAbstractTableModel(parent)
 {
@@ -54,7 +58,11 @@ QVariant OpenedSniffersModel::data(const QModelIndex & index, int role ) const {
 		case 1:
 			return openedSniffers.at(index.row()).url.path();
 		case 2:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+			return QUrlQuery(openedSniffers.at(index.row()).url).queryItemValue("channel");
+#else
 			return openedSniffers.at(index.row()).url.queryItemValue("channel");
+#endif
 		case 3:
 			return openedSniffers.at(index.row()).url.toString();
 		default:

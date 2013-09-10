@@ -158,7 +158,7 @@ QString EventLog::getEventString(int column, rpl::Event *event, bool for_search)
 					pcap_parser_close(pcap_handle);
 					pcap_handle = 0;
 					//packet_id + 1 to start from 1 as wireshark
-					return QString("Frame: %1, data=%2").arg(event->packed_id+1).arg(QString::fromAscii(QByteArray(buffer, data_size).toHex()));
+					return QString("Frame: %1, data=%2").arg(event->packed_id+1).arg(QString::fromLocal8Bit(QByteArray(buffer, data_size).toHex()));
 				} else {
 					return QString("Frame: %1").arg(event->packed_id+1);
 				}

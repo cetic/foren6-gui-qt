@@ -3,12 +3,13 @@
 #include "rpl/rplLink.h"
 #include <QApplication>
 #include <QCryptographicHash>
+#include <stdlib.h>
 
 QColor DodagOverlay::dodagToColor(const void *dodagid, int16_t version) {
 	unsigned char color[3] = {0};
 	char rawDodagId[18];
 
-	qMemCopy(rawDodagId, dodagid, 16);
+	memcpy(rawDodagId, dodagid, 16);
 	rawDodagId[16] = version & 0xFF;
 	rawDodagId[17] = (version >> 8) & 0xFF;
 

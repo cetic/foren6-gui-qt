@@ -9,6 +9,10 @@
 #include <QMessageBox>
 #include <QDir>
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+#include <QUrlQuery>
+#endif
+
 SnifferDialog::SnifferDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SnifferDialog)
@@ -59,7 +63,12 @@ void SnifferDialog::onAddSniffer() {
 
 	QString interfaceType = snifferUrl.scheme();
 	QString interfacePath = snifferUrl.path();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+	int interfaceChanned = QUrlQuery(snifferUrl).queryItemValue("channel").toInt();
+#else
 	int interfaceChanned = snifferUrl.queryItemValue("channel").toInt();
+#endif
 
 	if(interfaceType.isEmpty())
 		interfaceType = interfacePath.section('.', -1, -1);
