@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "ui_About.h"
 #include <rpl_packet_parser.h>
 #include "rpl/rplNetworkInfoManager.h"
 #include "utlist.h"
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionOpenSnifferDialog, SIGNAL(triggered()), this, SLOT(onOpenSnifferDialog()));
 	connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), this, SIGNAL(changeWsnVersion(int)));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(createNewAboutWindow()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 	connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
 
@@ -149,6 +151,13 @@ void MainWindow::createNewInformationWindow() {
 	}
 
 	infoWidgets.append(infoWidget);
+}
+
+void MainWindow::createNewAboutWindow() {
+    QDialog window;
+    Ui::About ui;
+    ui.setupUi(&window);
+    window.exec();
 }
 
 void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
