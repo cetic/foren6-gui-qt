@@ -90,7 +90,8 @@ FORMS    += MainWindow.ui \
     InformationWidget.ui \
     SnifferDialog.ui \
     VersionSlider.ui \
-    GraphView.ui
+    GraphView.ui \
+    About.ui
 
 RESOURCES += \
     Resource.qrc
