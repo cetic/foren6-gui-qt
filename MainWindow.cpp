@@ -154,9 +154,11 @@ void MainWindow::createNewInformationWindow() {
 }
 
 void MainWindow::createNewAboutWindow() {
+
     QDialog window;
     Ui::About ui;
     ui.setupUi(&window);
+    window.setWindowFlags(Qt::Dialog);
     window.exec();
 }
 
