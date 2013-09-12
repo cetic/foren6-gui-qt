@@ -152,6 +152,10 @@ QString EventLog::getEventString(int column, rpl::Event *event, bool for_search)
 
 				if(for_search == false) {
 					pcap_handle = pcap_parser_open("out.pcap");
+
+					if(pcap_handle == NULL)
+						return QString("Frame: %1").arg(event->packed_id+1);
+
 					pcap_parser_get(pcap_handle, event->packed_id, NULL, &data_size);
 					buffer = (char*)malloc(data_size);
 					pcap_parser_get(pcap_handle, event->packed_id, buffer, &data_size);

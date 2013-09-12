@@ -46,11 +46,6 @@
      </item>
      <item>
       <property name="text">
-       <string>Parent - Children</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>Rank depth</string>
       </property>
      </item>

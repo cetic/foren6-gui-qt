@@ -67,23 +67,6 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
-
-	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
-	if(associatedNode) {
-		if(qstrcmp(associatedNode->guard, "node") != 0) {
-			fprintf(stderr, "FATAL: casted node is NOT a rpl::Node, guard missing !!!! crashing ...\n");
-			while(1) {
-				//Attach the running instance with gdb
-				asm volatile ("nop" : : : "memory");
-			}
-		}
-	}
-
-	if(type != RET_Deleted && associatedNode) {
-		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
-	} else if(associatedNode) {
-		associatedNode->setNodeData(0, -13);
-	}
 }
 
 void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) {
@@ -126,24 +109,6 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
-
-	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
-
-	if(associatedLink) {
-		if(qstrcmp(associatedLink->guard, "link") != 0) {
-			fprintf(stderr, "FATAL: casted link is NOT a rpl::Link, guard missing !!!! crashing ...\n");
-			while(1) {
-				//Attach the running instance with gdb
-				asm volatile ("nop" : : : "memory");
-			}
-		}
-	}
-
-	if(type != RET_Deleted && associatedLink) {
-		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
-	} else if(associatedLink) {
-		associatedLink->setLinkData(0, -14);
-	}
 }
 
 void NetworkInfoManager::onPacketEvent(int packet_id) {
@@ -254,7 +219,7 @@ void NetworkInfoManager::useVersion(int version) {
 	hash_iterator_ptr it, itEnd;
 	hash_container_ptr node_container;
 	hash_container_ptr link_container;
-	QHash<addr_wpan_t, Node*> presentNodes;
+	QHash<addr_wpan_t, Node*> presentNodes, nodesInVersion;
 	QGraphicsItem *currentItem;
 	Node *currentNode;
 
@@ -293,6 +258,8 @@ void NetworkInfoManager::useVersion(int version) {
 	it = hash_begin(NULL, NULL);
 	itEnd = hash_begin(NULL, NULL);
 
+	nodesInVersion.clear();
+
 	if(node_container) {
 		for(hash_begin(node_container, it), hash_end(node_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
 			di_node_t *node = *(di_node_t **)hash_it_value(it);
@@ -306,6 +273,7 @@ void NetworkInfoManager::useVersion(int version) {
 				_scene.addNode(newnode);
 			}
 			newnode->setNodeData(node, currentVersion);
+			nodesInVersion.insert(node_get_mac64(node), newnode);
 		}
 	}
 
@@ -315,8 +283,18 @@ void NetworkInfoManager::useVersion(int version) {
 			Link *linkNodes;
 			Node *from, *to;
 
-			from = (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.child), HVM_FailIfNonExistant, NULL));
-			to =   (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
+			from = nodesInVersion.value(link_get_key(link)->ref.child.wpan_address, 0);
+			to =   nodesInVersion.value(link_get_key(link)->ref.parent.wpan_address, 0);
+
+			if(from == 0) {
+				qDebug("Warning: link with non existant child node: %llx\n", link_get_key(link)->ref.child.wpan_address);
+			}
+			if(to == 0) {
+				qDebug("Warning: link with non existant parent node: %llx\n", link_get_key(link)->ref.parent.wpan_address);
+			}
+			if(from == 0 || to == 0) {
+				continue;
+			}
 
 			linkNodes = new Link(link, currentVersion, from, to);
 			_scene.addLink(linkNodes);
