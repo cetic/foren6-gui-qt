@@ -27,6 +27,13 @@ class TreeScene : public QGraphicsScene
 		void removeAllNodes();
 		void clear();
 
+		Node *getNode(addr_wpan_t address);
+		Link *getLink(addr_wpan_t child, addr_wpan_t parent);
+
+		const QHash<addr_wpan_t, Node*>& getNodes() { return _nodes; }
+		const QHash<QPair<addr_wpan_t, addr_wpan_t>, Link*>& getLinks() { return _links; }
+
+
 	protected slots:
 		void updateNodePositions();
 		void toggleNodeMovement();
@@ -34,8 +41,8 @@ class TreeScene : public QGraphicsScene
 
 	private:
 		QTimer _updateDagsTimer;
-		QList<Node*> _nodes;
-		QList<Link*> _links;
+		QHash<addr_wpan_t, Node*> _nodes;
+		QHash<QPair<addr_wpan_t, addr_wpan_t>, Link*> _links;
 };
 
 }

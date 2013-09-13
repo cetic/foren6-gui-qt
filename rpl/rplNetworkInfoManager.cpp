@@ -67,23 +67,6 @@ void NetworkInfoManager::onNodeEvent(di_node_t *node, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
-
-	Node *associatedNode = reinterpret_cast<Node*>(node_get_user_data(node));
-	if(associatedNode) {
-		if(qstrcmp(associatedNode->guard, "node") != 0) {
-			fprintf(stderr, "FATAL: casted node is NOT a rpl::Node, guard missing !!!! crashing ...\n");
-			while(1) {
-				//Attach the running instance with gdb
-				asm volatile ("nop" : : : "memory");
-			}
-		}
-	}
-
-	if(type != RET_Deleted && associatedNode) {
-		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
-	} else if(associatedNode) {
-		associatedNode->setNodeData(0, -13);
-	}
 }
 
 void NetworkInfoManager::onDodagEvent(di_dodag_t *dodag, rpl_event_type_e type) {
@@ -126,24 +109,6 @@ void NetworkInfoManager::onLinkEvent(di_link_t *link, rpl_event_type_e type) {
 	event->version = rpldata_get_wsn_last_version();
 
 	thisInstance->emit logMessage(event);
-
-	Link *associatedLink = reinterpret_cast<Link*>(link_get_user_data(link));
-
-	if(associatedLink) {
-		if(qstrcmp(associatedLink->guard, "link") != 0) {
-			fprintf(stderr, "FATAL: casted link is NOT a rpl::Link, guard missing !!!! crashing ...\n");
-			while(1) {
-				//Attach the running instance with gdb
-				asm volatile ("nop" : : : "memory");
-			}
-		}
-	}
-
-	if(type != RET_Deleted && associatedLink) {
-		QMetaObject::invokeMethod(thisInstance, "updateOverlay", Qt::QueuedConnection);
-	} else if(associatedLink) {
-		associatedLink->setLinkData(0, -14);
-	}
 }
 
 void NetworkInfoManager::onPacketEvent(int packet_id) {
@@ -255,7 +220,6 @@ void NetworkInfoManager::useVersion(int version) {
 	hash_container_ptr node_container;
 	hash_container_ptr link_container;
 	QHash<addr_wpan_t, Node*> presentNodes;
-	QGraphicsItem *currentItem;
 	Node *currentNode;
 
 	if(version == 0) {
@@ -279,14 +243,7 @@ void NetworkInfoManager::useVersion(int version) {
 	node_container = rpldata_get_nodes(currentVersion);
 	link_container = rpldata_get_links(version);
 
-	foreach(currentItem, _scene.items()) {
-		currentNode = dynamic_cast<Node*>(currentItem);
-		if(currentNode) {
-			presentNodes.insert(node_get_mac64(currentNode->getNodeData()), currentNode);
-			//_scene.removeItem(currentItem);
-		} else if(currentItem->group() == 0)
-			_scene.removeItem(currentItem);
-	}
+	presentNodes = _scene.getNodes();
 
 	_scene.removeAllLinks();
 
@@ -315,8 +272,18 @@ void NetworkInfoManager::useVersion(int version) {
 			Link *linkNodes;
 			Node *from, *to;
 
-			from = (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.child), HVM_FailIfNonExistant, NULL));
-			to =   (Node*) node_get_user_data(*(di_node_t**)hash_value(node_container, hash_key_make(link_get_key(link)->ref.parent), HVM_FailIfNonExistant, NULL));
+			from = _scene.getNode(link_get_key(link)->ref.child.wpan_address);
+			to =   _scene.getNode(link_get_key(link)->ref.parent.wpan_address);
+
+			if(from == 0) {
+				qDebug("Warning: link with non existant child node: %llx\n", link_get_key(link)->ref.child.wpan_address);
+			}
+			if(to == 0) {
+				qDebug("Warning: link with non existant parent node: %llx\n", link_get_key(link)->ref.parent.wpan_address);
+			}
+			if(from == 0 || to == 0) {
+				continue;
+			}
 
 			linkNodes = new Link(link, currentVersion, from, to);
 			_scene.addLink(linkNodes);

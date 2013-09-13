@@ -12,10 +12,10 @@ bool RankDepthOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newB
 		*newPen = QPen(QColor(Qt::darkBlue));
 	else {
 		int rank = node_get_rank(node->getNodeData());
-		int color = qMax(qMin((rank-256)/20, 255), 0);
+		int color = qMax(qMin((rank-256)/10, 255), 0);
 		if(rank != 65535) {
-			if(rank > 3000)
-				color = qMin(rank*(255-137)/(10000-3000) + 137, 255);
+			if(rank > 1756)
+				color = qMin(rank*(255-150)/(10000-1756) + 150, 255);
 			*newPen = QPen(QColor(color, color, color));
 		} else {
 			*newPen = QPen(QColor(128, 128, 128));

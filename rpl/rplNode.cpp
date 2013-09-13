@@ -161,12 +161,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Node::setNodeData(di_node_t *data, int version) {
-	if(_nodeData)
-		node_set_user_data(_nodeData, 0);
 	_nodeData = data;
 	_version = version;
-	if(data)
-		node_set_user_data(data, this);
 }
 
 }

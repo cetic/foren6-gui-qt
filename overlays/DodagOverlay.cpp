@@ -13,13 +13,17 @@ QColor DodagOverlay::dodagToColor(const void *dodagid, int16_t version) {
 	rawDodagId[16] = version & 0xFF;
 	rawDodagId[17] = (version >> 8) & 0xFF;
 
-	QByteArray dodagHash = QCryptographicHash::hash(QByteArray(rawDodagId, 18), QCryptographicHash::Md5);
+	QByteArray dodagHash = QCryptographicHash::hash(QByteArray(rawDodagId, 18), QCryptographicHash::Sha1);
 
 	for(int i = 0; i < dodagHash.size(); i++) {
-		color[i%3] += dodagHash.at(i);
+		color[i%3] = color[i%3] + dodagHash.at(i) + color[i%3]*dodagHash.at(i);
 	}
 
-	return QColor(color[0]/2+64, color[1]/2+64, color[2]/2+64);
+	color[0] = qMax(-128, qMin(128, (int)((((int)color[0])-128)*1.2))) + 128;
+	color[1] = qMax(-128, qMin(128, (int)((((int)color[1])-128)*1.2))) + 128;
+	color[2] = qMax(-128, qMin(128, (int)((((int)color[2])-128)*1.2))) + 128;
+
+	return QColor(color[0], color[1], color[2] );
 }
 
 bool DodagOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {

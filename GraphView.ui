@@ -46,11 +46,6 @@
      </item>
      <item>
       <property name="text">
-       <string>Parent - Children</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>Rank depth</string>
       </property>
      </item>
@@ -87,6 +82,11 @@
      <item>
       <property name="text">
        <string>Dodag mismatch Errors in DAO</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Parent / child highlighing</string>
       </property>
      </item>
     </widget>
