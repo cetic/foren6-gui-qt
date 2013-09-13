@@ -219,8 +219,7 @@ void NetworkInfoManager::useVersion(int version) {
 	hash_iterator_ptr it, itEnd;
 	hash_container_ptr node_container;
 	hash_container_ptr link_container;
-	QHash<addr_wpan_t, Node*> presentNodes, nodesInVersion;
-	QGraphicsItem *currentItem;
+	QHash<addr_wpan_t, Node*> presentNodes;
 	Node *currentNode;
 
 	if(version == 0) {
@@ -244,21 +243,12 @@ void NetworkInfoManager::useVersion(int version) {
 	node_container = rpldata_get_nodes(currentVersion);
 	link_container = rpldata_get_links(version);
 
-	foreach(currentItem, _scene.items()) {
-		currentNode = dynamic_cast<Node*>(currentItem);
-		if(currentNode) {
-			presentNodes.insert(node_get_mac64(currentNode->getNodeData()), currentNode);
-			//_scene.removeItem(currentItem);
-		} else if(currentItem->group() == 0)
-			_scene.removeItem(currentItem);
-	}
+	presentNodes = _scene.getNodes();
 
 	_scene.removeAllLinks();
 
 	it = hash_begin(NULL, NULL);
 	itEnd = hash_begin(NULL, NULL);
-
-	nodesInVersion.clear();
 
 	if(node_container) {
 		for(hash_begin(node_container, it), hash_end(node_container, itEnd); !hash_it_equ(it, itEnd); hash_it_inc(it)) {
@@ -273,7 +263,6 @@ void NetworkInfoManager::useVersion(int version) {
 				_scene.addNode(newnode);
 			}
 			newnode->setNodeData(node, currentVersion);
-			nodesInVersion.insert(node_get_mac64(node), newnode);
 		}
 	}
 
@@ -283,8 +272,8 @@ void NetworkInfoManager::useVersion(int version) {
 			Link *linkNodes;
 			Node *from, *to;
 
-			from = nodesInVersion.value(link_get_key(link)->ref.child.wpan_address, 0);
-			to =   nodesInVersion.value(link_get_key(link)->ref.parent.wpan_address, 0);
+			from = _scene.getNode(link_get_key(link)->ref.child.wpan_address);
+			to =   _scene.getNode(link_get_key(link)->ref.parent.wpan_address);
 
 			if(from == 0) {
 				qDebug("Warning: link with non existant child node: %llx\n", link_get_key(link)->ref.child.wpan_address);

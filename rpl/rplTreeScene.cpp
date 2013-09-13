@@ -31,48 +31,66 @@ void TreeScene::toggleNodeMovement() {
 
 void TreeScene::addNode(Node *node) {
 	//qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
-	_nodes.append(node);
 	addItem(node);
+	_nodes.insert(node_get_key(node->getNodeData())->ref.wpan_address, node);
 }
 
 void TreeScene::addLink(Link *link) {
 	//qDebug("Adding Link %p %llX -> %llX", link, link->getLinkData()->key.ref.child.wpan_address, link->getLinkData()->key.ref.parent.wpan_address);
 	addItem(link);
-	_links.append(link);
+
+	QPair<addr_wpan_t, addr_wpan_t> linkKey;
+	linkKey.first = link_get_key(link->getLinkData())->ref.child.wpan_address;
+	linkKey.second = link_get_key(link->getLinkData())->ref.parent.wpan_address;
+	_links.insert(linkKey, link);
 }
 
 void TreeScene::removeNode(Node *node) {
 	//qDebug("Removing Node %p", node);
 	removeItem(node);
-	_nodes.removeAll(node);
+	_nodes.remove(node_get_key(node->getNodeData())->ref.wpan_address);
 }
 
 void TreeScene::removeAllNodes() {
 	Node *node;
 	foreach(node, _nodes) {
-		_nodes.removeAll(node);
 		delete node;
 	}
+	_nodes.clear();
 }
 
 void TreeScene::removeLink(Link *link) {
 	//qDebug("Removing Link %p, raw link %p", link, link->getLinkData());
 	removeItem(link);
-	_links.removeAll(link);
+
+	QPair<addr_wpan_t, addr_wpan_t> linkKey;
+	linkKey.first = link_get_key(link->getLinkData())->ref.child.wpan_address;
+	linkKey.second = link_get_key(link->getLinkData())->ref.parent.wpan_address;
+	_links.remove(linkKey);
 }
 
 void TreeScene::removeAllLinks() {
 	Link *link;
 	foreach(link, _links) {
-		_links.removeAll(link);
 		delete link;
 	}
+	_links.clear();
 }
 
 void TreeScene::clear() {
 	removeAllLinks();
 	removeAllNodes();
 	QGraphicsScene::clear();
+}
+
+Node *TreeScene::getNode(addr_wpan_t address) {
+	return _nodes.value(address, 0);
+}
+
+Link *TreeScene::getLink(addr_wpan_t child, addr_wpan_t parent) {
+	QPair<addr_wpan_t, addr_wpan_t> linkKey(child, parent);
+
+	return _links.value(linkKey, 0);
 }
 
 void TreeScene::updateNodePositions() {
