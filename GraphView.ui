@@ -84,6 +84,11 @@
        <string>Dodag mismatch Errors in DAO</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Parent / child highlighing</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">

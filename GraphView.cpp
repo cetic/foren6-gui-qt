@@ -46,10 +46,6 @@ void GraphView::onLayoutComboChange(int index) {
 			networkMgr->changeOverlay(new RplInstanceOverlay);
 			break;
 
-//		case 3:
-//			networkMgr->changeOverlay(new ParentChildrenOverlay);
-//			break;
-
 		case 3:
 			networkMgr->changeOverlay(new RankDepthOverlay);
 			break;
@@ -80,6 +76,10 @@ void GraphView::onLayoutComboChange(int index) {
 
 		case 10:
 			networkMgr->changeOverlay(new DodagMismatchErrorOverlay);
+			break;
+
+		case 11:
+			networkMgr->changeOverlay(new ParentChildrenOverlay);
 			break;
 	}
 }
