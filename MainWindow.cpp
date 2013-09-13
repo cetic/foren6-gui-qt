@@ -209,8 +209,9 @@ void MainWindow::doCreateNewInformationWindow(QString name) {
     InformationWidget *infoWidget;
     rpl::Event *message;
     infoWidget = new InformationWidget(this);
-    infoWidget->setFloating(true);
-    infoWidget->show();
+	infoWidget->setFloating(true);
+    infoWidget->move(this->pos()); /* Place at the same position as main window to avoid multi-screen glitches */
+	infoWidget->show();
     if ( name.isEmpty() ) {
         infoWidget->setObjectName(QString("InformationWidget-") + QString::number(infoWidgetId));
         infoWidgetId++;
