@@ -5,7 +5,7 @@ http://victorerixon.com/
 * stop.png
 
 http://www.webalys.com/minicons/icons-free-pack.php
-* clear.png
+* brush.png
 
 http://www.danilodemarco.com/
 * antenna.png
