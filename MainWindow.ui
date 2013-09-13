@@ -101,6 +101,9 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="Resource.qrc">
      <normaloff>:/icons/resources/icons/play.png</normaloff>:/icons/resources/icons/play.png</iconset>
@@ -113,6 +116,9 @@
    </property>
   </action>
   <action name="actionStop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="Resource.qrc">
      <normaloff>:/icons/resources/icons/stop.png</normaloff>:/icons/resources/icons/stop.png</iconset>
