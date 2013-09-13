@@ -160,3 +160,8 @@ bool SnifferDialog::loadInterface(const QString& soLocation) {
 
 	return true;
 }
+
+bool SnifferDialog::activeSniffersCount() {
+    QList<OpenedSniffersModel::SnifferInterface> openedSniffers = openedSniffersModel->getOpenedSniffers();
+    return openedSniffers.count();
+}

@@ -339,7 +339,10 @@ void MainWindow::onStopSniffer() {
 }
 
 void MainWindow::onOpenSnifferDialog() {
-	snifferDialog->exec();
+    snifferDialog->exec();
+    bool hasActiveSniffers = snifferDialog->activeSniffersCount() > 0;
+    ui->actionStart->setEnabled(hasActiveSniffers);
+    ui->actionStop->setEnabled(hasActiveSniffers);
 }
 
 void MainWindow::onClear() {

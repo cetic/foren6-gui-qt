@@ -21,6 +21,7 @@ public:
 	void onStartSniffer();
 	void onStopSniffer();
 	bool loadInterface(const QString& soLocation);
+    bool activeSniffersCount();
 
 protected slots:
 	void onAddSniffer();
