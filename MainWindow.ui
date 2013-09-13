@@ -56,7 +56,7 @@
      <x>0</x>
      <y>0</y>
      <width>670</width>
-     <height>20</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -103,7 +103,7 @@
   <action name="actionStart">
    <property name="icon">
     <iconset resource="Resource.qrc">
-     <normaloff>:/icons/resources/icons/media-playback-start.png</normaloff>:/icons/resources/icons/media-playback-start.png</iconset>
+     <normaloff>:/icons/resources/icons/play.png</normaloff>:/icons/resources/icons/play.png</iconset>
    </property>
    <property name="text">
     <string>Start</string>
@@ -115,7 +115,7 @@
   <action name="actionStop">
    <property name="icon">
     <iconset resource="Resource.qrc">
-     <normaloff>:/icons/resources/icons/media-playback-stop.png</normaloff>:/icons/resources/icons/media-playback-stop.png</iconset>
+     <normaloff>:/icons/resources/icons/stop.png</normaloff>:/icons/resources/icons/stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -125,6 +125,10 @@
    </property>
   </action>
   <action name="actionOpenSnifferDialog">
+   <property name="icon">
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/antenna.png</normaloff>:/icons/resources/icons/antenna.png</iconset>
+   </property>
    <property name="text">
     <string>Manage Sources</string>
    </property>
@@ -135,11 +139,23 @@
    </property>
   </action>
   <action name="actionToggleNodeMovement">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/unlocked.png</normaloff>
+     <normalon>:/icons/resources/icons/locked.png</normalon>:/icons/resources/icons/unlocked.png</iconset>
+   </property>
    <property name="text">
     <string>Toggle node movement</string>
    </property>
   </action>
   <action name="actionClear">
+   <property name="icon">
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/brush.png</normaloff>:/icons/resources/icons/brush.png</iconset>
+   </property>
    <property name="text">
     <string>Clear</string>
    </property>
