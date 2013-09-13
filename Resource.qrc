@@ -1,6 +1,10 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>resources/icons/media-playback-start.png</file>
-        <file>resources/icons/media-playback-stop.png</file>
+        <file>resources/icons/antenna.png</file>
+        <file>resources/icons/brush.png</file>
+        <file>resources/icons/locked.png</file>
+        <file>resources/icons/play.png</file>
+        <file>resources/icons/stop.png</file>
+        <file>resources/icons/unlocked.png</file>
     </qresource>
 </RCC>
