@@ -46,8 +46,9 @@ public:
 
 	void setPen(QPen pen) { _ellipse.setPen(pen); }
 	void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
-	void setFont(QFont font) { _label.setFont(font); }
-	void setTextColor(QColor color) { _label.setDefaultTextColor(color); }
+	void setFont(QFont font) { _label.setFont(font); _infoLabel.setFont(font); }
+	void setTextColor(QColor color) { _label.setDefaultTextColor(color); _infoLabel.setDefaultTextColor(color); }
+	void setInfoText(QString infoText) { _infoLabel.setPlainText(infoText); }
 
 	bool isSelected() { return _isSelected; }
 	void setSelected(bool selected) { _isSelected = selected; }
@@ -66,6 +67,7 @@ private:
 	di_node_t *_nodeData;
 	QGraphicsEllipseItem _ellipse;
 	QGraphicsTextItem _label;
+    QGraphicsTextItem _infoLabel;
 	qreal _dx, _dy;
 	QList<Link*> _links;
 
@@ -73,7 +75,6 @@ private:
 	bool _pinned;
 	bool _isSelected;
 
-public:
 	//debug
 	int _version;  //the version of the node data
 	char guard[5];

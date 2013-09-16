@@ -9,6 +9,7 @@ public:
 	virtual bool nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush);
 	virtual bool nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor);
 	virtual bool linkPen(rpl::Link *link, QPen *newPen);
+    virtual bool nodeInfoText(rpl::Node *node, QString *  infoText);
 
 protected:
 	QColor dodagToColor(const void* dodagid, int16_t version);

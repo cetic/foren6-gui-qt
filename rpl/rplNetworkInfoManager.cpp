@@ -135,6 +135,7 @@ void NetworkInfoManager::updateOverlay() {
 	QBrush brush;
 	QFont font;
 	QColor fontColor;
+	QString infoText;
 	QGraphicsItem* currentItem;
 	Node *currentNode;
 	Link *currentLink;
@@ -153,6 +154,11 @@ void NetworkInfoManager::updateOverlay() {
 				if(_overlay->nodeTextPen(currentNode, &font, &fontColor)) {
 					currentNode->setFont(font);
 					currentNode->setTextColor(fontColor);
+				}
+				if (_overlay->nodeInfoText(currentNode, &infoText)) {
+				  currentNode->setInfoText(infoText);
+				} else {
+                  currentNode->setInfoText(QString(""));
 				}
 			} else if((currentLink = dynamic_cast<Link*>(currentItem))) {
 				if(_overlay->linkPen(currentLink, &pen)) {

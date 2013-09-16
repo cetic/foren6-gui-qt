@@ -14,6 +14,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	  _nodeData(0),
 	  _ellipse(this),
 	  _label(this),
+      _infoLabel(this),
 	  _dx(0),
 	  _dy(0),
 	  _isBeingMoved(false),
@@ -27,14 +28,19 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	_label.setPlainText(QString::number((node_get_key(nodeData)->ref.wpan_address & 0xFF), 16));
 	this->addToGroup(&_label);
 
-	qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;
+    _infoLabel.setPlainText(QString(""));
+    this->addToGroup(&_infoLabel);
+
+    qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;
 
 	_ellipse.setRect(0, 0, maxSize, maxSize);
 	this->addToGroup(&_ellipse);
 
 	_label.setPos(maxSize/2 - _label.boundingRect().width()/2, maxSize/2 - _label.boundingRect().height()/2);
 
-	setCenterPos(qrand()%500, qrand()%500);
+    _infoLabel.setPos(0, maxSize/3);
+
+    setCenterPos(qrand()%500, qrand()%500);
 	setZValue(1);
 
 	qstrcpy(guard, "node");

@@ -82,3 +82,7 @@ bool ParentChildrenOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 
 	return true;
 }
+
+bool ParentChildrenOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
+  return false;
+}

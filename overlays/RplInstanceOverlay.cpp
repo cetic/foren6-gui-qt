@@ -65,3 +65,6 @@ bool RplInstanceOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 	return true;
 }
 
+bool RplInstanceOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
+  return false;
+}

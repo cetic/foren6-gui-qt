@@ -56,3 +56,7 @@ bool MaxDioIntervalOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 	return true;
 }
+
+bool MaxDioIntervalOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
+  return false;
+}
