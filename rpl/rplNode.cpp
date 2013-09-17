@@ -25,7 +25,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	setAcceptHoverEvents( true );
 	setNodeData(nodeData, version);
 
-	_label.setPlainText(QString::number((node_get_key(nodeData)->ref.wpan_address & 0xFF), 16));
+	setDefaultName();
 	this->addToGroup(&_label);
 
     _infoLabel.setPlainText(QString(""));
@@ -57,6 +57,14 @@ Node::~Node() {
 
 	qstrcpy(guard, "edon");
 	setNodeData(0, -21);
+}
+
+void Node::setDefaultName() {
+  setName(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
+}
+
+void Node::setName(QString const & name ) {
+	_label.setPlainText(name);
 }
 
 void Node::setCenterPos(QPointF newpos) {

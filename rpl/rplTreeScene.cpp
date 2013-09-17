@@ -11,6 +11,7 @@
 #include <math.h>
 
 #include <QVector2D>
+#include <QPainter>
 
 namespace rpl
 {
@@ -21,6 +22,65 @@ TreeScene::TreeScene()
 	_updateDagsTimer.setSingleShot(false);
 	connect(&_updateDagsTimer, SIGNAL(timeout()), this, SLOT(updateNodePositions()));
 	_updateDagsTimer.start();
+	layout = 0;
+	background = new QPixmap();
+}
+
+void TreeScene::setLayout(QSettings *  newLayout) {
+  layout = newLayout;
+  delete background;
+  if ( layout->contains("background") ) {
+    backgroundFile = layout->value("background", "").toString();
+    background = new QPixmap(backgroundFile);
+  } else {
+    background = new QPixmap();
+  }
+  setSceneRect(background->rect());
+  Node * node;
+  foreach (node, _nodes) {
+    layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
+    if ( layout->contains("x") ) {
+        node->setPos( layout->value("x", 0).toFloat(), layout->value("y", 0).toFloat());
+    }
+    node->setLocked(layout->value("locked", true).toBool());
+    if ( layout->contains("name") ) {
+        node->setName(layout->value("name", "").toString());
+    } else {
+      node->setDefaultName();
+    }
+    layout->endGroup();
+  }
+}
+
+void TreeScene::getLayout(QSettings *  newLayout) {
+  layout = newLayout;
+  layout->setValue("background", backgroundFile);
+  Node * node;
+  foreach (node, _nodes) {
+    layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
+    layout->setValue("x", node->x());
+    layout->setValue("y", node->y());
+    layout->setValue("locked", node->isLocked());
+    layout->endGroup();
+  }
+}
+
+void TreeScene::clearLayout() {
+  delete background;
+  background = new QPixmap();
+  setSceneRect(background->rect());
+  Node * node;
+  foreach (node, _nodes) {
+    node->setLocked(false);
+    node->setDefaultName();
+  }
+  layout = 0;
+}
+
+void TreeScene::drawBackground( QPainter * painter, const QRectF & rect ) {
+	painter->save();
+	painter->drawPixmap(rect, *background, rect);
+	painter->restore();
 }
 
 void TreeScene::toggleNodeMovement() {
@@ -33,6 +93,17 @@ void TreeScene::addNode(Node *node) {
 	//qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
 	addItem(node);
 	_nodes.insert(node_get_key(node->getNodeData())->ref.wpan_address, node);
+	if ( layout ) {
+	  layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
+      if ( layout->contains("x") ) {
+          node->setPos( layout->value("x", 0).toFloat(), layout->value("y", 0).toFloat());
+      }
+      node->setLocked(layout->value("locked", false).toBool());
+      if ( layout->contains("name") ) {
+          node->setName(layout->value("name", "").toString());
+      }
+      layout->endGroup();
+	}
 }
 
 void TreeScene::addLink(Link *link) {

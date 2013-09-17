@@ -6,6 +6,7 @@
 #include "rplTreeScene.h"
 #include <QMutex>
 #include <QObject>
+#include <QSettings>
 
 namespace rpl
 {
@@ -55,6 +56,9 @@ public:
 public slots:
 	void useVersion(int version);
 	void updateOverlay();
+    void onLoadLayout();
+    void onSaveLayout();
+    void onClearLayout();
 
 signals:
 	void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
@@ -83,6 +87,8 @@ private:
 	bool realtimeMode;
 	Node *selectedNode;
 	static NetworkInfoManager *thisInstance;
+	QSettings *  layout;
+	QString  layoutFile;
 };
 
 }

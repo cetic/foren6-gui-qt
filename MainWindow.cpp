@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 	connect(ui->actionOpenSnifferDialog, SIGNAL(triggered()), this, SLOT(onOpenSnifferDialog()));
 	connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), this, SIGNAL(changeWsnVersion(int)));
+    connect(ui->actionLoadLayout, SIGNAL(triggered()), wsnManager, SLOT(onLoadLayout()));
+    connect(ui->actionSaveLayout, SIGNAL(triggered()), wsnManager, SLOT(onSaveLayout()));
+    connect(ui->actionClearLayout, SIGNAL(triggered()), wsnManager, SLOT(onClearLayout()));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(createNewAboutWindow()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));

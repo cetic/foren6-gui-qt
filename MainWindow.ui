@@ -67,6 +67,14 @@
     <addaction name="actionStop"/>
     <addaction name="actionOpenSnifferDialog"/>
    </widget>
+   <widget class="QMenu" name="menuLayout">
+    <property name="title">
+     <string>Layout</string>
+    </property>
+    <addaction name="actionLoadLayout"/>
+    <addaction name="actionSaveLayout"/>
+    <addaction name="actionClearLayout"/>
+   </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
      <string>Window</string>
@@ -80,6 +88,7 @@
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuLayout"/>
    <addaction name="menuWindow"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -142,6 +151,21 @@
   <action name="actionNewInformationWindow">
    <property name="text">
     <string>New Information Window</string>
+   </property>
+  </action>
+  <action name="actionLoadLayout">
+   <property name="text">
+    <string>Load layout...</string>
+   </property>
+  </action>
+  <action name="actionSaveLayout">
+   <property name="text">
+    <string>Save layout...</string>
+   </property>
+  </action>
+  <action name="actionClearLayout">
+   <property name="text">
+    <string>Clear layout</string>
    </property>
   </action>
   <action name="actionToggleNodeMovement">

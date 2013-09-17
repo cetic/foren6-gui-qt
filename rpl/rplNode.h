@@ -53,6 +53,11 @@ public:
 	bool isSelected() { return _isSelected; }
 	void setSelected(bool selected) { _isSelected = selected; }
 
+	void setName(QString const & name);
+	void setDefaultName();
+	void setLocked(bool locked) { _pinned = locked; }
+	bool isLocked() const { return _pinned; }
+
 public slots:
 	void updatePosition();
 

@@ -3,6 +3,7 @@
 #include "rplLink.h"
 #include "rplNode.h"
 #include <QGraphicsWidget>
+#include <QFileDialog>
 #include <data_info/hash_container.h>
 #include <data_info/link.h>
 
@@ -167,6 +168,50 @@ void NetworkInfoManager::updateOverlay() {
 			}
 		}
 	}
+}
+
+void NetworkInfoManager::onLoadLayout() {
+  QString target = QFileDialog::getOpenFileName(0, "Select a layout file", QString(), "Layout file (*.ini)");
+
+  if(target.isEmpty())
+      return;
+  QSettings *  newLayout = new QSettings(target, QSettings::IniFormat);
+  if ( newLayout->status() != QSettings::NoError) {
+    /* TODO: add error*/
+    return;
+  }
+  _scene.setLayout(newLayout);
+
+  layoutFile = target;
+  delete layout;
+  layout = newLayout;
+}
+
+void NetworkInfoManager::onSaveLayout() {
+  QString target = QFileDialog::getSaveFileName(0, "Save layout file", layoutFile, "Layout file (*.ini)");
+
+  if(target.isEmpty())
+      return;
+
+  QSettings *  newLayout = new QSettings(target, QSettings::IniFormat);
+  _scene.getLayout(newLayout);
+
+  newLayout->sync();
+  if ( newLayout->status() != QSettings::NoError) {
+    /* TODO: add error*/
+    return;
+  }
+
+  layoutFile = target;
+  delete layout;
+  layout = newLayout;
+}
+
+void NetworkInfoManager::onClearLayout() {
+  _scene.clearLayout();
+  layoutFile = QString();
+  delete layout;
+  layout = 0;
 }
 
 void NetworkInfoManager::selectNode(Node *node) {
