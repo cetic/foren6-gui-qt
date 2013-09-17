@@ -42,7 +42,7 @@ NetworkInfoManager::NetworkInfoManager()
 	selectedNode = 0;
 	qRegisterMetaType<rpl::Event*>();
 	_overlay = new NormalOverlay;
-
+	layout = 0;
 
 	_updateVersionTimer.setInterval(100);
 	_updateVersionTimer.setSingleShot(false);
@@ -194,6 +194,7 @@ void NetworkInfoManager::onSaveLayout() {
       return;
 
   QSettings *  newLayout = new QSettings(target, QSettings::IniFormat);
+  newLayout->clear();
   _scene.getLayout(newLayout);
 
   newLayout->sync();

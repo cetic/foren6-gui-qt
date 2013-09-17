@@ -54,6 +54,7 @@ class TreeScene : public QGraphicsScene
 		QSettings * layout;
         QPixmap * background;
         QString backgroundFile;
+        qreal scale;
 };
 
 }

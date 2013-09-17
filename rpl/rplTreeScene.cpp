@@ -24,6 +24,7 @@ TreeScene::TreeScene()
 	_updateDagsTimer.start();
 	layout = 0;
 	background = new QPixmap();
+	scale = 1.0;
 }
 
 void TreeScene::setLayout(QSettings *  newLayout) {
@@ -36,11 +37,13 @@ void TreeScene::setLayout(QSettings *  newLayout) {
     background = new QPixmap();
   }
   setSceneRect(background->rect());
+  scale = layout->value("scale", 1.0).toFloat();
+  qDebug("scale: %f", scale);
   Node * node;
   foreach (node, _nodes) {
     layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
     if ( layout->contains("x") ) {
-        node->setPos( layout->value("x", 0).toFloat(), layout->value("y", 0).toFloat());
+        node->setPos( layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
     }
     node->setLocked(layout->value("locked", true).toBool());
     if ( layout->contains("name") ) {
@@ -55,11 +58,12 @@ void TreeScene::setLayout(QSettings *  newLayout) {
 void TreeScene::getLayout(QSettings *  newLayout) {
   layout = newLayout;
   layout->setValue("background", backgroundFile);
+  layout->setValue("scale", scale);
   Node * node;
   foreach (node, _nodes) {
     layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
-    layout->setValue("x", node->x());
-    layout->setValue("y", node->y());
+    layout->setValue("x", node->x() / scale);
+    layout->setValue("y", node->y() / scale);
     layout->setValue("locked", node->isLocked());
     layout->endGroup();
   }
@@ -75,6 +79,7 @@ void TreeScene::clearLayout() {
     node->setDefaultName();
   }
   layout = 0;
+  scale = 1.0;
 }
 
 void TreeScene::drawBackground( QPainter * painter, const QRectF & rect ) {
@@ -96,7 +101,7 @@ void TreeScene::addNode(Node *node) {
 	if ( layout ) {
 	  layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
       if ( layout->contains("x") ) {
-          node->setPos( layout->value("x", 0).toFloat(), layout->value("y", 0).toFloat());
+          node->setPos( layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
       }
       node->setLocked(layout->value("locked", false).toBool());
       if ( layout->contains("name") ) {

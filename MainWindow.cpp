@@ -366,8 +366,7 @@ void MainWindow::onClear() {
 	rpldata_clear();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
+void MainWindow::closeEvent(QCloseEvent *event) {
     QSettings settings;
     settings.beginGroup("MainWindow");
     settings.setValue("size", size());
