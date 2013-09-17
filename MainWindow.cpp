@@ -22,6 +22,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->infoSplitter->setStretchFactor(0, 0);
 	ui->infoSplitter->setStretchFactor(1, 1);
 
+    QCoreApplication::setOrganizationName("CETIC");
+    QCoreApplication::setOrganizationDomain("cetic.be");
+    QCoreApplication::setApplicationName("Foren6");
+
+	QSettings settings;
+    settings.beginGroup("MainWindow");
+    if (settings.contains("size")) {
+        resize(settings.value("size", QSize(400, 400)).toSize());
+    }
+    if ( settings.contains("pos")) {
+        move(settings.value("pos", QPoint(200, 200)).toPoint());
+    }
+    settings.endGroup();
+
 	rpl_tool_init();
 
 	wsnManager = new rpl::NetworkInfoManager;
@@ -350,4 +364,14 @@ void MainWindow::onOpenSnifferDialog() {
 
 void MainWindow::onClear() {
 	rpldata_clear();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QSettings settings;
+    settings.beginGroup("MainWindow");
+    settings.setValue("size", size());
+    settings.setValue("pos", pos());
+    settings.endGroup();
+    event->accept();
 }

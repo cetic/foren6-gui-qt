@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QCloseEvent>
 #include "rpl/rplNetworkInfoManager.h"
 #include "rpl_packet_parser.h"
 #include "InformationWidget.h"
@@ -32,6 +33,7 @@ public slots:
 	void clearTargetNodeInfo();
 	void addMessage(rpl::Event *event);
 	void clearMessages();
+    void closeEvent(QCloseEvent *event);
 
 protected slots:
 	void onStartSniffer();
