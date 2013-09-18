@@ -49,7 +49,9 @@ void VersionSlider::setValue(int version) {
 	ui->versionSlider->setValue(ceil(timestamp*100));
 	ui->versionSpin->setValue(version);
 	settingCurrentVersion = false;
-	ui->currentTimeLabel->setText(QString::number(timestamp));
+	QString text = value() == maximum() ? "(R) " : "";
+	text += QString::number(timestamp);
+	ui->currentTimeLabel->setText(text);
 }
 
 int VersionSlider::maximum() {
