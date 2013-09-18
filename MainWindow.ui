@@ -71,6 +71,9 @@
     <property name="title">
      <string>Layout</string>
     </property>
+    <addaction name="actionLoadBackground"/>
+    <addaction name="actionClearBackground"/>
+    <addaction name="separator"/>
     <addaction name="actionLoadLayout"/>
     <addaction name="actionSaveLayout"/>
     <addaction name="actionClearLayout"/>
@@ -151,6 +154,16 @@
   <action name="actionNewInformationWindow">
    <property name="text">
     <string>New Information Window</string>
+   </property>
+  </action>
+  <action name="actionLoadBackground">
+   <property name="text">
+    <string>Load background...</string>
+   </property>
+  </action>
+  <action name="actionClearBackground">
+   <property name="text">
+    <string>Clear background</string>
    </property>
   </action>
   <action name="actionLoadLayout">

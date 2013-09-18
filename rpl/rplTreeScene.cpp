@@ -27,16 +27,16 @@ TreeScene::TreeScene()
 	scale = 1.0;
 }
 
+void TreeScene::setBackground(QString newBackgroundFile) {
+    backgroundFile = newBackgroundFile;
+    delete background;
+    background = new QPixmap(backgroundFile);
+    setSceneRect(background->rect());
+}
+
 void TreeScene::setLayout(QSettings *  newLayout) {
   layout = newLayout;
-  delete background;
-  if ( layout->contains("background") ) {
-    backgroundFile = layout->value("background", "").toString();
-    background = new QPixmap(backgroundFile);
-  } else {
-    background = new QPixmap();
-  }
-  setSceneRect(background->rect());
+  setBackground(backgroundFile = layout->value("background", "").toString());
   scale = layout->value("scale", 1.0).toFloat();
   qDebug("scale: %f", scale);
   Node * node;
@@ -70,9 +70,7 @@ void TreeScene::getLayout(QSettings *  newLayout) {
 }
 
 void TreeScene::clearLayout() {
-  delete background;
-  background = new QPixmap();
-  setSceneRect(background->rect());
+  setBackground(QString());
   Node * node;
   foreach (node, _nodes) {
     node->setLocked(false);

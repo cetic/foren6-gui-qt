@@ -28,6 +28,7 @@ class TreeScene : public QGraphicsScene
 		void removeAllNodes();
 		void clear();
 
+		void setBackground(QString newBackgroundFile);
 		void setLayout(QSettings *  layout);
         void getLayout(QSettings *  layout);
 		void clearLayout();

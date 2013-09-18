@@ -56,6 +56,8 @@ public:
 public slots:
 	void useVersion(int version);
 	void updateOverlay();
+    void onLoadBackground();
+    void onClearBackground();
     void onLoadLayout();
     void onSaveLayout();
     void onClearLayout();

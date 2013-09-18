@@ -174,6 +174,18 @@ void NetworkInfoManager::updateOverlay() {
 	}
 }
 
+void NetworkInfoManager::onLoadBackground() {
+  //TODO: replace hardcoded list by QImageReader::supportedImageFormats
+    QString target = QFileDialog::getOpenFileName(0, "Select a background file", QString(), "Images (*.png *.jpg *.jpeg *.bmp *.svg)");
+    if(target.isEmpty())
+        return;
+    _scene.setBackground(target);
+}
+
+void NetworkInfoManager::onClearBackground() {
+    _scene.setBackground(QString());
+}
+
 void NetworkInfoManager::onLoadLayout() {
   QString target = QFileDialog::getOpenFileName(0, "Select a layout file", QString(), "Layout file (*.ini)");
   setLayout(target);
