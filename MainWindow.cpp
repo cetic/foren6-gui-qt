@@ -364,7 +364,7 @@ void MainWindow::onStopSniffer() {
     ui->actionStart->setEnabled(true);
     ui->actionStop->setEnabled(false);
     ui->actionOpenSnifferDialog->setEnabled(true);
-    captureStarted=true;
+    captureStarted=false;
 }
 
 void MainWindow::onOpenSnifferDialog() {
