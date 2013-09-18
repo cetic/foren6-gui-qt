@@ -5,6 +5,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include "rplNetworkInfoManager.h"
 #include <QApplication>
+#include <QMenu>
+#include <QInputDialog>
 
 namespace rpl
 {
@@ -25,7 +27,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	setAcceptHoverEvents( true );
 	setNodeData(nodeData, version);
 
-	setDefaultName();
+	setName("");
 	this->addToGroup(&_label);
 
     _infoLabel.setPlainText(QString(""));
@@ -59,12 +61,13 @@ Node::~Node() {
 	setNodeData(0, -21);
 }
 
-void Node::setDefaultName() {
-  setName(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
-}
-
 void Node::setName(QString const & name ) {
-	_label.setPlainText(name);
+    _friendlyName = name;
+    if (! name.isEmpty()) {
+        _label.setPlainText(name);
+    } else {
+        _label.setPlainText(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
+    }
 }
 
 void Node::setCenterPos(QPointF newpos) {
@@ -124,12 +127,34 @@ void Node::updatePosition() {
 	}
 }
 
+void Node::contextMenuEvent( QGraphicsSceneContextMenuEvent * event ) {
+    QMenu menu;
+
+    QAction *lockAction = menu.addAction(_pinned ? "Unlock" : "Lock");
+    QAction *renameAction = menu.addAction("Rename...");
+    QAction *selectedAction = menu.exec(event->screenPos());
+    if ( selectedAction == lockAction ) {
+      _pinned = !_pinned;
+    } else if ( selectedAction == renameAction ) {
+        bool ok;
+        QString name = QInputDialog::getText(0,
+            "Set node name",
+             "Friendly node name :",
+             QLineEdit::Normal,
+             _friendlyName,
+             &ok);
+        if (ok) {
+           setName(name);
+        }
+    }
+}
+
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsItemGroup::mousePressEvent(event);
 	if(event->button() == Qt::LeftButton) {
 		_timeElapsedMouseMove.invalidate();
 		_isBeingMoved = true;
-	} else if(event->button() == Qt::RightButton) {
+	} else if(event->button() == Qt::MiddleButton) {
 		_pinned = !_pinned;
 	}
 }

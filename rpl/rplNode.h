@@ -54,7 +54,7 @@ public:
 	void setSelected(bool selected) { _isSelected = selected; }
 
 	void setName(QString const & name);
-	void setDefaultName();
+	QString getName() const { return _friendlyName; }
 	void setLocked(bool locked) { _pinned = locked; }
 	bool isLocked() const { return _pinned; }
 
@@ -65,6 +65,7 @@ protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
 	NetworkInfoManager *_networkInfoManager;
@@ -76,6 +77,7 @@ private:
 	qreal _dx, _dy;
 	QList<Link*> _links;
 
+	QString _friendlyName;
 	bool _isBeingMoved;
 	bool _pinned;
 	bool _isSelected;

@@ -38,7 +38,6 @@ void TreeScene::setLayout(QSettings *  newLayout) {
   layout = newLayout;
   setBackground(backgroundFile = layout->value("background", "").toString());
   scale = layout->value("scale", 1.0).toFloat();
-  qDebug("scale: %f", scale);
   Node * node;
   foreach (node, _nodes) {
     layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
@@ -46,11 +45,7 @@ void TreeScene::setLayout(QSettings *  newLayout) {
         node->setPos( layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
     }
     node->setLocked(layout->value("locked", true).toBool());
-    if ( layout->contains("name") ) {
-        node->setName(layout->value("name", "").toString());
-    } else {
-      node->setDefaultName();
-    }
+    node->setName(layout->value("name", "").toString());
     layout->endGroup();
   }
 }
@@ -65,6 +60,7 @@ void TreeScene::getLayout(QSettings *  newLayout) {
     layout->setValue("x", node->x() / scale);
     layout->setValue("y", node->y() / scale);
     layout->setValue("locked", node->isLocked());
+    layout->setValue("name", node->getName());
     layout->endGroup();
   }
 }
@@ -74,7 +70,7 @@ void TreeScene::clearLayout() {
   Node * node;
   foreach (node, _nodes) {
     node->setLocked(false);
-    node->setDefaultName();
+    node->setName("");
   }
   layout = 0;
   scale = 1.0;
@@ -102,9 +98,7 @@ void TreeScene::addNode(Node *node) {
           node->setPos( layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
       }
       node->setLocked(layout->value("locked", false).toBool());
-      if ( layout->contains("name") ) {
-          node->setName(layout->value("name", "").toString());
-      }
+      node->setName(layout->value("name", "").toString());
       layout->endGroup();
 	}
 }
