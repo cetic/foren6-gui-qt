@@ -48,6 +48,10 @@ NetworkInfoManager::NetworkInfoManager()
 	_updateVersionTimer.setSingleShot(false);
 	QObject::connect(&_updateVersionTimer, SIGNAL(timeout()), this, SLOT(updateVersion()));
 	_updateVersionTimer.start();
+
+	//Load layout from global preferences
+    QSettings settings;
+    setLayout(settings.value("layout", QString()).toString());
 }
 
 NetworkInfoManager::~NetworkInfoManager() {
@@ -172,7 +176,10 @@ void NetworkInfoManager::updateOverlay() {
 
 void NetworkInfoManager::onLoadLayout() {
   QString target = QFileDialog::getOpenFileName(0, "Select a layout file", QString(), "Layout file (*.ini)");
+  setLayout(target);
+}
 
+void NetworkInfoManager::setLayout(QString target) {
   if(target.isEmpty())
       return;
   QSettings *  newLayout = new QSettings(target, QSettings::IniFormat);
@@ -185,6 +192,10 @@ void NetworkInfoManager::onLoadLayout() {
   layoutFile = target;
   delete layout;
   layout = newLayout;
+
+  //Save layout in global preferences
+  QSettings settings;
+  settings.setValue("layout", layoutFile);
 }
 
 void NetworkInfoManager::onSaveLayout() {
@@ -206,6 +217,10 @@ void NetworkInfoManager::onSaveLayout() {
   layoutFile = target;
   delete layout;
   layout = newLayout;
+
+  //Save layout in global preferences
+  QSettings settings;
+  settings.setValue("layout", layoutFile);
 }
 
 void NetworkInfoManager::onClearLayout() {
@@ -213,6 +228,10 @@ void NetworkInfoManager::onClearLayout() {
   layoutFile = QString();
   delete layout;
   layout = 0;
+
+  //Save layout in global preferences
+  QSettings settings;
+  settings.setValue("layout", layoutFile);
 }
 
 void NetworkInfoManager::selectNode(Node *node) {

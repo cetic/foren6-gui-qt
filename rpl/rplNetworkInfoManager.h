@@ -77,6 +77,7 @@ protected:
 	static void onLinkEvent(di_link_t *link, rpl_event_type_e type);
 	static void onPacketEvent(int packet_id);
 	static void onClear();
+	void setLayout(QString layoutFile);
 
 private:
 	TreeScene _scene;
