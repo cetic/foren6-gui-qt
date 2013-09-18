@@ -48,6 +48,7 @@ private:
 	Ui::MainWindow *ui;
 	rpl::NetworkInfoManager *wsnManager;
 	SnifferDialog *snifferDialog;
+	bool captureStarted;
 
 	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;

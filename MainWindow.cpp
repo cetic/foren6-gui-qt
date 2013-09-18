@@ -145,6 +145,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 
 	ui->rplNodeInfoTree->expandAll();
+
+	captureStarted = false;
 }
 
 MainWindow::~MainWindow()
@@ -351,17 +353,25 @@ void MainWindow::clearTargetNodeInfo() {
 
 void MainWindow::onStartSniffer() {
 	snifferDialog->onStartSniffer();
+	ui->actionStart->setEnabled(false);
+	ui->actionStop->setEnabled(true);
+	ui->actionOpenSnifferDialog->setEnabled(false);
+	captureStarted=true;
 }
 
 void MainWindow::onStopSniffer() {
 	snifferDialog->onStopSniffer();
+    ui->actionStart->setEnabled(true);
+    ui->actionStop->setEnabled(false);
+    ui->actionOpenSnifferDialog->setEnabled(true);
+    captureStarted=true;
 }
 
 void MainWindow::onOpenSnifferDialog() {
     snifferDialog->exec();
     bool hasActiveSniffers = snifferDialog->activeSniffersCount() > 0;
-    ui->actionStart->setEnabled(hasActiveSniffers);
-    ui->actionStop->setEnabled(hasActiveSniffers);
+    ui->actionStart->setEnabled(hasActiveSniffers && ! captureStarted);
+    ui->actionStop->setEnabled(hasActiveSniffers && captureStarted);
 }
 
 void MainWindow::onClear() {
