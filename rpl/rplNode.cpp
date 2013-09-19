@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QMenu>
 #include <QInputDialog>
+#include <QGraphicsView>
 
 namespace rpl
 {
@@ -134,26 +135,27 @@ void Node::incSpeed(qreal x, qreal y) {
 
 void Node::updatePosition() {
 	if(_isBeingMoved == false && _pinned == false) {
+		QRectF rect = _networkInfoManager->scene()->sceneRect();
 		qint64 interval = 40;
 		qreal newX = centerX() + _dx*interval/1000;
 		qreal newY = centerY() + _dy*interval/1000;
 		_dx *= 0.9;
 		_dy *= 0.9;
 
-		if(newX < 0) {
-			newX = 0;
+		if(newX < rect.left()) {
+			newX = rect.left();
 			_dx = -_dx/2;
 		}
-		if(newY < 0) {
-			newY = 0;
+		if(newY < rect.top()) {
+			newY = rect.top();
 			_dy = - _dy/2;
 		}
-		if(newX > 500) {
-			newX = 500;
+		if(newX > rect.right()) {
+			newX = rect.right();
 			_dx = -_dx/2;
 		}
-		if(newY > 500) {
-			newY = 500;
+		if(newY > rect.bottom()) {
+			newY = rect.bottom();
 			_dy = - _dy/2;
 		}
 		setCenterPos(newX, newY);
