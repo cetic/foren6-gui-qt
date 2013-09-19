@@ -49,6 +49,7 @@ public:
 	void setFont(QFont font) { _label.setFont(font); _infoLabel.setFont(font); }
 	void setTextColor(QColor color);
 	void setInfoText(QString infoText);
+	void showInfoText(bool show);
 
 	bool isSelected() { return _isSelected; }
 	void setSelected(bool selected) { _isSelected = selected; }
@@ -66,6 +67,7 @@ protected:
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+	void alignLabels();
 
 private:
 	NetworkInfoManager *_networkInfoManager;
@@ -82,6 +84,7 @@ private:
 	bool _isBeingMoved;
 	bool _pinned;
 	bool _isSelected;
+	bool _showInfoText;
 
 	//debug
 	int _version;  //the version of the node data

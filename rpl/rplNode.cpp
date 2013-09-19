@@ -23,7 +23,8 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	  _dy(0),
 	  _isBeingMoved(false),
 	  _pinned(false),
-	  _isSelected(false)
+	  _isSelected(false),
+	  _showInfoText(false)
 {
 	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable);
 	setAcceptHoverEvents( true );
@@ -41,6 +42,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
     setName("");
 
     _infoLabel.setFont(newFont);
+    _infoLabel.setVisible(_showInfoText);
     this->addToGroup(&_infoLabel);
     setInfoText("");
 
@@ -63,6 +65,17 @@ Node::~Node() {
 	setNodeData(0, -21);
 }
 
+void Node::alignLabels() {
+  qreal y;
+  if ( _showInfoText && ! _infoLabel.text().isEmpty() ) {
+      y =  _maxSize/2 - _label.boundingRect().height();
+  } else {
+      y=  _maxSize/2 - _label.boundingRect().height()/2;
+  }
+  _label.setPos(_maxSize/2 - _label.boundingRect().width()/2, y );
+  _infoLabel.setPos(_maxSize/2 - _infoLabel.boundingRect().width()/2, _maxSize/2);
+}
+
 void Node::setName(QString const & name ) {
     _friendlyName = name;
     if (! name.isEmpty()) {
@@ -70,13 +83,18 @@ void Node::setName(QString const & name ) {
     } else {
         _label.setText(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
     }
-    qreal y= _maxSize/2 - _label.boundingRect().height();
-    _label.setPos(_maxSize/2 - _label.boundingRect().width()/2, y );
+    alignLabels();
 }
 
 void Node::setInfoText(QString infoText) {
     _infoLabel.setText(infoText);
-    _infoLabel.setPos(_maxSize/2 - _infoLabel.boundingRect().width()/2, _maxSize/2);
+    alignLabels();
+}
+
+void Node::showInfoText(bool show) {
+    _showInfoText = show;
+    _infoLabel.setVisible(_showInfoText);
+    alignLabels();
 }
 
 void Node::setTextColor(QColor color) {

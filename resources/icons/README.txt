@@ -11,3 +11,6 @@ http://www.danilodemarco.com/
 * antenna.png
 * locked.png
 * unlocked.png
+
+https://www.iconfinder.com/designmodo
+* bubble.png

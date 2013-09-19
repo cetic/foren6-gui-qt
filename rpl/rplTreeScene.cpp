@@ -25,6 +25,7 @@ TreeScene::TreeScene()
 	layout = 0;
 	background = new QPixmap();
 	scale = 1.0;
+	showNodeInfo = false;
 }
 
 void TreeScene::setBackground(QString newBackgroundFile) {
@@ -88,9 +89,18 @@ void TreeScene::toggleNodeMovement() {
 	else _updateDagsTimer.start();
 }
 
+void TreeScene::toggleNodeInfo() {
+    showNodeInfo = ! showNodeInfo;
+    Node * node;
+    foreach (node, _nodes) {
+        node->showInfoText(showNodeInfo);
+    }
+}
+
 void TreeScene::addNode(Node *node) {
 	//qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
 	addItem(node);
+	node->showInfoText(showNodeInfo);
 	_nodes.insert(node_get_key(node->getNodeData())->ref.wpan_address, node);
 	if ( layout ) {
 	  layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));

@@ -46,7 +46,7 @@ class TreeScene : public QGraphicsScene
 	protected slots:
 		void updateNodePositions();
 		void toggleNodeMovement();
-
+        void toggleNodeInfo();
 
 	private:
 		QTimer _updateDagsTimer;
@@ -56,6 +56,7 @@ class TreeScene : public QGraphicsScene
         QPixmap * background;
         QString backgroundFile;
         qreal scale;
+        bool showNodeInfo;
 };
 
 }

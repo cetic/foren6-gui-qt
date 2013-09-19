@@ -110,6 +110,7 @@
    <addaction name="actionOpenSnifferDialog"/>
    <addaction name="actionToggleNodeMovement"/>
    <addaction name="actionClear"/>
+   <addaction name="actionToggleNodeInfo"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -201,6 +202,19 @@
    </property>
    <property name="text">
     <string>Clear</string>
+   </property>
+  </action>
+  <action name="actionToggleNodeInfo">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/bubble.png</normaloff>
+     <normalon>:/icons/resources/icons/bubble.png</normalon>:/icons/resources/icons/bubble.png</iconset>
+   </property>
+   <property name="text">
+    <string>Toggle node info</string>
    </property>
   </action>
   <action name="actionAbout">
