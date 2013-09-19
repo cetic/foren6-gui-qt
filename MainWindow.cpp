@@ -312,6 +312,7 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, QString::number(node_get_route_error_count(node)));
+	nodeInfoTree.nodeRouteLoopErrorCount->setForeground(1, QBrush(node_get_route_error_delta(node) ? QBrush(QColor(255, 0, 0)) : QBrush(QColor(0, 0, 0))));
 	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, QString::number(node_get_ip_mismatch_error_count(node)));
 	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(node_get_dodag_mismatch_error_count(node)));
 
