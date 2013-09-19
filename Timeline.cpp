@@ -39,7 +39,7 @@ void Timeline::paintEvent(QPaintEvent *ev) {
 		    alpha = 64 + (255-64) * alpha / 255;
 		} else {
 		    if ( has_errors ) {
-	            painter.setPen(QColor(255, 0, 0, alpha));
+	            painter.setPen(QColor(255, 0, 0, 255));
 		    } else {
               painter.setPen(QColor(0, 0, 0, alpha));
 		    }
