@@ -47,7 +47,7 @@ public:
 	void setPen(QPen pen) { _ellipse.setPen(pen); }
 	void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
 	void setFont(QFont font) { _label.setFont(font); _infoLabel.setFont(font); }
-	void setTextColor(QColor color) {}//{ _label.setDefaultTextColor(color); _infoLabel.setDefaultTextColor(color); }
+	void setTextColor(QColor color);
 	void setInfoText(QString infoText);
 
 	bool isSelected() { return _isSelected; }

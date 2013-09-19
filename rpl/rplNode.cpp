@@ -31,7 +31,6 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 
     QSettings settings;
     _maxSize = settings.value("node_size", defaultNodeSize).toFloat();
-    qDebug("Node: %f", _maxSize);
 	_ellipse.setRect(0, 0, _maxSize, _maxSize);
 	this->addToGroup(&_ellipse);
 
@@ -78,6 +77,12 @@ void Node::setName(QString const & name ) {
 void Node::setInfoText(QString infoText) {
     _infoLabel.setText(infoText);
     _infoLabel.setPos(_maxSize/2 - _infoLabel.boundingRect().width()/2, _maxSize/2);
+}
+
+void Node::setTextColor(QColor color) {
+    QBrush brush(color);
+    _label.setBrush(brush);
+    _infoLabel.setBrush(brush);
 }
 
 void Node::setCenterPos(QPointF newpos) {
