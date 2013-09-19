@@ -10,17 +10,27 @@
 #include "SnifferDialog.h"
 
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <stdio.h>
 #include <math.h>
+
+MainWindow *  MainWindow::thisInstance = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
+    analyzer_callbacks_t callbacks = {
+      &onErrorEvent
+    };
+
 	ui->setupUi(this);
 	ui->infoSplitter->setStretchFactor(0, 0);
 	ui->infoSplitter->setStretchFactor(1, 1);
+
+	thisInstance = this;
+    connect(this, SIGNAL(reportError(QString)), this, SLOT(onReportError(QString)), Qt::QueuedConnection);
 
     QCoreApplication::setOrganizationName("CETIC");
     QCoreApplication::setOrganizationDomain("cetic.be");
@@ -36,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     settings.endGroup();
 
+    rpl_tool_set_analyzer_callbacks(&callbacks);
 	rpl_tool_init();
 
 	wsnManager = new rpl::NetworkInfoManager;
@@ -153,6 +164,17 @@ MainWindow::~MainWindow()
 {
 	rpl_tool_cleanup();
 	delete ui;
+}
+
+void MainWindow::onErrorEvent(char const * errorMessage) {
+    if ( !thisInstance ) return;
+    thisInstance->emit reportError(errorMessage);
+}
+
+void MainWindow::onReportError(QString errorMessage) {
+    QMessageBox messageBox;
+    messageBox.critical(0, "Error", errorMessage);
+    QCoreApplication::exit(1);
 }
 
 void MainWindow::createNewInformationWindow() {

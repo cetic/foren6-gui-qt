@@ -23,10 +23,12 @@ public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
+	static MainWindow * getInstance() { return thisInstance; }
 
 signals:
 	void changeWsnVersion(int newVersion);
 	void toggleNodeMovement();
+    void reportError(QString errorMessage);
 
 public slots:
 	void setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
@@ -43,12 +45,17 @@ protected slots:
     void createNewAboutWindow();
 	void onInformationWindowClosed(QObject *informationWindow);
 	void onClear();
+    void onReportError(QString errorMessage);
+
+protected:
+	static void onErrorEvent(char const * errorMessage);
 
 private:
 	Ui::MainWindow *ui;
 	rpl::NetworkInfoManager *wsnManager;
 	SnifferDialog *snifferDialog;
 	bool captureStarted;
+	static MainWindow *  thisInstance;
 
 	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;
