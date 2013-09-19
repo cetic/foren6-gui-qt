@@ -27,13 +27,33 @@ void Timeline::paintEvent(QPaintEvent *ev) {
 
 
 	painter.begin(this);
-	painter.setPen(QColor(0, 0, 0, 64));
+	int current_position = 0;
+	qreal alpha = 0;
+	bool has_errors = false;
 	while(version <= maxVersion) {
 		timestamp = rpldata_wsn_version_get_timestamp(version);
 		int position = QStyle::sliderPositionFromValue(min, max, ceil(timestamp*100), w-offset) + offset/2;
-		painter.drawLine(position, 0, position, h);
+		if ( position == current_position ) {
+		    alpha = 64 + (255-64) * alpha / 255;
+		} else {
+		    if ( has_errors ) {
+	            painter.setPen(QColor(255, 0, 0, alpha));
+		    } else {
+              painter.setPen(QColor(0, 0, 0, alpha));
+		    }
+	        painter.drawLine(current_position, 0, current_position, h);
+	        alpha = 64;
+	        has_errors = false;
+	        current_position = position;
+		}
 		version++;
 	}
+    if ( has_errors ) {
+        painter.setPen(QColor(255, 0, 0, alpha));
+    } else {
+      painter.setPen(QColor(0, 0, 0, alpha));
+    }
+    painter.drawLine(current_position, 0, current_position, h);
 	painter.end();
 
 	QSlider::paintEvent(ev);
