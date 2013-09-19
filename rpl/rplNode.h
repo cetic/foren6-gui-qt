@@ -47,8 +47,8 @@ public:
 	void setPen(QPen pen) { _ellipse.setPen(pen); }
 	void setBrush(QBrush brush) { _ellipse.setBrush(brush); }
 	void setFont(QFont font) { _label.setFont(font); _infoLabel.setFont(font); }
-	void setTextColor(QColor color) { _label.setDefaultTextColor(color); _infoLabel.setDefaultTextColor(color); }
-	void setInfoText(QString infoText) { _infoLabel.setPlainText(infoText); }
+	void setTextColor(QColor color) {}//{ _label.setDefaultTextColor(color); _infoLabel.setDefaultTextColor(color); }
+	void setInfoText(QString infoText);
 
 	bool isSelected() { return _isSelected; }
 	void setSelected(bool selected) { _isSelected = selected; }
@@ -72,10 +72,11 @@ private:
 	QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
 	di_node_t *_nodeData;
 	QGraphicsEllipseItem _ellipse;
-	QGraphicsTextItem _label;
-    QGraphicsTextItem _infoLabel;
+	QGraphicsSimpleTextItem _label;
+    QGraphicsSimpleTextItem _infoLabel;
 	qreal _dx, _dy;
 	QList<Link*> _links;
+	qreal _maxSize;
 
 	QString _friendlyName;
 	bool _isBeingMoved;

@@ -11,6 +11,8 @@
 namespace rpl
 {
 
+static qreal const defaultNodeSize = 32;
+
 Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int version)
 	: _networkInfoManager(networkInfoManager),
 	  _nodeData(0),
@@ -27,20 +29,21 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	setAcceptHoverEvents( true );
 	setNodeData(nodeData, version);
 
-	setName("");
-	this->addToGroup(&_label);
-
-    _infoLabel.setPlainText(QString(""));
-    this->addToGroup(&_infoLabel);
-
-    qreal maxSize = qMax(_label.boundingRect().width(), _label.boundingRect().height()) + 2;
-
-	_ellipse.setRect(0, 0, maxSize, maxSize);
+    QSettings settings;
+    _maxSize = settings.value("node_size", defaultNodeSize).toFloat();
+    qDebug("Node: %f", _maxSize);
+	_ellipse.setRect(0, 0, _maxSize, _maxSize);
 	this->addToGroup(&_ellipse);
 
-	_label.setPos(maxSize/2 - _label.boundingRect().width()/2, maxSize/2 - _label.boundingRect().height()/2);
+    QFont newFont = QApplication::font();
+    newFont.setPointSize(8);
+    _label.setFont(newFont);
+    this->addToGroup(&_label);
+    setName("");
 
-    _infoLabel.setPos(0, maxSize/3);
+    _infoLabel.setFont(newFont);
+    this->addToGroup(&_infoLabel);
+    setInfoText("");
 
     setCenterPos(qrand()%500, qrand()%500);
 	setZValue(1);
@@ -64,10 +67,17 @@ Node::~Node() {
 void Node::setName(QString const & name ) {
     _friendlyName = name;
     if (! name.isEmpty()) {
-        _label.setPlainText(name);
+        _label.setText(name);
     } else {
-        _label.setPlainText(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
+        _label.setText(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
     }
+    qreal y= _maxSize/2 - _label.boundingRect().height();
+    _label.setPos(_maxSize/2 - _label.boundingRect().width()/2, y );
+}
+
+void Node::setInfoText(QString infoText) {
+    _infoLabel.setText(infoText);
+    _infoLabel.setPos(_maxSize/2 - _infoLabel.boundingRect().width()/2, _maxSize/2);
 }
 
 void Node::setCenterPos(QPointF newpos) {
@@ -75,7 +85,7 @@ void Node::setCenterPos(QPointF newpos) {
 }
 
 void Node::setCenterPos(qreal x, qreal y) {
-	setPos(x - boundingRect().width()/2, y - boundingRect().height()/2);
+    setPos(x - _maxSize/2, y - _maxSize/2);
 }
 
 void Node::setPos(qreal x, qreal y) {
@@ -89,7 +99,7 @@ void Node::setPos(qreal x, qreal y) {
 }
 
 QPointF Node::centerPos() const {
-	return QPointF(x() + boundingRect().width()/2, y() + boundingRect().height()/2);
+    return QPointF(x() + _maxSize/2, y() + _maxSize/2);
 }
 
 void Node::incSpeed(qreal x, qreal y) {
