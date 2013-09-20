@@ -55,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	snifferDialog = new SnifferDialog(this);
 
+	packetWidget = 0;
+
 	ui->graphView->setNetworkManager(wsnManager);
 
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
@@ -67,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSaveLayout, SIGNAL(triggered()), wsnManager, SLOT(onSaveLayout()));
     connect(ui->actionClearLayout, SIGNAL(triggered()), wsnManager, SLOT(onClearLayout()));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
+    connect(ui->actionNewPacketWindow, SIGNAL(triggered()), this, SLOT(createNewPacketWindow()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(createNewAboutWindow()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 	connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
@@ -196,6 +199,7 @@ void MainWindow::createNewInformationWindow() {
 
 	connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
 	connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
+    connect(infoWidget, SIGNAL(messageSelected(rpl::Event*)), this, SLOT(messageSelected(rpl::Event*)));
 	connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
 
 	foreach(message, messages) {
@@ -203,6 +207,13 @@ void MainWindow::createNewInformationWindow() {
 	}
 
 	infoWidgets.append(infoWidget);
+}
+
+void MainWindow::createNewPacketWindow() {
+  if (packetWidget) return;
+    packetWidget = new PacketWidget(this);
+    packetWidget->setFloating(true);
+    packetWidget->show();
 }
 
 void MainWindow::createNewAboutWindow() {
@@ -214,8 +225,11 @@ void MainWindow::createNewAboutWindow() {
 }
 
 void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
-
 	infoWidgets.removeAll((InformationWidget*)informationWindow);
+}
+
+void MainWindow::onPacketWindowClosed(QObject *packetWindow) {
+    packetWidget = 0;
 }
 
 void MainWindow::addMessage(rpl::Event *event) {
@@ -236,6 +250,11 @@ void MainWindow::clearMessages() {
 	}
 	messages.clear();
 
+}
+
+void MainWindow::messageSelected(rpl::Event * event) {
+    if ( ! packetWidget) return;
+    packetWidget->showPacket(event);
 }
 
 void MainWindow::layoutChanged(QString layoutFile) {

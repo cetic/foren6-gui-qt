@@ -62,6 +62,13 @@ int EventLog::rowCount(const QModelIndex& parent) const {
 	else return filteredMessages.size();
 }
 
+rpl::Event* EventLog::at(const QModelIndex& index) const {
+    if(!index.isValid() )
+        return NULL;
+
+    return filteredMessages.at(index.row());
+}
+
 QVariant EventLog::data(const QModelIndex& index, int role) const {
 	rpl::Event *currentEvent;
 

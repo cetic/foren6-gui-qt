@@ -25,8 +25,10 @@ public slots:
 
 signals:
 	void setCurrentVersion(int version);
+	void messageSelected(rpl::Event *  event);
 
 protected slots:
+    void onMessageLogClicked(QModelIndex index);
 	void onMessageLogDoubleClicked(QModelIndex index);
 	void onFilterTextChanged(QString newText);
 	

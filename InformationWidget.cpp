@@ -10,6 +10,7 @@ InformationWidget::InformationWidget(QWidget *parent) :
 	ui->setupUi(this);
 	messageLog = new EventLog(this);
 	ui->messageTable->setModel(messageLog);
+    connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
 	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));
 	connect(ui->filterEdit, SIGNAL(textChanged(QString)), this, SLOT(onFilterTextChanged(QString)));
 }
@@ -25,6 +26,11 @@ void InformationWidget::addMessage(rpl::Event *newMsg) {
 
 void InformationWidget::clearMessages() {
 	messageLog->clear();
+}
+
+void InformationWidget::onMessageLogClicked(QModelIndex index) {
+    rpl::Event *  event = messageLog->at(index);
+    emit messageSelected(event);
 }
 
 void InformationWidget::onMessageLogDoubleClicked(QModelIndex index) {

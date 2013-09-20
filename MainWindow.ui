@@ -83,6 +83,7 @@
      <string>Window</string>
     </property>
     <addaction name="actionNewInformationWindow"/>
+    <addaction name="actionNewPacketWindow"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -155,6 +156,11 @@
   <action name="actionNewInformationWindow">
    <property name="text">
     <string>New Information Window</string>
+   </property>
+  </action>
+  <action name="actionNewPacketWindow">
+   <property name="text">
+    <string>New Packet Window</string>
    </property>
   </action>
   <action name="actionLoadBackground">

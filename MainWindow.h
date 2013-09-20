@@ -7,6 +7,7 @@
 #include "rpl/rplNetworkInfoManager.h"
 #include "rpl_packet_parser.h"
 #include "InformationWidget.h"
+#include "PacketWidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -43,9 +44,12 @@ protected slots:
 	void onStopSniffer();
 	void onOpenSnifferDialog();
 	void createNewInformationWindow();
+    void createNewPacketWindow();
     void createNewAboutWindow();
 	void onInformationWindowClosed(QObject *informationWindow);
+    void onPacketWindowClosed(QObject *packetWindow);
 	void onClear();
+	void messageSelected(rpl::Event *  event);
     void onReportError(QString errorMessage);
     void layoutChanged(QString layout);
 
@@ -61,6 +65,7 @@ private:
 
 	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;
+    PacketWidget* packetWidget;
 
 	QLabel layoutName;
 
