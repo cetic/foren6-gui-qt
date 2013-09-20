@@ -56,5 +56,9 @@ bool TrafficOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 }
 
 bool TrafficOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-  return false;
+    int traffic = node_get_packet_count(node->getNodeData());
+    if (infoText) {
+        *infoText = QString::number(traffic);
+    }
+    return true;
 }
