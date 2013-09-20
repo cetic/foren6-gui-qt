@@ -50,6 +50,7 @@ public:
 	di_dodag_t* getDodag(const di_dodag_ref_t* dodag_ref);
 	di_link_t* getLink(const di_link_ref_t* link_ref);
 	di_rpl_instance_t* getRplInstance(const di_rpl_instance_ref_t* rpl_instance_ref);
+    void setLayout(QString layoutFile);
 
 	static NetworkInfoManager* getInstance() { return thisInstance; }
 
@@ -67,6 +68,7 @@ signals:
 	void updateVersionCount(int versionCount);
 	void logMessage(rpl::Event *action);
 	void clearMessages();
+	void layoutChanged(QString layout);
 
 protected slots:
 	void updateVersion();
@@ -79,7 +81,6 @@ protected:
 	static void onLinkEvent(di_link_t *link, rpl_event_type_e type);
 	static void onPacketEvent(int packet_id);
 	static void onClear();
-	void setLayout(QString layoutFile);
 
 private:
 	TreeScene _scene;

@@ -9,8 +9,10 @@
 
 #include "SnifferDialog.h"
 
+#include <QSettings>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QLabel>
 
 #include <stdio.h>
 #include <math.h>
@@ -77,8 +79,14 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(wsnManager, SIGNAL(updateVersionCount(int)), ui->versionSlider, SLOT(onUpdateVersionCount(int)));
 	connect(wsnManager, SIGNAL(logMessage(rpl::Event*)), this, SLOT(addMessage(rpl::Event*)));
 	connect(wsnManager, SIGNAL(clearMessages()), this, SLOT(clearMessages()));
+    connect(wsnManager, SIGNAL(layoutChanged(QString)), this, SLOT(layoutChanged(QString)));
 
+	//QStatusBar can not be edited in QtCreator
+	statusBar()->addWidget(new QLabel("Layout: "));
+    statusBar()->addWidget(&layoutName);
 
+    //Load layout from global preferences
+    wsnManager->setLayout(settings.value("layout", QString()).toString());
 
 	{
 		nodeInfoTree.rplInstanceMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
@@ -228,6 +236,13 @@ void MainWindow::clearMessages() {
 	}
 	messages.clear();
 
+}
+
+void MainWindow::layoutChanged(QString layoutFile) {
+    layoutName.setText(!layoutFile.isEmpty() ? layoutFile : "-");
+    //Save layout in global preferences
+    QSettings settings;
+    settings.setValue("layout", layoutFile);
 }
 
 void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {

@@ -48,10 +48,6 @@ NetworkInfoManager::NetworkInfoManager()
 	_updateVersionTimer.setSingleShot(false);
 	QObject::connect(&_updateVersionTimer, SIGNAL(timeout()), this, SLOT(updateVersion()));
 	_updateVersionTimer.start();
-
-	//Load layout from global preferences
-    QSettings settings;
-    setLayout(settings.value("layout", QString()).toString());
 }
 
 NetworkInfoManager::~NetworkInfoManager() {
@@ -205,9 +201,7 @@ void NetworkInfoManager::setLayout(QString target) {
   delete layout;
   layout = newLayout;
 
-  //Save layout in global preferences
-  QSettings settings;
-  settings.setValue("layout", layoutFile);
+  emit layoutChanged(layoutFile);
 }
 
 void NetworkInfoManager::onSaveLayout() {
@@ -230,9 +224,7 @@ void NetworkInfoManager::onSaveLayout() {
   delete layout;
   layout = newLayout;
 
-  //Save layout in global preferences
-  QSettings settings;
-  settings.setValue("layout", layoutFile);
+  emit layoutChanged(layoutFile);
 }
 
 void NetworkInfoManager::onClearLayout() {
@@ -241,9 +233,7 @@ void NetworkInfoManager::onClearLayout() {
   delete layout;
   layout = 0;
 
-  //Save layout in global preferences
-  QSettings settings;
-  settings.setValue("layout", layoutFile);
+  emit layoutChanged(layoutFile);
 }
 
 void NetworkInfoManager::selectNode(Node *node) {

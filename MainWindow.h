@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QLabel>
 #include "rpl/rplNetworkInfoManager.h"
 #include "rpl_packet_parser.h"
 #include "InformationWidget.h"
@@ -46,6 +47,7 @@ protected slots:
 	void onInformationWindowClosed(QObject *informationWindow);
 	void onClear();
     void onReportError(QString errorMessage);
+    void layoutChanged(QString layout);
 
 protected:
 	static void onErrorEvent(char const * errorMessage);
@@ -59,6 +61,8 @@ private:
 
 	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;
+
+	QLabel layoutName;
 
 	struct NodeInfoTree {
 		QTreeWidgetItem *rplInstanceMain;
