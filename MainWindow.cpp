@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->infoSplitter->setStretchFactor(0, 0);
 	ui->infoSplitter->setStretchFactor(1, 1);
 
+	packetWidget = 0;
+
 	thisInstance = this;
     connect(this, SIGNAL(reportError(QString)), this, SLOT(onReportError(QString)), Qt::QueuedConnection);
 
@@ -46,6 +48,18 @@ MainWindow::MainWindow(QWidget *parent) :
     if ( settings.contains("pos")) {
         move(settings.value("pos", QPoint(200, 200)).toPoint());
     }
+    infoWidgetId = settings.value("info_widget_id", 0).toInt();
+    if (settings.value("packet_widget", false).toBool()) {
+        createNewPacketWindow();
+    }
+    int size = settings.beginReadArray("info_widgets");
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        doCreateNewInformationWindow(settings.value("id").toString());
+    }
+    settings.endArray();
+
+    restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
 
     rpl_tool_set_analyzer_callbacks(&callbacks);
@@ -54,8 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	wsnManager = new rpl::NetworkInfoManager;
 
 	snifferDialog = new SnifferDialog(this);
-
-	packetWidget = 0;
 
 	ui->graphView->setNetworkManager(wsnManager);
 
@@ -190,23 +202,32 @@ void MainWindow::onReportError(QString errorMessage) {
 }
 
 void MainWindow::createNewInformationWindow() {
-	InformationWidget *infoWidget;
-	rpl::Event *message;
+    doCreateNewInformationWindow();
+}
 
-	infoWidget = new InformationWidget(this);
-	infoWidget->setFloating(true);
-	infoWidget->show();
+void MainWindow::doCreateNewInformationWindow(QString name) {
+    InformationWidget *infoWidget;
+    rpl::Event *message;
+    infoWidget = new InformationWidget(this);
+    infoWidget->setFloating(true);
+    infoWidget->show();
+    if ( name.isEmpty() ) {
+        infoWidget->setObjectName(QString("InformationWidget-") + QString::number(infoWidgetId));
+        infoWidgetId++;
+    } else {
+        infoWidget->setObjectName(name);
+    }
 
-	connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
-	connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
+    connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
+    connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
     connect(infoWidget, SIGNAL(messageSelected(rpl::Event*)), this, SLOT(messageSelected(rpl::Event*)));
-	connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
+    connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
 
-	foreach(message, messages) {
-		infoWidget->addMessage(message);
-	}
+    foreach(message, messages) {
+        infoWidget->addMessage(message);
+    }
 
-	infoWidgets.append(infoWidget);
+    infoWidgets.append(infoWidget);
 }
 
 void MainWindow::createNewPacketWindow() {
@@ -441,6 +462,16 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     settings.beginGroup("MainWindow");
     settings.setValue("size", size());
     settings.setValue("pos", pos());
+    settings.setValue("info_widget_id", infoWidgetId);
+    settings.setValue("packet_widget", packetWidget != 0);
+    settings.beginWriteArray("info_widgets");
+    for (int i = 0; i < infoWidgets.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("id", infoWidgets.at(i)->objectName());
+    }
+    settings.endArray();
+
+    settings.setValue("windowState", saveState());
     settings.endGroup();
     event->accept();
 }

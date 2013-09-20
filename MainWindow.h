@@ -55,6 +55,7 @@ protected slots:
 
 protected:
 	static void onErrorEvent(char const * errorMessage);
+	void doCreateNewInformationWindow(QString name = QString());
 
 private:
 	Ui::MainWindow *ui;
@@ -65,6 +66,7 @@ private:
 
 	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;
+	int infoWidgetId;
     PacketWidget* packetWidget;
 
 	QLabel layoutName;
