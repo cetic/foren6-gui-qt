@@ -8,6 +8,7 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QDir>
+#include <QSettings>
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 #include <QUrlQuery>
@@ -45,11 +46,31 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 		qDebug("Loading %s", captureInterface.absoluteFilePath().toLatin1().constData());
 		loadInterface(captureInterface.absoluteFilePath().toLatin1().constData());
 	}
+
+	QSettings settings;
+    settings.beginGroup("Sniffers");
+    int size = settings.beginReadArray("sources");
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        doAddSniffer(QUrl(settings.value("url").toString()));
+    }
+    settings.endArray();
+    settings.endGroup();
 }
 
 SnifferDialog::~SnifferDialog()
 {
 	delete ui;
+	qDebug("Sniffer done");
+    QSettings settings;
+    settings.beginGroup("Sniffers");
+    settings.beginWriteArray("sources");
+    for (int i = 0; i < openedSniffersModel->getOpenedSniffers().count(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("url", openedSniffersModel->getOpenedSniffers().at(i).url.toString());
+    }
+    settings.endArray();
+    settings.endGroup();
 }
 
 void SnifferDialog::onAddSniffer() {
@@ -57,11 +78,16 @@ void SnifferDialog::onAddSniffer() {
 	QString snifferTarget = ui->targetEdit->text();
 	int channel = ui->channelSpin->value();
 
-	interface_t *interface;
-	ifreader_t sniffer_handle;
 	QUrl snifferUrl(QString("%1://%2?channel=%3").arg(snifferType).arg(snifferTarget).arg(channel));
 
-	QString interfaceType = snifferUrl.scheme();
+	doAddSniffer(snifferUrl);
+}
+
+void SnifferDialog::doAddSniffer(QUrl snifferUrl) {
+    interface_t *interface;
+    ifreader_t sniffer_handle;
+
+    QString interfaceType = snifferUrl.scheme();
 	QString interfacePath = snifferUrl.path();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
