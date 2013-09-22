@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	thisInstance = this;
     connect(this, SIGNAL(reportError(QString)), this, SLOT(onReportError(QString)), Qt::QueuedConnection);
+    wsnManager = new rpl::NetworkInfoManager;
 
     QCoreApplication::setOrganizationName("CETIC");
     QCoreApplication::setOrganizationDomain("cetic.be");
@@ -64,8 +65,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     rpl_tool_set_analyzer_callbacks(&callbacks);
 	rpl_tool_init();
-
-	wsnManager = new rpl::NetworkInfoManager;
 
 	snifferDialog = new SnifferDialog(this);
 
@@ -209,8 +208,9 @@ void MainWindow::doCreateNewInformationWindow(QString name) {
     InformationWidget *infoWidget;
     rpl::Event *message;
     infoWidget = new InformationWidget(this);
-    infoWidget->setFloating(true);
-    infoWidget->show();
+	infoWidget->setFloating(true);
+    infoWidget->move(this->pos()); /* Place at the same position as main window to avoid multi-screen glitches */
+	infoWidget->show();
     if ( name.isEmpty() ) {
         infoWidget->setObjectName(QString("InformationWidget-") + QString::number(infoWidgetId));
         infoWidgetId++;
