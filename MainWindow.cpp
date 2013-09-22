@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	thisInstance = this;
     connect(this, SIGNAL(reportError(QString)), this, SLOT(onReportError(QString)), Qt::QueuedConnection);
+    wsnManager = new rpl::NetworkInfoManager;
 
     QCoreApplication::setOrganizationName("CETIC");
     QCoreApplication::setOrganizationDomain("cetic.be");
@@ -64,8 +65,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     rpl_tool_set_analyzer_callbacks(&callbacks);
 	rpl_tool_init();
-
-	wsnManager = new rpl::NetworkInfoManager;
 
 	snifferDialog = new SnifferDialog(this);
 
