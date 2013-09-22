@@ -3,9 +3,11 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QLabel>
 #include "rpl/rplNetworkInfoManager.h"
 #include "rpl_packet_parser.h"
 #include "InformationWidget.h"
+#include "PacketWidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -42,13 +44,18 @@ protected slots:
 	void onStopSniffer();
 	void onOpenSnifferDialog();
 	void createNewInformationWindow();
+    void createNewPacketWindow();
     void createNewAboutWindow();
 	void onInformationWindowClosed(QObject *informationWindow);
+    void onPacketWindowClosed(QObject *packetWindow);
 	void onClear();
+	void messageSelected(rpl::Event *  event);
     void onReportError(QString errorMessage);
+    void layoutChanged(QString layout);
 
 protected:
 	static void onErrorEvent(char const * errorMessage);
+	void doCreateNewInformationWindow(QString name = QString());
 
 private:
 	Ui::MainWindow *ui;
@@ -59,6 +66,10 @@ private:
 
 	QList<rpl::Event*> messages;
 	QList<InformationWidget*> infoWidgets;
+	int infoWidgetId;
+    PacketWidget* packetWidget;
+
+	QLabel layoutName;
 
 	struct NodeInfoTree {
 		QTreeWidgetItem *rplInstanceMain;

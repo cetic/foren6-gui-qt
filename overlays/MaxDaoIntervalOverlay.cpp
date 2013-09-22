@@ -58,5 +58,9 @@ bool MaxDaoIntervalOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 }
 
 bool MaxDaoIntervalOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-  return false;
+    double interval = node_get_max_dao_interval(node->getNodeData());
+    if (infoText) {
+        *infoText = QString::number(interval, 'f', 0);
+    }
+    return true;
 }

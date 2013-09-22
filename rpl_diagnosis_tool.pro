@@ -38,8 +38,11 @@ SOURCES += main.cpp\
     rpl/rplNode.cpp \
     rpl/rplNetworkInfoManager.cpp \
     rpl/rplLink.cpp \
+    SimpleTreeItem.cpp \
+    SimpleTreeModel.cpp \
     EventLog.cpp \
     InformationWidget.cpp \
+    PacketWidget.cpp \
     SnifferDialog.cpp \
     OpenedSniffersModel.cpp \
     VersionSlider.cpp \
@@ -64,8 +67,11 @@ HEADERS  += MainWindow.h \
     rpl/rplNode.h \
     rpl/rplNetworkInfoManager.h \
     rpl/rplLink.h \
+    SimpleTreeItem.h \
+    SimpleTreeModel.h \
     EventLog.h \
     InformationWidget.h \
+    PacketWidget.h \
     SnifferDialog.h \
     OpenedSniffersModel.h \
     VersionSlider.h \
@@ -88,6 +94,7 @@ HEADERS  += MainWindow.h \
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \
+    PacketWidget.ui \
     SnifferDialog.ui \
     VersionSlider.ui \
     GraphView.ui \

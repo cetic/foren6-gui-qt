@@ -64,5 +64,9 @@ bool ErrorsOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 }
 
 bool ErrorsOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-  return false;
+    int errorCount = getErrorCount(node);
+    if (infoText) {
+        *infoText = QString::number(errorCount);
+    }
+    return true;
 }
