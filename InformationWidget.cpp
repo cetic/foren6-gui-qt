@@ -10,7 +10,6 @@ InformationWidget::InformationWidget(QWidget *parent) :
 	ui->setupUi(this);
 	messageLog = new EventLog(this);
 	ui->messageTable->setModel(messageLog);
-	this->setAttribute(Qt::WA_DeleteOnClose);
 	connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
 	connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
 	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));

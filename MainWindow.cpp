@@ -247,10 +247,12 @@ void MainWindow::createNewAboutWindow() {
 
 void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
 	infoWidgets.removeAll((InformationWidget*)informationWindow);
+	delete (InformationWidget*)informationWindow;
 }
 
 void MainWindow::onPacketWindowClosed(QObject *packetWindow) {
-    packetWidget = 0;
+	delete packetWidget;
+	packetWidget = 0;
 }
 
 void MainWindow::addMessage(rpl::Event *event) {
