@@ -14,6 +14,7 @@ InformationWidget::InformationWidget(QWidget *parent) :
 	connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
 	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));
 	connect(ui->filterEdit, SIGNAL(textChanged(QString)), this, SLOT(onFilterTextChanged(QString)));
+	setAttribute(Qt::WA_DeleteOnClose);
 }
 
 InformationWidget::~InformationWidget()

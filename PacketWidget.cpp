@@ -11,6 +11,7 @@ PacketWidget::PacketWidget(QWidget *parent) :
 {
 	ui->setupUi(this);
 	ui->dataTree->setFont(QFont("Courier"));
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
 PacketWidget::~PacketWidget()
