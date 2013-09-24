@@ -235,10 +235,11 @@ void MainWindow::doCreateNewInformationWindow(QString name) {
 }
 
 void MainWindow::createNewPacketWindow() {
-  if (packetWidget) return;
+    if (packetWidget) return;
     packetWidget = new PacketWidget(this);
     packetWidget->setFloating(true);
     packetWidget->show();
+    connect(packetWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onPacketWindowClosed(QObject*)));
 }
 
 void MainWindow::createNewAboutWindow() {
@@ -251,11 +252,9 @@ void MainWindow::createNewAboutWindow() {
 
 void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
 	infoWidgets.removeAll((InformationWidget*)informationWindow);
-	delete (InformationWidget*)informationWindow;
 }
 
 void MainWindow::onPacketWindowClosed(QObject *packetWindow) {
-	delete packetWidget;
 	packetWidget = 0;
 }
 
@@ -470,6 +469,10 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     settings.setValue("pos", pos());
     settings.setValue("info_widget_id", infoWidgetId);
     settings.setValue("packet_widget", packetWidget != 0);
+    //Recommended way of clearing up an array in QSettings...
+    settings.beginGroup("info_widgets");
+    settings.remove("");
+    settings.endGroup();
     settings.beginWriteArray("info_widgets");
     for (int i = 0; i < infoWidgets.size(); ++i) {
         settings.setArrayIndex(i);
