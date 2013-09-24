@@ -66,7 +66,11 @@ MainWindow::MainWindow(QWidget *parent) :
     rpl_tool_set_analyzer_callbacks(&callbacks);
 	rpl_tool_init();
 
+    captureStarted = false;
 	snifferDialog = new SnifferDialog(this);
+    bool hasActiveSniffers = snifferDialog->activeSniffersCount() > 0;
+    ui->actionStart->setEnabled(hasActiveSniffers && ! captureStarted);
+    ui->actionStop->setEnabled(hasActiveSniffers && captureStarted);
 
 	ui->graphView->setNetworkManager(wsnManager);
 
@@ -180,7 +184,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->rplNodeInfoTree->expandAll();
 
-	captureStarted = false;
+
 }
 
 MainWindow::~MainWindow()
