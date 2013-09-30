@@ -356,9 +356,12 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
 	inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
 	nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
+    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node), QColor(Qt::blue));
 
 	nodeInfoTree.nodeGrounded->setText(1, (node_get_grounded(node) ? "true" : "false"));
-	const di_metric_t *metric = node_get_metric(node);
+    setDeltaColor( nodeInfoTree.nodeGrounded, node_get_grounded_delta(node), QColor(Qt::blue));
+
+    const di_metric_t *metric = node_get_metric(node);
 	QString metricValue;
 
 	metricValue = QString::number(metric->value);
@@ -366,15 +369,23 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		metricValue += QString(" (") + metric->type->name + ": " + QString::number(metric_get_display_value(metric)) + ")";
 	}
 	nodeInfoTree.nodeMetric->setText(1, metricValue);
+    setDeltaColor( nodeInfoTree.nodeMetric, node_get_metric_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeRank->setText(1, QString::number(node_get_rank(node)));
+    setDeltaColor( nodeInfoTree.nodeRank, node_get_rank_delta(node), QColor(Qt::blue));
 
 	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
+    setDeltaColor( nodeInfoTree.nodeTraffic, node_get_packet_count_delta(node), QColor(Qt::blue));
 
 	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)) + " sec");
+    setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, node_get_max_dao_interval_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(node_get_max_dio_interval(node)) + " sec");
+    setDeltaColor( nodeInfoTree.nodeMaxDioInterval, node_get_max_dio_interval_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(node_get_dtsn(node)));
+    setDeltaColor( nodeInfoTree.nodeLastDtsn, node_get_latest_dtsn_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
-	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeLastDaoSeq, node_get_latest_dao_sequence_delta(node), QColor(Qt::blue));
+
+    nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
     setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, node_get_upward_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
     setDeltaColor( nodeInfoTree.nodeDownwardRankErrorCount, node_get_downward_error_delta(node), QColor(Qt::red));
