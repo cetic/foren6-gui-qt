@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
+#include <QColor>
 
 #include <stdio.h>
 #include <math.h>
@@ -290,6 +291,10 @@ void MainWindow::layoutChanged(QString layoutFile) {
     settings.setValue("layout", layoutFile);
 }
 
+void MainWindow::setDeltaColor(QTreeWidgetItem * widget, int delta, QColor color) {
+    widget->setForeground(1, QBrush(delta ? QBrush(color) : QBrush(QColor(0, 0, 0))));
+}
+
 void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
 	char ipv6string[INET6_ADDRSTRLEN];
 
@@ -351,9 +356,12 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
 	inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
 	nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
+    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node), QColor(Qt::blue));
 
 	nodeInfoTree.nodeGrounded->setText(1, (node_get_grounded(node) ? "true" : "false"));
-	const di_metric_t *metric = node_get_metric(node);
+    setDeltaColor( nodeInfoTree.nodeGrounded, node_get_grounded_delta(node), QColor(Qt::blue));
+
+    const di_metric_t *metric = node_get_metric(node);
 	QString metricValue;
 
 	metricValue = QString::number(metric->value);
@@ -361,20 +369,32 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		metricValue += QString(" (") + metric->type->name + ": " + QString::number(metric_get_display_value(metric)) + ")";
 	}
 	nodeInfoTree.nodeMetric->setText(1, metricValue);
+    setDeltaColor( nodeInfoTree.nodeMetric, node_get_metric_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeRank->setText(1, QString::number(node_get_rank(node)));
+    setDeltaColor( nodeInfoTree.nodeRank, node_get_rank_delta(node), QColor(Qt::blue));
 
 	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
+    setDeltaColor( nodeInfoTree.nodeTraffic, node_get_packet_count_delta(node), QColor(Qt::blue));
 
 	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)) + " sec");
+    setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, node_get_max_dao_interval_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(node_get_max_dio_interval(node)) + " sec");
+    setDeltaColor( nodeInfoTree.nodeMaxDioInterval, node_get_max_dio_interval_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(node_get_dtsn(node)));
+    setDeltaColor( nodeInfoTree.nodeLastDtsn, node_get_latest_dtsn_delta(node), QColor(Qt::blue));
 	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
-	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeLastDaoSeq, node_get_latest_dao_sequence_delta(node), QColor(Qt::blue));
+
+    nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, node_get_upward_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeDownwardRankErrorCount, node_get_downward_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, QString::number(node_get_route_error_count(node)));
-	nodeInfoTree.nodeRouteLoopErrorCount->setForeground(1, QBrush(node_get_route_error_delta(node) ? QBrush(QColor(255, 0, 0)) : QBrush(QColor(0, 0, 0))));
+	setDeltaColor( nodeInfoTree.nodeRouteLoopErrorCount, node_get_route_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, QString::number(node_get_ip_mismatch_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeIpMismatchErrorCount, node_get_ip_mismatch_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(node_get_dodag_mismatch_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeDodagMismatchErrorCount, node_get_dodag_mismatch_error_delta(node), QColor(Qt::red));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;
