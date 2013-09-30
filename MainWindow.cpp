@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
+#include <QColor>
 
 #include <stdio.h>
 #include <math.h>
@@ -286,6 +287,10 @@ void MainWindow::layoutChanged(QString layoutFile) {
     settings.setValue("layout", layoutFile);
 }
 
+void MainWindow::setDeltaColor(QTreeWidgetItem * widget, int delta, QColor color) {
+    widget->setForeground(1, QBrush(delta ? QBrush(color) : QBrush(QColor(0, 0, 0))));
+}
+
 void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
 	char ipv6string[INET6_ADDRSTRLEN];
 
@@ -366,11 +371,15 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(node_get_dtsn(node)));
 	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
 	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, node_get_upward_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeDownwardRankErrorCount, node_get_downward_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, QString::number(node_get_route_error_count(node)));
-	nodeInfoTree.nodeRouteLoopErrorCount->setForeground(1, QBrush(node_get_route_error_delta(node) ? QBrush(QColor(255, 0, 0)) : QBrush(QColor(0, 0, 0))));
+	setDeltaColor( nodeInfoTree.nodeRouteLoopErrorCount, node_get_route_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, QString::number(node_get_ip_mismatch_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeIpMismatchErrorCount, node_get_ip_mismatch_error_delta(node), QColor(Qt::red));
 	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(node_get_dodag_mismatch_error_count(node)));
+    setDeltaColor( nodeInfoTree.nodeDodagMismatchErrorCount, node_get_dodag_mismatch_error_delta(node), QColor(Qt::red));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;

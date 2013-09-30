@@ -56,6 +56,7 @@ protected slots:
 protected:
 	static void onErrorEvent(char const * errorMessage);
 	void doCreateNewInformationWindow(QString name = QString());
+	void setDeltaColor(QTreeWidgetItem * widget, int delta, QColor color);
 
 private:
 	Ui::MainWindow *ui;
