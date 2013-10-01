@@ -353,6 +353,7 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
 	inet_ntop(AF_INET6, (const char*)node_get_local_ip(node), ipv6string, INET6_ADDRSTRLEN);
 	nodeInfoTree.nodeLocalIp->setText(1, ipv6string);
+    setDeltaColor( nodeInfoTree.nodeLocalIp, node_get_local_address_delta(node), QColor(Qt::blue));
 
 	inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
 	nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
@@ -411,7 +412,7 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		routeInfo << QString(ipv6string) + "/" + QString::number(route->route_prefix.length) << QString::number(route->via_node, 16);
 		nodeInfoTree.routeMain->addChild(new QTreeWidgetItem(routeInfo));
 	}
-
+	nodeInfoTree.routeMain->setForeground(0, QBrush(node_get_routes_delta(node) ? QBrush(Qt::blue) : QBrush(Qt::black)));
 }
 
 void MainWindow::clearTargetNodeInfo() {
