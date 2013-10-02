@@ -32,7 +32,7 @@ void EventLog::setFilter(const QString& filter) {
 	filteredMessages.clear();
 
 	foreach(message, messages) {
-		if(getEventString(0, message, true).contains(filter) || getEventString(1, message, true).contains(filter, Qt::CaseInsensitive)) {
+        if(getEventString(0, message, true).contains(filter, Qt::CaseInsensitive) || getEventString(1, message, true).contains(filter, Qt::CaseInsensitive)) {
 			filteredMessages.append(message);
 		}
 	}
