@@ -27,7 +27,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
+   <item row="4" column="3">
     <widget class="QPushButton" name="addButton">
      <property name="text">
       <string>Add</string>
@@ -40,7 +40,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
+   <item row="4" column="1" colspan="2">
     <widget class="QSpinBox" name="channelSpin">
      <property name="maximum">
       <number>30</number>
@@ -57,7 +57,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="channelLabel">
      <property name="text">
       <string>Channel</string>
@@ -67,7 +67,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="3">
+   <item row="5" column="3">
     <widget class="QPushButton" name="removeButton">
      <property name="text">
       <string>Remove</string>
@@ -87,14 +87,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1" colspan="2">
-    <widget class="QComboBox" name="typeCombo">
-     <property name="editable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="typeLabel">
      <property name="text">
       <string>Type</string>
@@ -103,6 +96,26 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <widget class="QComboBox" name="typeCombo">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item row="1" column="0" colspan="4">
     <widget class="QTableView" name="snifferTable">
@@ -141,7 +154,7 @@
      </attribute>
     </widget>
    </item>
-   <item row="5" column="3">
+   <item row="6" column="3">
     <widget class="QPushButton" name="closeButton">
      <property name="text">
       <string>Close Window</string>
@@ -151,18 +164,12 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="3" column="1" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>(path to packet file or a real sniffer device, example: /dev/ttyUSB0)</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
   </layout>
  </widget>
