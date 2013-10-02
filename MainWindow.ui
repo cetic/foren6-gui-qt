@@ -112,6 +112,7 @@
    <addaction name="actionToggleNodeMovement"/>
    <addaction name="actionClear"/>
    <addaction name="actionToggleNodeInfo"/>
+   <addaction name="actionLink_Unlink_Dialogs"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -226,6 +227,22 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionLink_Unlink_Dialogs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resource.qrc">
+     <normaloff>:/icons/resources/icons/unlinked.png</normaloff>
+     <normalon>:/icons/resources/icons/linked.png</normalon>:/icons/resources/icons/unlinked.png</iconset>
+   </property>
+   <property name="text">
+    <string>Link/Unlink Dialogs</string>
    </property>
   </action>
  </widget>
