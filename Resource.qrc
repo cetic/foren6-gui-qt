@@ -7,5 +7,7 @@
         <file>resources/icons/stop.png</file>
         <file>resources/icons/unlocked.png</file>
         <file>resources/icons/bubble.png</file>
+        <file>resources/icons/linked.png</file>
+        <file>resources/icons/unlinked.png</file>
     </qresource>
 </RCC>
