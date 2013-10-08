@@ -81,6 +81,11 @@ private:
 		QTreeWidgetItem *dodagVersion;
 		QTreeWidgetItem *dodagId;
 		QTreeWidgetItem *dodagPrefix;
+        QTreeWidgetItem *dodagPrefixOnLink;
+        QTreeWidgetItem *dodagPrefixAutoconf;
+        QTreeWidgetItem *dodagPrefixRouterAddress;
+        QTreeWidgetItem *dodagPrefixValidLifetime;
+        QTreeWidgetItem *dodagPrefixPreferredLifetime;
 		QTreeWidgetItem *dodagConfigAuthEnabled;
 		QTreeWidgetItem *dodagConfigPathControlSize;
 		QTreeWidgetItem *dodagConfigDioIntervalMin;

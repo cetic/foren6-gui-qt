@@ -123,6 +123,16 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.dodagId->setText(0, "DODAG ID");
 		nodeInfoTree.dodagPrefix = new QTreeWidgetItem(nodeInfoTree.dodagMain);
 		nodeInfoTree.dodagPrefix->setText(0, "Prefix");
+        nodeInfoTree.dodagPrefixOnLink = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
+        nodeInfoTree.dodagPrefixOnLink->setText(0, "On-link");
+        nodeInfoTree.dodagPrefixAutoconf = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
+        nodeInfoTree.dodagPrefixAutoconf->setText(0, "Autoconf");
+        nodeInfoTree.dodagPrefixRouterAddress = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
+        nodeInfoTree.dodagPrefixRouterAddress->setText(0, "Router address");
+        nodeInfoTree.dodagPrefixValidLifetime = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
+        nodeInfoTree.dodagPrefixValidLifetime->setText(0, "Valid lifetime");
+        nodeInfoTree.dodagPrefixPreferredLifetime = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
+        nodeInfoTree.dodagPrefixPreferredLifetime->setText(0, "Preferred lifetime");
 		nodeInfoTree.dodagConfigAuthEnabled = new QTreeWidgetItem(nodeInfoTree.dodagMain);
 		nodeInfoTree.dodagConfigAuthEnabled->setText(0, "Use Authentication");
 		nodeInfoTree.dodagConfigPathControlSize = new QTreeWidgetItem(nodeInfoTree.dodagMain);
@@ -319,11 +329,24 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
 		nodeInfoTree.dodagVersion->setText(1, QString::number(dodag_get_key(dodag)->ref.version));
 
-		inet_ntop(AF_INET6, (const char*)&dodag_get_prefix(dodag)->prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
-		nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(dodag_get_prefix(dodag)->prefix.length));
+        const rpl_prefix_t *prefix_info = node_get_dodag_prefix_info(node);
+        const rpl_prefix_delta_t *prefix_info_delta = node_get_dodag_prefix_info_delta(node);
+		inet_ntop(AF_INET6, (const char*)&prefix_info->prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
+		nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(prefix_info->prefix.length));
+        setDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->prefix, QColor(Qt::blue));
+        nodeInfoTree.dodagPrefixOnLink->setText(1, (prefix_info->on_link? "Yes" : "No"));
+        setDeltaColor( nodeInfoTree.dodagPrefixOnLink, prefix_info_delta->on_link, QColor(Qt::blue));
+        nodeInfoTree.dodagPrefixAutoconf->setText(1, (prefix_info->auto_address_config? "Yes" : "No"));
+        setDeltaColor( nodeInfoTree.dodagPrefixAutoconf, prefix_info_delta->auto_address_config, QColor(Qt::blue));
+        nodeInfoTree.dodagPrefixRouterAddress->setText(1, (prefix_info->router_address? "Yes" : "No"));
+        setDeltaColor( nodeInfoTree.dodagPrefixRouterAddress, prefix_info_delta->router_address, QColor(Qt::blue));
+        nodeInfoTree.dodagPrefixValidLifetime->setText(1, QString::number(prefix_info->valid_lifetime));
+        setDeltaColor( nodeInfoTree.dodagPrefixValidLifetime, prefix_info_delta->valid_lifetime, QColor(Qt::blue));
+        nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, QString::number(prefix_info->preferred_lifetime));
+        setDeltaColor( nodeInfoTree.dodagPrefixPreferredLifetime, prefix_info_delta->preferred_lifetime, QColor(Qt::blue));
 
 		const rpl_dodag_config_t *config = node_get_dodag_config(node);
-        const di_dodag_config_delta_t *config_delta = node_get_dodag_config_delta(node);
+        const rpl_dodag_config_delta_t *config_delta = node_get_dodag_config_delta(node);
 		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (config->auth_enabled? "Yes" : "No"));
 	    setDeltaColor( nodeInfoTree.dodagConfigAuthEnabled, config_delta->auth_enabled, QColor(Qt::blue));
 		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, QString::number(config->default_lifetime));
@@ -348,6 +371,11 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		nodeInfoTree.dodagId->setText(1, "");
 		nodeInfoTree.dodagVersion->setText(1, "");
 		nodeInfoTree.dodagPrefix->setText(1, "");
+        nodeInfoTree.dodagPrefixOnLink->setText(1, "");
+        nodeInfoTree.dodagPrefixAutoconf->setText(1, "");
+        nodeInfoTree.dodagPrefixRouterAddress->setText(1, "");
+        nodeInfoTree.dodagPrefixValidLifetime->setText(1, "");
+        nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
 
 		nodeInfoTree.dodagConfigAuthEnabled->setText(1, "");
 		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, "");
@@ -434,6 +462,11 @@ void MainWindow::clearTargetNodeInfo() {
 	nodeInfoTree.dodagVersion->setText(1, "");
 	nodeInfoTree.dodagId->setText(1, "");
 	nodeInfoTree.dodagPrefix->setText(1, "");
+    nodeInfoTree.dodagPrefixOnLink->setText(1, "");
+    nodeInfoTree.dodagPrefixAutoconf->setText(1, "");
+    nodeInfoTree.dodagPrefixRouterAddress->setText(1, "");
+    nodeInfoTree.dodagPrefixValidLifetime->setText(1, "");
+    nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
 	nodeInfoTree.dodagConfigAuthEnabled->setText(1, "");
 	nodeInfoTree.dodagConfigPathControlSize->setText(1, "");
 	nodeInfoTree.dodagConfigDioIntervalMin->setText(1, "");
