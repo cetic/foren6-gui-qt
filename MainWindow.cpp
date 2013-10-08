@@ -291,7 +291,7 @@ void MainWindow::layoutChanged(QString layoutFile) {
     settings.setValue("layout", layoutFile);
 }
 
-void MainWindow::setDeltaColor(QTreeWidgetItem * widget, int delta, QColor color) {
+void MainWindow::setDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color) {
     widget->setForeground(1, QBrush(delta ? QBrush(color) : QBrush(QColor(0, 0, 0))));
 }
 
@@ -322,16 +322,28 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		inet_ntop(AF_INET6, (const char*)&dodag_get_prefix(dodag)->prefix, ipv6string, INET6_ADDRSTRLEN);
 		nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(dodag_get_prefix(dodag)->length));
 
-		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (dodag_get_config(dodag)->auth_enabled? "Yes" : "No"));
-		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, QString::number(dodag_get_config(dodag)->default_lifetime));
-		nodeInfoTree.dodagConfigDioIntervalMax->setText(1, QString::number(dodag_get_config(dodag)->dio_interval_max));
-		nodeInfoTree.dodagConfigDioIntervalMin->setText(1, QString::number(dodag_get_config(dodag)->dio_interval_min));
-		nodeInfoTree.dodagConfigDioRedundancyConstant->setText(1, QString::number(dodag_get_config(dodag)->dio_redundancy_constant));
-		nodeInfoTree.dodagConfigLifetimeUnit->setText(1, QString::number(dodag_get_config(dodag)->lifetime_unit));
-		nodeInfoTree.dodagConfigMaxRankIncrease->setText(1, QString::number(dodag_get_config(dodag)->max_rank_inc));
-		nodeInfoTree.dodagConfigMinHopRankIncrease->setText(1, QString::number(dodag_get_config(dodag)->min_hop_rank_inc));
-		nodeInfoTree.dodagConfigObjectiveFunction->setText(1, QString::number(dodag_get_config(dodag)->objective_function));
-		nodeInfoTree.dodagConfigPathControlSize->setText(1, QString::number(dodag_get_config(dodag)->path_control_size));
+		const di_dodag_config_t *config = node_get_dodag_config(node);
+        const di_dodag_config_delta_t *config_delta = node_get_dodag_config_delta(node);
+		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (config->auth_enabled? "Yes" : "No"));
+	    setDeltaColor( nodeInfoTree.dodagConfigAuthEnabled, config_delta->auth_enabled, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, QString::number(config->default_lifetime));
+        setDeltaColor( nodeInfoTree.dodagConfigDefaultLifetime, config_delta->default_lifetime, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigDioIntervalMax->setText(1, QString::number(config->dio_interval_max));
+        setDeltaColor( nodeInfoTree.dodagConfigDioIntervalMax, config_delta->dio_interval_max, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigDioIntervalMin->setText(1, QString::number(config->dio_interval_min));
+        setDeltaColor( nodeInfoTree.dodagConfigDioIntervalMin, config_delta->dio_interval_min, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigDioRedundancyConstant->setText(1, QString::number(config->dio_redundancy_constant));
+        setDeltaColor( nodeInfoTree.dodagConfigDioRedundancyConstant, config_delta->dio_redundancy_constant, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigLifetimeUnit->setText(1, QString::number(config->lifetime_unit));
+        setDeltaColor( nodeInfoTree.dodagConfigLifetimeUnit, config_delta->lifetime_unit, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigMaxRankIncrease->setText(1, QString::number(config->max_rank_inc));
+        setDeltaColor( nodeInfoTree.dodagConfigMaxRankIncrease, config_delta->max_rank_inc, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigMinHopRankIncrease->setText(1, QString::number(config->min_hop_rank_inc));
+        setDeltaColor( nodeInfoTree.dodagConfigMinHopRankIncrease, config_delta->min_hop_rank_inc, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigObjectiveFunction->setText(1, QString::number(config->objective_function));
+        setDeltaColor( nodeInfoTree.dodagConfigObjectiveFunction, config_delta->objective_function, QColor(Qt::blue));
+		nodeInfoTree.dodagConfigPathControlSize->setText(1, QString::number(config->path_control_size));
+        setDeltaColor( nodeInfoTree.dodagConfigPathControlSize, config_delta->path_control_size, QColor(Qt::blue));
 	} else {
 		nodeInfoTree.dodagId->setText(1, "");
 		nodeInfoTree.dodagVersion->setText(1, "");
