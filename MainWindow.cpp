@@ -319,10 +319,10 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
 		nodeInfoTree.dodagVersion->setText(1, QString::number(dodag_get_key(dodag)->ref.version));
 
-		inet_ntop(AF_INET6, (const char*)&dodag_get_prefix(dodag)->prefix, ipv6string, INET6_ADDRSTRLEN);
-		nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(dodag_get_prefix(dodag)->length));
+		inet_ntop(AF_INET6, (const char*)&dodag_get_prefix(dodag)->prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
+		nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(dodag_get_prefix(dodag)->prefix.length));
 
-		const di_dodag_config_t *config = node_get_dodag_config(node);
+		const rpl_dodag_config_t *config = node_get_dodag_config(node);
         const di_dodag_config_delta_t *config_delta = node_get_dodag_config_delta(node);
 		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (config->auth_enabled? "Yes" : "No"));
 	    setDeltaColor( nodeInfoTree.dodagConfigAuthEnabled, config_delta->auth_enabled, QColor(Qt::blue));
@@ -420,8 +420,8 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
 	LL_FOREACH(route_table, route) {
 		QStringList routeInfo;
-		inet_ntop(AF_INET6, (const char*)&route->route_prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
-		routeInfo << QString(ipv6string) + "/" + QString::number(route->route_prefix.length) << QString::number(route->via_node, 16);
+		inet_ntop(AF_INET6, (const char*)&route->target.prefix, ipv6string, INET6_ADDRSTRLEN);
+		routeInfo << QString(ipv6string) + "/" + QString::number(route->target.length) << QString::number(route->via_node, 16);
 		nodeInfoTree.routeMain->addChild(new QTreeWidgetItem(routeInfo));
 	}
 	nodeInfoTree.routeMain->setForeground(0, QBrush(node_get_routes_delta(node) ? QBrush(Qt::blue) : QBrush(Qt::black)));
