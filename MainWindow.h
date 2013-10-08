@@ -56,7 +56,7 @@ protected slots:
 protected:
 	static void onErrorEvent(char const * errorMessage);
 	void doCreateNewInformationWindow(QString name = QString());
-	void setDeltaColor(QTreeWidgetItem * widget, int delta, QColor color);
+	void setDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color);
 
 private:
 	Ui::MainWindow *ui;
@@ -81,6 +81,11 @@ private:
 		QTreeWidgetItem *dodagVersion;
 		QTreeWidgetItem *dodagId;
 		QTreeWidgetItem *dodagPrefix;
+        QTreeWidgetItem *dodagPrefixOnLink;
+        QTreeWidgetItem *dodagPrefixAutoconf;
+        QTreeWidgetItem *dodagPrefixRouterAddress;
+        QTreeWidgetItem *dodagPrefixValidLifetime;
+        QTreeWidgetItem *dodagPrefixPreferredLifetime;
 		QTreeWidgetItem *dodagConfigAuthEnabled;
 		QTreeWidgetItem *dodagConfigPathControlSize;
 		QTreeWidgetItem *dodagConfigDioIntervalMin;
