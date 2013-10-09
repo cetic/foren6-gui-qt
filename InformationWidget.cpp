@@ -33,6 +33,7 @@ void InformationWidget::clearMessages() {
 void InformationWidget::onMessageLogClicked(QModelIndex index) {
     rpl::Event *  event = messageLog->at(index);
     emit messageSelected(event);
+    ui->messageTable->resizeColumnsToContents();
 }
 
 void InformationWidget::onMessageLogDoubleClicked(QModelIndex index) {

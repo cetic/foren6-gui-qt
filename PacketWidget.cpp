@@ -95,4 +95,5 @@ void PacketWidget::showPacket(rpl::Event *event) {
     model = new TreeModel(result);
     ui->dataTree->setModel(model);
     applyExpandState();
+    ui->dataTree->resizeColumnToContents(0);
 }
