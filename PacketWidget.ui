@@ -20,6 +20,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0" colspan="2">
      <widget class="QTreeView" name="dataTree">
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
       <property name="showDropIndicator" stdset="0">
        <bool>false</bool>
       </property>
