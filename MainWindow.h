@@ -56,8 +56,8 @@ protected slots:
 protected:
 	static void onErrorEvent(char const * errorMessage);
 	void doCreateNewInformationWindow(QString name = QString());
-	void setDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color);
-    void setTitleDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color);
+	void setDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color = QColor(Qt::blue));
+    void setTitleDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color = QColor(Qt::blue));
 
 private:
 	Ui::MainWindow *ui;

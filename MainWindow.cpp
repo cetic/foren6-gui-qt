@@ -313,7 +313,8 @@ void MainWindow::setTitleDeltaColor(QTreeWidgetItem * widget, bool delta, QColor
 
 void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
 	char ipv6string[INET6_ADDRSTRLEN];
-
+	(void)dodag;
+	(void)rpl_instance;
 	if(!node) {
 		clearTargetNodeInfo();
 		return;
@@ -321,74 +322,57 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
     const rpl_instance_config_t *instance_config = node_get_instance_config(node);
     const rpl_instance_config_delta_t *instance_config_delta = node_get_instance_config_delta(node);
+    setTitleDeltaColor(nodeInfoTree.rplInstanceMain, instance_config_delta->has_changed);
+    if (instance_config) {
+        nodeInfoTree.rplInstanceId->setText(1, QString::number(instance_config->rpl_instance_id));
+        setDeltaColor(nodeInfoTree.rplInstanceId, instance_config_delta->rpl_instance_id);
+        nodeInfoTree.rplInstanceModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
+        setDeltaColor(nodeInfoTree.rplInstanceModeOfOperation, instance_config_delta->mode_of_operation);
+        inet_ntop(AF_INET6, (const char*)&instance_config->dodagid, ipv6string, INET6_ADDRSTRLEN);
+        nodeInfoTree.dodagId->setText(1, ipv6string);
+        setDeltaColor(nodeInfoTree.dodagId, instance_config_delta->dodagid);
+        nodeInfoTree.dodagVersion->setText(1, QString::number(instance_config->version_number));
+        setDeltaColor(nodeInfoTree.dodagVersion, instance_config_delta->version_number);
+        nodeInfoTree.nodeGrounded->setText(1, (instance_config->grounded ? "true" : "false"));
+        setDeltaColor( nodeInfoTree.nodeGrounded, instance_config_delta->grounded);
+        nodeInfoTree.nodeRank->setText(1, QString::number(instance_config->rank));
+        setDeltaColor( nodeInfoTree.nodeRank, instance_config_delta->rank);
+        nodeInfoTree.nodeLastDtsn->setText(1, QString::number(instance_config->dtsn));
+        setDeltaColor( nodeInfoTree.nodeLastDtsn, instance_config_delta->dtsn);
+    } else {
+        nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
+        nodeInfoTree.dodagId->setText(1, "");
+        nodeInfoTree.dodagVersion->setText(1, "");
+        nodeInfoTree.nodeGrounded->setText(1, "");
+        nodeInfoTree.nodeRank->setText(1, "");
+        nodeInfoTree.nodeLastDtsn->setText(1, "" );
+    }
 
-	if(rpl_instance) {
-		nodeInfoTree.rplInstanceId->setText(1, QString::number(instance_config->rpl_instance_id));
-		nodeInfoTree.rplInstanceModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
+    const rpl_dodag_config_t *dodag_config = node_get_dodag_config(node);
+    const rpl_dodag_config_delta_t *dodag_config_delta = node_get_dodag_config_delta(node);
+    setTitleDeltaColor( nodeInfoTree.dodagConfig, dodag_config_delta->has_changed);
+    if(dodag_config) {
+		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (dodag_config->auth_enabled? "Yes" : "No"));
+	    setDeltaColor( nodeInfoTree.dodagConfigAuthEnabled, dodag_config_delta->auth_enabled);
+		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, QString::number(dodag_config->default_lifetime));
+        setDeltaColor( nodeInfoTree.dodagConfigDefaultLifetime, dodag_config_delta->default_lifetime);
+		nodeInfoTree.dodagConfigDioIntervalMax->setText(1, QString::number(dodag_config->dio_interval_max));
+        setDeltaColor( nodeInfoTree.dodagConfigDioIntervalMax, dodag_config_delta->dio_interval_max);
+		nodeInfoTree.dodagConfigDioIntervalMin->setText(1, QString::number(dodag_config->dio_interval_min));
+        setDeltaColor( nodeInfoTree.dodagConfigDioIntervalMin, dodag_config_delta->dio_interval_min);
+		nodeInfoTree.dodagConfigDioRedundancyConstant->setText(1, QString::number(dodag_config->dio_redundancy_constant));
+        setDeltaColor( nodeInfoTree.dodagConfigDioRedundancyConstant, dodag_config_delta->dio_redundancy_constant);
+		nodeInfoTree.dodagConfigLifetimeUnit->setText(1, QString::number(dodag_config->lifetime_unit));
+        setDeltaColor( nodeInfoTree.dodagConfigLifetimeUnit, dodag_config_delta->lifetime_unit);
+		nodeInfoTree.dodagConfigMaxRankIncrease->setText(1, QString::number(dodag_config->max_rank_inc));
+        setDeltaColor( nodeInfoTree.dodagConfigMaxRankIncrease, dodag_config_delta->max_rank_inc);
+		nodeInfoTree.dodagConfigMinHopRankIncrease->setText(1, QString::number(dodag_config->min_hop_rank_inc));
+        setDeltaColor( nodeInfoTree.dodagConfigMinHopRankIncrease, dodag_config_delta->min_hop_rank_inc);
+		nodeInfoTree.dodagConfigObjectiveFunction->setText(1, QString::number(dodag_config->objective_function));
+        setDeltaColor( nodeInfoTree.dodagConfigObjectiveFunction, dodag_config_delta->objective_function);
+		nodeInfoTree.dodagConfigPathControlSize->setText(1, QString::number(dodag_config->path_control_size));
+        setDeltaColor( nodeInfoTree.dodagConfigPathControlSize, dodag_config_delta->path_control_size);
 	} else {
-		if(dodag)
-			nodeInfoTree.rplInstanceId->setText(1, QString::number(instance_config->rpl_instance_id));
-		else nodeInfoTree.rplInstanceId->setText(1, "");
-		nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
-	}
-
-	if(dodag) {
-		inet_ntop(AF_INET6, (const char*)&dodag_get_key(dodag)->ref.dodagid, ipv6string, INET6_ADDRSTRLEN);
-		nodeInfoTree.dodagId->setText(1, ipv6string);
-
-		nodeInfoTree.dodagVersion->setText(1, QString::number(dodag_get_key(dodag)->ref.version));
-
-        const rpl_prefix_t *prefix_info = node_get_dodag_prefix_info(node);
-        const rpl_prefix_delta_t *prefix_info_delta = node_get_dodag_prefix_info_delta(node);
-        setTitleDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->has_changed, QColor(Qt::blue));
-		inet_ntop(AF_INET6, (const char*)&prefix_info->prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
-		nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(prefix_info->prefix.length));
-        setDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->prefix, QColor(Qt::blue));
-        nodeInfoTree.dodagPrefixOnLink->setText(1, (prefix_info->on_link? "Yes" : "No"));
-        setDeltaColor( nodeInfoTree.dodagPrefixOnLink, prefix_info_delta->on_link, QColor(Qt::blue));
-        nodeInfoTree.dodagPrefixAutoconf->setText(1, (prefix_info->auto_address_config? "Yes" : "No"));
-        setDeltaColor( nodeInfoTree.dodagPrefixAutoconf, prefix_info_delta->auto_address_config, QColor(Qt::blue));
-        nodeInfoTree.dodagPrefixRouterAddress->setText(1, (prefix_info->router_address? "Yes" : "No"));
-        setDeltaColor( nodeInfoTree.dodagPrefixRouterAddress, prefix_info_delta->router_address, QColor(Qt::blue));
-        nodeInfoTree.dodagPrefixValidLifetime->setText(1, QString::number(prefix_info->valid_lifetime));
-        setDeltaColor( nodeInfoTree.dodagPrefixValidLifetime, prefix_info_delta->valid_lifetime, QColor(Qt::blue));
-        nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, QString::number(prefix_info->preferred_lifetime));
-        setDeltaColor( nodeInfoTree.dodagPrefixPreferredLifetime, prefix_info_delta->preferred_lifetime, QColor(Qt::blue));
-
-		const rpl_dodag_config_t *config = node_get_dodag_config(node);
-        const rpl_dodag_config_delta_t *config_delta = node_get_dodag_config_delta(node);
-        setTitleDeltaColor( nodeInfoTree.dodagConfig, config_delta->has_changed, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (config->auth_enabled? "Yes" : "No"));
-	    setDeltaColor( nodeInfoTree.dodagConfigAuthEnabled, config_delta->auth_enabled, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, QString::number(config->default_lifetime));
-        setDeltaColor( nodeInfoTree.dodagConfigDefaultLifetime, config_delta->default_lifetime, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigDioIntervalMax->setText(1, QString::number(config->dio_interval_max));
-        setDeltaColor( nodeInfoTree.dodagConfigDioIntervalMax, config_delta->dio_interval_max, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigDioIntervalMin->setText(1, QString::number(config->dio_interval_min));
-        setDeltaColor( nodeInfoTree.dodagConfigDioIntervalMin, config_delta->dio_interval_min, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigDioRedundancyConstant->setText(1, QString::number(config->dio_redundancy_constant));
-        setDeltaColor( nodeInfoTree.dodagConfigDioRedundancyConstant, config_delta->dio_redundancy_constant, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigLifetimeUnit->setText(1, QString::number(config->lifetime_unit));
-        setDeltaColor( nodeInfoTree.dodagConfigLifetimeUnit, config_delta->lifetime_unit, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigMaxRankIncrease->setText(1, QString::number(config->max_rank_inc));
-        setDeltaColor( nodeInfoTree.dodagConfigMaxRankIncrease, config_delta->max_rank_inc, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigMinHopRankIncrease->setText(1, QString::number(config->min_hop_rank_inc));
-        setDeltaColor( nodeInfoTree.dodagConfigMinHopRankIncrease, config_delta->min_hop_rank_inc, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigObjectiveFunction->setText(1, QString::number(config->objective_function));
-        setDeltaColor( nodeInfoTree.dodagConfigObjectiveFunction, config_delta->objective_function, QColor(Qt::blue));
-		nodeInfoTree.dodagConfigPathControlSize->setText(1, QString::number(config->path_control_size));
-        setDeltaColor( nodeInfoTree.dodagConfigPathControlSize, config_delta->path_control_size, QColor(Qt::blue));
-	} else {
-		nodeInfoTree.dodagId->setText(1, "");
-		nodeInfoTree.dodagVersion->setText(1, "");
-
-		nodeInfoTree.dodagPrefix->setText(1, "");
-        nodeInfoTree.dodagPrefixOnLink->setText(1, "");
-        nodeInfoTree.dodagPrefixAutoconf->setText(1, "");
-        nodeInfoTree.dodagPrefixRouterAddress->setText(1, "");
-        nodeInfoTree.dodagPrefixValidLifetime->setText(1, "");
-        nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
-
         nodeInfoTree.dodagConfig->setText(1, "");
 		nodeInfoTree.dodagConfigAuthEnabled->setText(1, "");
 		nodeInfoTree.dodagConfigDefaultLifetime->setText(1, "");
@@ -401,20 +385,41 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		nodeInfoTree.dodagConfigObjectiveFunction->setText(1, "");
 		nodeInfoTree.dodagConfigPathControlSize->setText(1, "");
 	}
+    const rpl_prefix_t *prefix_info = node_get_dodag_prefix_info(node);
+    const rpl_prefix_delta_t *prefix_info_delta = node_get_dodag_prefix_info_delta(node);
+    setTitleDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->has_changed);
+    if (prefix_info) {
+        inet_ntop(AF_INET6, (const char*)&prefix_info->prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
+        nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(prefix_info->prefix.length));
+        setDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->prefix);
+        nodeInfoTree.dodagPrefixOnLink->setText(1, (prefix_info->on_link? "Yes" : "No"));
+        setDeltaColor( nodeInfoTree.dodagPrefixOnLink, prefix_info_delta->on_link);
+        nodeInfoTree.dodagPrefixAutoconf->setText(1, (prefix_info->auto_address_config? "Yes" : "No"));
+        setDeltaColor( nodeInfoTree.dodagPrefixAutoconf, prefix_info_delta->auto_address_config);
+        nodeInfoTree.dodagPrefixRouterAddress->setText(1, (prefix_info->router_address? "Yes" : "No"));
+        setDeltaColor( nodeInfoTree.dodagPrefixRouterAddress, prefix_info_delta->router_address);
+        nodeInfoTree.dodagPrefixValidLifetime->setText(1, QString::number(prefix_info->valid_lifetime));
+        setDeltaColor( nodeInfoTree.dodagPrefixValidLifetime, prefix_info_delta->valid_lifetime);
+        nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, QString::number(prefix_info->preferred_lifetime));
+        setDeltaColor( nodeInfoTree.dodagPrefixPreferredLifetime, prefix_info_delta->preferred_lifetime);
+    } else {
+        nodeInfoTree.dodagPrefix->setText(1, "");
+        nodeInfoTree.dodagPrefixOnLink->setText(1, "");
+        nodeInfoTree.dodagPrefixAutoconf->setText(1, "");
+        nodeInfoTree.dodagPrefixRouterAddress->setText(1, "");
+        nodeInfoTree.dodagPrefixValidLifetime->setText(1, "");
+        nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
+    }
 
 	nodeInfoTree.nodeMacAddress->setText(1, QString::number(node_get_key(node)->ref.wpan_address, 16));
 
 	inet_ntop(AF_INET6, (const char*)node_get_local_ip(node), ipv6string, INET6_ADDRSTRLEN);
 	nodeInfoTree.nodeLocalIp->setText(1, ipv6string);
-    setDeltaColor( nodeInfoTree.nodeLocalIp, node_get_local_address_delta(node), QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeLocalIp, node_get_local_address_delta(node));
 
 	inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
 	nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
-    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node), QColor(Qt::blue));
-
-
-	nodeInfoTree.nodeGrounded->setText(1, (instance_config->grounded ? "true" : "false"));
-    setDeltaColor( nodeInfoTree.nodeGrounded, instance_config_delta->grounded, QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node));
 
     const di_metric_t *metric = node_get_metric(node);
 	QString metricValue;
@@ -424,21 +429,17 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		metricValue += QString(" (") + metric->type->name + ": " + QString::number(metric_get_display_value(metric)) + ")";
 	}
 	nodeInfoTree.nodeMetric->setText(1, metricValue);
-    setDeltaColor( nodeInfoTree.nodeMetric, node_get_metric_delta(node), QColor(Qt::blue));
-	nodeInfoTree.nodeRank->setText(1, QString::number(instance_config->rank));
-    setDeltaColor( nodeInfoTree.nodeRank, instance_config_delta->rank, QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeMetric, node_get_metric_delta(node));
 
 	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
-    setDeltaColor( nodeInfoTree.nodeTraffic, node_get_packet_count_delta(node), QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeTraffic, node_get_packet_count_delta(node));
 
 	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)) + " sec");
-    setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, node_get_max_dao_interval_delta(node), QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, node_get_max_dao_interval_delta(node));
 	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(node_get_max_dio_interval(node)) + " sec");
-    setDeltaColor( nodeInfoTree.nodeMaxDioInterval, node_get_max_dio_interval_delta(node), QColor(Qt::blue));
-	nodeInfoTree.nodeLastDtsn->setText(1, QString::number(instance_config->dtsn));
-    setDeltaColor( nodeInfoTree.nodeLastDtsn, instance_config_delta->dtsn, QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeMaxDioInterval, node_get_max_dio_interval_delta(node));
 	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
-    setDeltaColor( nodeInfoTree.nodeLastDaoSeq, node_get_latest_dao_sequence_delta(node), QColor(Qt::blue));
+    setDeltaColor( nodeInfoTree.nodeLastDaoSeq, node_get_latest_dao_sequence_delta(node));
 
     nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
     setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, node_get_upward_error_delta(node), QColor(Qt::red));
@@ -466,21 +467,27 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		routeInfo << QString(ipv6string) + "/" + QString::number(route->target.length) << QString::number(route->via_node, 16);
 		nodeInfoTree.routeMain->addChild(new QTreeWidgetItem(routeInfo));
 	}
-	nodeInfoTree.routeMain->setForeground(0, QBrush(node_get_routes_delta(node) ? QBrush(Qt::blue) : QBrush(Qt::black)));
+	setTitleDeltaColor(nodeInfoTree.routeMain, node_get_routes_delta(node));
 }
 
 void MainWindow::clearTargetNodeInfo() {
+    setTitleDeltaColor(nodeInfoTree.rplInstanceMain, false );
 	nodeInfoTree.rplInstanceId->setText(1, "");
 	nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
 
+    setTitleDeltaColor( nodeInfoTree.dodagConfig, false);
 	nodeInfoTree.dodagVersion->setText(1, "");
 	nodeInfoTree.dodagId->setText(1, "");
+
+    setTitleDeltaColor( nodeInfoTree.dodagPrefix, false);
 	nodeInfoTree.dodagPrefix->setText(1, "");
     nodeInfoTree.dodagPrefixOnLink->setText(1, "");
     nodeInfoTree.dodagPrefixAutoconf->setText(1, "");
     nodeInfoTree.dodagPrefixRouterAddress->setText(1, "");
     nodeInfoTree.dodagPrefixValidLifetime->setText(1, "");
     nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
+
+    setTitleDeltaColor( nodeInfoTree.dodagConfig, false);
     nodeInfoTree.dodagConfig->setText(1, "");
 	nodeInfoTree.dodagConfigAuthEnabled->setText(1, "");
 	nodeInfoTree.dodagConfigPathControlSize->setText(1, "");
