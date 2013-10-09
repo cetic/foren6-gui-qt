@@ -57,6 +57,7 @@ protected:
 	static void onErrorEvent(char const * errorMessage);
 	void doCreateNewInformationWindow(QString name = QString());
 	void setDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color);
+    void setTitleDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color);
 
 private:
 	Ui::MainWindow *ui;
@@ -86,6 +87,7 @@ private:
         QTreeWidgetItem *dodagPrefixRouterAddress;
         QTreeWidgetItem *dodagPrefixValidLifetime;
         QTreeWidgetItem *dodagPrefixPreferredLifetime;
+        QTreeWidgetItem *dodagConfig;
 		QTreeWidgetItem *dodagConfigAuthEnabled;
 		QTreeWidgetItem *dodagConfigPathControlSize;
 		QTreeWidgetItem *dodagConfigDioIntervalMin;
