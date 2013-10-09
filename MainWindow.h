@@ -58,6 +58,8 @@ protected:
 	void doCreateNewInformationWindow(QString name = QString());
 	void setDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color = QColor(Qt::blue));
     void setTitleDeltaColor(QTreeWidgetItem * widget, bool delta, QColor color = QColor(Qt::blue));
+    void setThreeColor(QTreeWidgetItem * widget, bool valid, bool delta, QColor errorColor = QColor(Qt::red), QColor deltaColor = QColor(Qt::blue));
+    void setTitleThreeColor(QTreeWidgetItem * widget, bool valid, bool delta, QColor errorColor = QColor(Qt::red), QColor deltaColor = QColor(Qt::blue));
 
 private:
 	Ui::MainWindow *ui;

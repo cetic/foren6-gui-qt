@@ -311,6 +311,14 @@ void MainWindow::setTitleDeltaColor(QTreeWidgetItem * widget, bool delta, QColor
     widget->setForeground(0, QBrush(delta ? QBrush(color) : QBrush(QColor(0, 0, 0))));
 }
 
+void MainWindow::setThreeColor(QTreeWidgetItem * widget, bool error, bool delta, QColor errorColor, QColor deltaColor) {
+    widget->setForeground(1, QBrush(error ? errorColor : (delta ? QBrush(deltaColor) : QBrush(QColor(0, 0, 0)))));
+}
+
+void MainWindow::setTitleThreeColor(QTreeWidgetItem * widget, bool error, bool delta, QColor errorColor, QColor deltaColor) {
+    widget->setForeground(0, QBrush(error ? errorColor : (delta ? QBrush(deltaColor) : QBrush(QColor(0, 0, 0)))));
+}
+
 void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance) {
 	char ipv6string[INET6_ADDRSTRLEN];
 	(void)dodag;
@@ -387,21 +395,22 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 	}
     const rpl_prefix_t *prefix_info = node_get_dodag_prefix_info(node);
     const rpl_prefix_delta_t *prefix_info_delta = node_get_dodag_prefix_info_delta(node);
-    setTitleDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->has_changed);
+    const rpl_prefix_delta_t *actual_prefix_info_delta = node_get_actual_dodag_prefix_info_delta(node);
+    setTitleThreeColor( nodeInfoTree.dodagPrefix, actual_prefix_info_delta->has_changed, prefix_info_delta->has_changed);
     if (prefix_info) {
         inet_ntop(AF_INET6, (const char*)&prefix_info->prefix.prefix, ipv6string, INET6_ADDRSTRLEN);
         nodeInfoTree.dodagPrefix->setText(1, QString(ipv6string) + "/" + QString::number(prefix_info->prefix.length));
-        setDeltaColor( nodeInfoTree.dodagPrefix, prefix_info_delta->prefix);
+        setThreeColor( nodeInfoTree.dodagPrefix, actual_prefix_info_delta->prefix, prefix_info_delta->prefix);
         nodeInfoTree.dodagPrefixOnLink->setText(1, (prefix_info->on_link? "Yes" : "No"));
-        setDeltaColor( nodeInfoTree.dodagPrefixOnLink, prefix_info_delta->on_link);
+        setThreeColor( nodeInfoTree.dodagPrefixOnLink, actual_prefix_info_delta->on_link, prefix_info_delta->on_link);
         nodeInfoTree.dodagPrefixAutoconf->setText(1, (prefix_info->auto_address_config? "Yes" : "No"));
-        setDeltaColor( nodeInfoTree.dodagPrefixAutoconf, prefix_info_delta->auto_address_config);
+        setThreeColor( nodeInfoTree.dodagPrefixAutoconf, actual_prefix_info_delta->auto_address_config, prefix_info_delta->auto_address_config);
         nodeInfoTree.dodagPrefixRouterAddress->setText(1, (prefix_info->router_address? "Yes" : "No"));
-        setDeltaColor( nodeInfoTree.dodagPrefixRouterAddress, prefix_info_delta->router_address);
+        setThreeColor( nodeInfoTree.dodagPrefixRouterAddress, actual_prefix_info_delta->router_address, prefix_info_delta->router_address);
         nodeInfoTree.dodagPrefixValidLifetime->setText(1, QString::number(prefix_info->valid_lifetime));
-        setDeltaColor( nodeInfoTree.dodagPrefixValidLifetime, prefix_info_delta->valid_lifetime);
+        setThreeColor( nodeInfoTree.dodagPrefixValidLifetime, actual_prefix_info_delta->valid_lifetime, prefix_info_delta->valid_lifetime);
         nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, QString::number(prefix_info->preferred_lifetime));
-        setDeltaColor( nodeInfoTree.dodagPrefixPreferredLifetime, prefix_info_delta->preferred_lifetime);
+        setThreeColor( nodeInfoTree.dodagPrefixPreferredLifetime, actual_prefix_info_delta->preferred_lifetime, prefix_info_delta->preferred_lifetime);
     } else {
         nodeInfoTree.dodagPrefix->setText(1, "");
         nodeInfoTree.dodagPrefixOnLink->setText(1, "");
