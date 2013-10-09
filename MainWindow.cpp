@@ -252,6 +252,7 @@ void MainWindow::createNewPacketWindow() {
     packetWidget = new PacketWidget(this);
     packetWidget->setFloating(true);
     packetWidget->show();
+    packetWidget->move(this->pos()); /* Place at the same position as main window to avoid multi-screen glitches */
     connect(packetWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onPacketWindowClosed(QObject*)));
 }
 
