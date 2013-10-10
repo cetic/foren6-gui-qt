@@ -123,15 +123,15 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.rplInstanceMain->setText(0, "RPL Instances");
 		nodeInfoTree.rplInstanceId = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
 		nodeInfoTree.rplInstanceId->setText(0, "Instance ID");
-		nodeInfoTree.rplInstanceModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
-		nodeInfoTree.rplInstanceModeOfOperation->setText(0, "Mode of Operation");
 
-		nodeInfoTree.dodagMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-		nodeInfoTree.dodagMain->setText(0, "DODAG");
+		nodeInfoTree.dodagMain = nodeInfoTree.rplInstanceId;//new QTreeWidgetItem(nodeInfoTree.rplInstanceId);
+		//nodeInfoTree.dodagMain->setText(0, "DODAG ID");
+        nodeInfoTree.dodagId = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+        nodeInfoTree.dodagId->setText(0, "DODAG ID");
 		nodeInfoTree.dodagVersion = new QTreeWidgetItem(nodeInfoTree.dodagMain);
 		nodeInfoTree.dodagVersion->setText(0, "Version");
-		nodeInfoTree.dodagId = new QTreeWidgetItem(nodeInfoTree.dodagMain);
-		nodeInfoTree.dodagId->setText(0, "DODAG ID");
+        nodeInfoTree.rplInstanceModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceId);
+        nodeInfoTree.rplInstanceModeOfOperation->setText(0, "Mode of Operation");
 		nodeInfoTree.dodagPrefix = new QTreeWidgetItem(nodeInfoTree.dodagMain);
 		nodeInfoTree.dodagPrefix->setText(0, "Prefix");
         nodeInfoTree.dodagPrefixOnLink = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
