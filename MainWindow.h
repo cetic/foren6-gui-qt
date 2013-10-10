@@ -76,7 +76,13 @@ private:
 	QLabel layoutName;
 
 	struct NodeInfoTree {
-		QTreeWidgetItem *rplInstanceMain;
+	    QTreeWidgetItem *linkMain;
+        QTreeWidgetItem *nodeMacAddress;
+        QTreeWidgetItem *ipv6Main;
+        QTreeWidgetItem *nodeLocalIp;
+        QTreeWidgetItem *nodeGlobalIp;
+
+	    QTreeWidgetItem *rplInstanceMain;
 		QTreeWidgetItem *rplInstanceId;
 		QTreeWidgetItem *rplInstanceModeOfOperation;
 
@@ -101,18 +107,19 @@ private:
 		QTreeWidgetItem *dodagConfigLifetimeUnit;
 		QTreeWidgetItem *dodagConfigObjectiveFunction;
 
-		QTreeWidgetItem *nodeMain;
+        QTreeWidgetItem *rplMain;
 		QTreeWidgetItem *nodeMetric;
 		QTreeWidgetItem *nodeRank;
-		QTreeWidgetItem *nodeMacAddress;
-		QTreeWidgetItem *nodeLocalIp;
-		QTreeWidgetItem *nodeGlobalIp;
 		QTreeWidgetItem *nodeGrounded;
-		QTreeWidgetItem *nodeTraffic;
+        QTreeWidgetItem *nodeLastDtsn;
+        QTreeWidgetItem *nodeLastDaoSeq;
+
+        QTreeWidgetItem *statisticsMain;
+        QTreeWidgetItem *nodeTraffic;
 		QTreeWidgetItem *nodeMaxDaoInterval;
 		QTreeWidgetItem *nodeMaxDioInterval;
-		QTreeWidgetItem *nodeLastDtsn;
-		QTreeWidgetItem *nodeLastDaoSeq;
+
+        QTreeWidgetItem *errorsMain;
 		QTreeWidgetItem *nodeUpwardRankErrorCount;
 		QTreeWidgetItem *nodeDownwardRankErrorCount;
 		QTreeWidgetItem *nodeRouteLoopErrorCount;

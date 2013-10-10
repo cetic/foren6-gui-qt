@@ -108,8 +108,19 @@ MainWindow::MainWindow(QWidget *parent) :
     wsnManager->setLayout(settings.value("layout", QString()).toString());
 
 	{
+        nodeInfoTree.linkMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+        nodeInfoTree.linkMain->setText(0, "802.15.4");
+        nodeInfoTree.nodeMacAddress = new QTreeWidgetItem(nodeInfoTree.linkMain);
+        nodeInfoTree.nodeMacAddress->setText(0, "MAC Address");
+        nodeInfoTree.ipv6Main = new QTreeWidgetItem(ui->rplNodeInfoTree);
+        nodeInfoTree.ipv6Main->setText(0, "IPv6");
+        nodeInfoTree.nodeLocalIp = new QTreeWidgetItem(nodeInfoTree.ipv6Main);
+        nodeInfoTree.nodeLocalIp->setText(0, "Link-Local IP");
+        nodeInfoTree.nodeGlobalIp = new QTreeWidgetItem(nodeInfoTree.ipv6Main);
+        nodeInfoTree.nodeGlobalIp->setText(0, "Global IP");
+
 		nodeInfoTree.rplInstanceMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-		nodeInfoTree.rplInstanceMain->setText(0, "RPL Instance");
+		nodeInfoTree.rplInstanceMain->setText(0, "RPL Instances");
 		nodeInfoTree.rplInstanceId = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
 		nodeInfoTree.rplInstanceId->setText(0, "Instance ID");
 		nodeInfoTree.rplInstanceModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
@@ -134,6 +145,7 @@ MainWindow::MainWindow(QWidget *parent) :
         nodeInfoTree.dodagPrefixPreferredLifetime = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
         nodeInfoTree.dodagPrefixPreferredLifetime->setText(0, "Preferred lifetime");
         nodeInfoTree.dodagConfig = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+
         nodeInfoTree.dodagConfig->setText(0, "Configuration");
 		nodeInfoTree.dodagConfigAuthEnabled = new QTreeWidgetItem(nodeInfoTree.dodagConfig);
 		nodeInfoTree.dodagConfigAuthEnabled->setText(0, "Use Authentication");
@@ -156,39 +168,39 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.dodagConfigObjectiveFunction = new QTreeWidgetItem(nodeInfoTree.dodagConfig);
 		nodeInfoTree.dodagConfigObjectiveFunction->setText(0, "Objective Function");
 
-		nodeInfoTree.nodeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-		nodeInfoTree.nodeMain->setText(0, "Node");
-		nodeInfoTree.nodeMacAddress = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-		nodeInfoTree.nodeMacAddress->setText(0, "MAC Address");
-		nodeInfoTree.nodeLocalIp = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-		nodeInfoTree.nodeLocalIp->setText(0, "Link-Local IP");
-		nodeInfoTree.nodeGlobalIp = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-		nodeInfoTree.nodeGlobalIp->setText(0, "Global IP");
-		nodeInfoTree.nodeMetric = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+        nodeInfoTree.rplMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+        nodeInfoTree.rplMain->setText(0, "RPL");
+		nodeInfoTree.nodeMetric = new QTreeWidgetItem(nodeInfoTree.rplMain);
 		nodeInfoTree.nodeMetric->setText(0, "Metric");
-		nodeInfoTree.nodeRank = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeRank = new QTreeWidgetItem(nodeInfoTree.rplMain);
 		nodeInfoTree.nodeRank->setText(0, "Rank");
-		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.rplMain);
 		nodeInfoTree.nodeGrounded->setText(0, "Grounded");
-		nodeInfoTree.nodeTraffic = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+        nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.rplMain);
+        nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
+        nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.rplMain);
+        nodeInfoTree.nodeLastDaoSeq->setText(0, "Last DAO Sequence");
+
+        nodeInfoTree.statisticsMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+        nodeInfoTree.statisticsMain->setText(0, "Statistics");
+		nodeInfoTree.nodeTraffic = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
 		nodeInfoTree.nodeTraffic->setText(0, "Transmited Packets");
-		nodeInfoTree.nodeMaxDaoInterval = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeMaxDaoInterval = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
 		nodeInfoTree.nodeMaxDaoInterval->setText(0, "Max DAO Interval");
-		nodeInfoTree.nodeMaxDioInterval = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeMaxDioInterval = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
 		nodeInfoTree.nodeMaxDioInterval->setText(0, "Max DIO Interval");
-		nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-		nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
-		nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.nodeMain);
-		nodeInfoTree.nodeLastDaoSeq->setText(0, "Last DAO Sequence");
-		nodeInfoTree.nodeUpwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+
+        nodeInfoTree.errorsMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+        nodeInfoTree.errorsMain->setText(0, "Errors");
+		nodeInfoTree.nodeUpwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeUpwardRankErrorCount->setText(0, "Upward rank errors");
-		nodeInfoTree.nodeDownwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeDownwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeDownwardRankErrorCount->setText(0, "Downward rank errors");
-		nodeInfoTree.nodeRouteLoopErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeRouteLoopErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeRouteLoopErrorCount->setText(0, "Route loop errors");
-		nodeInfoTree.nodeIpMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeIpMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeIpMismatchErrorCount->setText(0, "IP mismatch errors");
-		nodeInfoTree.nodeDodagMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.nodeMain);
+		nodeInfoTree.nodeDodagMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeDodagMismatchErrorCount->setText(0, "Dodag mismatch errors");
 
 		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
