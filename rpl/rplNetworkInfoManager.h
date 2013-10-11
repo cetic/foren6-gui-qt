@@ -66,6 +66,7 @@ public slots:
 signals:
 	void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);
 	void updateVersionCount(int versionCount);
+    void timeTick(int msec);
 	void logMessage(rpl::Event *action);
 	void clearMessages();
 	void layoutChanged(QString layout);

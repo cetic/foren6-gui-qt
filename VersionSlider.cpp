@@ -6,7 +6,9 @@
 
 VersionSlider::VersionSlider(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::VersionSlider)
+    ui(new Ui::VersionSlider),
+    showUpdate(false),
+    incrTime(false)
 {
 	ui->setupUi(this);
 
@@ -21,37 +23,37 @@ VersionSlider::~VersionSlider()
 	delete ui;
 }
 
-void VersionSlider::setMaximum(int max) {
-	maxTimestamp = 0;
+void VersionSlider::updateTime(void) {
+    if(maxTimestamp > 20000000)
+        maxTimestamp = 20000000;
+    if(currentTimestamp > 20000000)
+        currentTimestamp = 20000000;
+    ui->versionSlider->setMaximum(ceil(maxTimestamp*100));
+    ui->versionSlider->setValue(ceil(currentTimestamp*100));
+    QString text = value() == maximum() ? "(R) " : "";
+    text += QString::number(currentTimestamp);
+    ui->currentTimeLabel->setText(text);
+}
 
+void VersionSlider::setMaximum(int max) {
 	for(int i = 0; i < max; i++) {
 		if(maxTimestamp < rpldata_wsn_version_get_timestamp(i))
 			maxTimestamp = rpldata_wsn_version_get_timestamp(i);
 	}
 
-	if(maxTimestamp > 20000000)
-		maxTimestamp = 20000000;
-
 	settingCurrentVersion = true;
-	ui->versionSlider->setMaximum(ceil(maxTimestamp*100));
 	ui->versionSpin->setMaximum(max);
+    updateTime();
 	settingCurrentVersion = false;
 	ui->versionSpin->setSuffix(QString("/%1").arg(max));
 }
 
 void VersionSlider::setValue(int version) {
-	double timestamp = rpldata_wsn_version_get_timestamp(version);
-
-	if(timestamp > 20000000)
-		timestamp = 20000000;
-
+	currentTimestamp = rpldata_wsn_version_get_timestamp(version);
 	settingCurrentVersion = true;
-	ui->versionSlider->setValue(ceil(timestamp*100));
 	ui->versionSpin->setValue(version);
+	updateTime();
 	settingCurrentVersion = false;
-	QString text = value() == maximum() ? "(R) " : "";
-	text += QString::number(timestamp);
-	ui->currentTimeLabel->setText(text);
 }
 
 int VersionSlider::maximum() {
@@ -87,6 +89,28 @@ void VersionSlider::onUpdateVersionCount(int versionCount) {
 
 	if(versionChange)
 		emit changeWsnVersion(value());
+}
+
+void VersionSlider::onTimeTick(int msec) {
+    if (!incrTime) return;
+    maxTimestamp += msec / 1000.0;
+    if (showUpdate) {
+        updateTime();
+    }
+}
+
+void VersionSlider::clearTime() {
+    incrTime = false;
+    maxTimestamp = 0;
+}
+
+void VersionSlider::startTime() {
+    showUpdate = true;
+    incrTime = true;
+}
+
+void VersionSlider::stopTime() {
+    showUpdate = false;
 }
 
 void VersionSlider::onVersionSliderChange(int value) {

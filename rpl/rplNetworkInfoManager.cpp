@@ -390,6 +390,8 @@ void NetworkInfoManager::updateVersion() {
 	if(versionCount != lastVersionCount) {
 		lastVersionCount = versionCount;
 		emit updateVersionCount(versionCount);
+	} else {
+	    emit timeTick(100);
 	}
 }
 

@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)), this, SLOT(setTargetNodeInfo(const di_node_t*,const di_dodag_t*,const di_rpl_instance_t*)));
 	connect(wsnManager, SIGNAL(updateVersionCount(int)), ui->versionSlider, SLOT(onUpdateVersionCount(int)));
+    connect(wsnManager, SIGNAL(timeTick(int)), ui->versionSlider, SLOT(onTimeTick(int)));
 	connect(wsnManager, SIGNAL(logMessage(rpl::Event*)), this, SLOT(addMessage(rpl::Event*)));
 	connect(wsnManager, SIGNAL(clearMessages()), this, SLOT(clearMessages()));
     connect(wsnManager, SIGNAL(layoutChanged(QString)), this, SLOT(layoutChanged(QString)));
@@ -552,6 +553,7 @@ void MainWindow::onStartSniffer() {
 	ui->actionStart->setEnabled(false);
 	ui->actionStop->setEnabled(true);
 	ui->actionOpenSnifferDialog->setEnabled(false);
+	ui->versionSlider->startTime();
 	captureStarted=true;
 }
 
@@ -560,6 +562,7 @@ void MainWindow::onStopSniffer() {
     ui->actionStart->setEnabled(true);
     ui->actionStop->setEnabled(false);
     ui->actionOpenSnifferDialog->setEnabled(true);
+    ui->versionSlider->stopTime();
     captureStarted=false;
 }
 
@@ -572,6 +575,7 @@ void MainWindow::onOpenSnifferDialog() {
 
 void MainWindow::onClear() {
 	rpldata_clear();
+    ui->versionSlider->clearTime();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
