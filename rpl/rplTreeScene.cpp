@@ -32,7 +32,9 @@ void TreeScene::setBackground(QString newBackgroundFile) {
     backgroundFile = newBackgroundFile;
     delete background;
     background = new QPixmap(backgroundFile);
-    setSceneRect(background->rect());
+    if (background->rect().isValid()) {
+        setSceneRect(background->rect());
+    }
 }
 
 void TreeScene::setLayout(QSettings *  newLayout) {
