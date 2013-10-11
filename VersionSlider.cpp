@@ -140,15 +140,11 @@ void VersionSlider::onVersionSliderChange(int value) {
 }
 
 void VersionSlider::onVersionSpinChange(int value) {
-	int version = qMax(qMin(value, maximum()), 0);
+	int version = qMax(qMin(value, maximum()), 1);
 
 	if(settingCurrentVersion)
 		return;
 
-	if(version == 0)
-		setValue(maximum());
-	else
-		setValue(version);
-
+    setValue(version);
 	emit changeWsnVersion(version);
 }
