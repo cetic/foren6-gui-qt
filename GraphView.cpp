@@ -31,6 +31,7 @@ void GraphView::setNetworkManager(rpl::NetworkInfoManager *networkMgr) {
 	ui->nodeGraphView->setScene(networkMgr->scene());
 	this->networkMgr = networkMgr;
     bindSceneToView();
+    connect(this->networkMgr->scene(), SIGNAL(backgroundChangeEvent()), this, SLOT(bindSceneToView()));
 }
 
 void GraphView::onLayoutComboChange(int index) {
@@ -90,8 +91,12 @@ void GraphView::resizeEvent(QResizeEvent * e) {
 }
 
 void GraphView::bindSceneToView() {
-    QRect _rect = this->rect();
-    _rect.setWidth(_rect.width()*0.9);
-    _rect.setHeight(_rect.height()*0.9);
-    this->networkMgr->scene()->setSceneRect(_rect);
+    if(!this->networkMgr->scene()->hasValidBackground()) {
+        qDebug("bindSceneToView");
+        QRect _rect = this->rect();
+        _rect.setWidth(_rect.width()*0.9);
+        _rect.setHeight(_rect.height()*0.9);
+        _rect.translate(-_rect.width()/2, -_rect.height()/2);
+        this->networkMgr->scene()->setSceneRect(_rect);
+    }
 }
