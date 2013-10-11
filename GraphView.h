@@ -24,6 +24,8 @@ protected slots:
 private:
 	Ui::GraphView *ui;
 	rpl::NetworkInfoManager *networkMgr;
+    void resizeEvent(QResizeEvent * e);
+    void bindSceneToView();
 };
 
 #endif // GRAPHVIEW_H

@@ -30,6 +30,7 @@ GraphView::~GraphView()
 void GraphView::setNetworkManager(rpl::NetworkInfoManager *networkMgr) {
 	ui->nodeGraphView->setScene(networkMgr->scene());
 	this->networkMgr = networkMgr;
+    bindSceneToView();
 }
 
 void GraphView::onLayoutComboChange(int index) {
@@ -82,4 +83,15 @@ void GraphView::onLayoutComboChange(int index) {
 			networkMgr->changeOverlay(new ParentChildrenOverlay);
 			break;
 	}
+}
+
+void GraphView::resizeEvent(QResizeEvent * e) {
+    bindSceneToView();
+}
+
+void GraphView::bindSceneToView() {
+    QRect _rect = this->rect();
+    _rect.setWidth(_rect.width()*0.9);
+    _rect.setHeight(_rect.height()*0.9);
+    this->networkMgr->scene()->setSceneRect(_rect);
 }
