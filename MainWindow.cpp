@@ -492,6 +492,8 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		nodeInfoTree.routeMain->addChild(new QTreeWidgetItem(routeInfo));
 	}
 	setTitleDeltaColor(nodeInfoTree.routeMain, node_get_routes_delta(node));
+    ui->rplNodeInfoTree->resizeColumnToContents(0);
+    ui->rplNodeInfoTree->resizeColumnToContents(1);
 }
 
 void MainWindow::clearTargetNodeInfo() {
