@@ -43,6 +43,7 @@ private:
 	bool showUpdate;
 	bool incrTime;
 	double currentTimestamp;
+	double currentMaxTimestamp;
 	double maxTimestamp;
 	bool settingCurrentVersion;  //avoid recursive loop setValue -> onVersion*Change -> setValue ...
 };

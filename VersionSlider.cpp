@@ -24,11 +24,14 @@ VersionSlider::~VersionSlider()
 }
 
 void VersionSlider::updateTime(void) {
-    if(maxTimestamp > 20000000)
-        maxTimestamp = 20000000;
+    if (showUpdate) {
+        currentMaxTimestamp = maxTimestamp;
+    }
+    if(currentMaxTimestamp > 20000000)
+        currentMaxTimestamp = 20000000;
     if(currentTimestamp > 20000000)
         currentTimestamp = 20000000;
-    ui->versionSlider->setMaximum(ceil(maxTimestamp*100));
+    ui->versionSlider->setMaximum(ceil(currentMaxTimestamp*100));
     ui->versionSlider->setValue(ceil(currentTimestamp*100));
     QString text = value() == maximum() ? "(R) " : "";
     text += QString::number(currentTimestamp);
@@ -94,14 +97,14 @@ void VersionSlider::onUpdateVersionCount(int versionCount) {
 void VersionSlider::onTimeTick(int msec) {
     if (!incrTime) return;
     maxTimestamp += msec / 1000.0;
-    if (showUpdate) {
-        updateTime();
-    }
+    updateTime();
 }
 
 void VersionSlider::clearTime() {
     incrTime = false;
     maxTimestamp = 0;
+    currentMaxTimestamp = 0;
+    currentTimestamp = 0;
 }
 
 void VersionSlider::startTime() {
@@ -137,15 +140,10 @@ void VersionSlider::onVersionSliderChange(int value) {
 }
 
 void VersionSlider::onVersionSpinChange(int value) {
-	int version = qMax(qMin(value, maximum()), 1);
+	int version = qMax(qMin(value, maximum()), 0);
 
 	if(settingCurrentVersion)
 		return;
-
-	if(version > maximum())
-		version = 0;  //realtime mode
-	if(version < 1)
-		version = 1;
 
 	if(version == 0)
 		setValue(maximum());
