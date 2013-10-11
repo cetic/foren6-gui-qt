@@ -20,12 +20,12 @@ public:
 
 protected slots:
 	void onLayoutComboChange(int index);
+    void bindSceneToView();
 	
 private:
 	Ui::GraphView *ui;
 	rpl::NetworkInfoManager *networkMgr;
     void resizeEvent(QResizeEvent * e);
-    void bindSceneToView();
 };
 
 #endif // GRAPHVIEW_H

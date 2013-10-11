@@ -35,6 +35,7 @@ void TreeScene::setBackground(QString newBackgroundFile) {
     if (background->rect().isValid()) {
         setSceneRect(background->rect());
     }
+    emit backgroundChangeEvent();
 }
 
 void TreeScene::setLayout(QSettings *  newLayout) {
@@ -227,6 +228,10 @@ void TreeScene::updateNodePositions() {
 
 		n1->updatePosition();
 	}
+}
+
+bool TreeScene::hasValidBackground() {
+    return this->background->rect().isValid();
 }
 
 }

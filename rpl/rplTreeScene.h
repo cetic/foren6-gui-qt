@@ -29,6 +29,7 @@ class TreeScene : public QGraphicsScene
 		void clear();
 
 		void setBackground(QString newBackgroundFile);
+        bool hasValidBackground();
 		void setLayout(QSettings *  layout);
         void getLayout(QSettings *  layout);
 		void clearLayout();
@@ -38,7 +39,6 @@ class TreeScene : public QGraphicsScene
 
 		const QHash<addr_wpan_t, Node*>& getNodes() { return _nodes; }
 		const QHash<QPair<addr_wpan_t, addr_wpan_t>, Link*>& getLinks() { return _links; }
-
 
         protected:
 		void drawBackground( QPainter * painter, const QRectF & rect );
@@ -57,6 +57,8 @@ class TreeScene : public QGraphicsScene
         QString backgroundFile;
         qreal scale;
         bool showNodeInfo;
+    signals:
+        void backgroundChangeEvent();
 };
 
 }
