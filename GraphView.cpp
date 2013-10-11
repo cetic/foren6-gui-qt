@@ -96,6 +96,7 @@ void GraphView::bindSceneToView() {
         QRect _rect = this->rect();
         _rect.setWidth(_rect.width()*0.9);
         _rect.setHeight(_rect.height()*0.9);
+        _rect.translate(-_rect.width()/2, -_rect.height()/2);
         this->networkMgr->scene()->setSceneRect(_rect);
     }
 }
