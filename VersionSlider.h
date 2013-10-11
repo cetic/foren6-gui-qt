@@ -17,8 +17,10 @@ public:
 
 	void setMaximum(int max);
 	void setValue(int version);
+	void setRealtime();
 	int maximum();
 	int value();
+	bool realtime();
 	void clearTime();
 	void startTime();
 	void stopTime();
