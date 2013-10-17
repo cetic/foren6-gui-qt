@@ -99,7 +99,8 @@ void SnifferDialog::doAddSniffer(QUrl snifferUrl) {
 	if(interfaceType.isEmpty())
 		interfaceType = interfacePath.section('.', -1, -1);
 
-	interface = (interface_t *) ui->typeCombo->itemData(ui->typeCombo->currentIndex()).value<void*>();
+	int index = ui->typeCombo->findText(interfaceType);
+	interface = (interface_t *) ui->typeCombo->itemData(index).value<void*>();
 
 	if(interface == 0) {
 		qWarning("Could not get interface !");
