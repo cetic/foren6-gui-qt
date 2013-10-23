@@ -102,3 +102,7 @@ FORMS    += MainWindow.ui \
 
 RESOURCES += \
     Resource.qrc
+
+#Icons
+#MacOSX
+ICON = foren6-400p-alpha.icns
