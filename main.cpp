@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-	a.setApplicationName("RPL Diagnosis Tool");
+    a.setApplicationName("Foren6");
 
 	MainWindow m;
 	m.show();
