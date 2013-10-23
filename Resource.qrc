@@ -9,5 +9,7 @@
         <file>resources/icons/bubble.png</file>
         <file>resources/icons/linked.png</file>
         <file>resources/icons/unlinked.png</file>
+        <file>resources/logo/foren6-48-alpha.png</file>
+        <file>resources/logo/foren6-400p-alpha.icns</file>
     </qresource>
 </RCC>
