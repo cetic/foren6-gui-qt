@@ -105,4 +105,4 @@ RESOURCES += \
 
 #Icons
 #MacOSX
-ICON = foren6-400p-alpha.icns
+ICON = resources/logo/foren6-400p-alpha.icns
