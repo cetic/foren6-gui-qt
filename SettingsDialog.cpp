@@ -28,3 +28,13 @@ void SettingsDialog::restoreSettings()
     ui->settings_RplRootRankEdit->setText(this->settings_RplRootRank);
     ui->settings_6lowpanContextEdit->setText(this->settings_6lowpanContext);
 }
+
+QString SettingsDialog::getRplRootRank()
+{
+    return settings_RplRootRank;
+}
+
+QString SettingsDialog::get6lowpanContext()
+{
+    return settings_6lowpanContext;
+}
