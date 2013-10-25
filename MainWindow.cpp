@@ -551,6 +551,7 @@ void MainWindow::clearTargetNodeInfo() {
 }
 
 void MainWindow::onStartSniffer() {
+    onClear();
 	snifferDialog->onStartSniffer();
 	ui->actionStart->setEnabled(false);
 	ui->actionStop->setEnabled(true);
