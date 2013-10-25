@@ -121,19 +121,17 @@ MainWindow::MainWindow(QWidget *parent) :
         nodeInfoTree.nodeGlobalIp->setText(0, "Global IP");
 
 		nodeInfoTree.rplInstanceMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-		nodeInfoTree.rplInstanceMain->setText(0, "RPL Instances");
-		nodeInfoTree.rplInstanceId = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
-		nodeInfoTree.rplInstanceId->setText(0, "Instance ID");
+		nodeInfoTree.rplInstanceMain->setText(0, "RPL configuration");
+		nodeInfoTree.rplInstanceIdMain = new QTreeWidgetItem(nodeInfoTree.rplInstanceMain);
+		nodeInfoTree.rplInstanceIdMain->setText(0, "Instance ID");
 
-		nodeInfoTree.dodagMain = nodeInfoTree.rplInstanceId;//new QTreeWidgetItem(nodeInfoTree.rplInstanceId);
-		//nodeInfoTree.dodagMain->setText(0, "DODAG ID");
-        nodeInfoTree.dodagId = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+        nodeInfoTree.dodagId = new QTreeWidgetItem(nodeInfoTree.rplInstanceIdMain);
         nodeInfoTree.dodagId->setText(0, "DODAG ID");
-		nodeInfoTree.dodagVersion = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+		nodeInfoTree.dodagVersion = new QTreeWidgetItem(nodeInfoTree.rplInstanceIdMain);
 		nodeInfoTree.dodagVersion->setText(0, "Version");
-        nodeInfoTree.rplInstanceModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceId);
-        nodeInfoTree.rplInstanceModeOfOperation->setText(0, "Mode of Operation");
-		nodeInfoTree.dodagPrefix = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+        nodeInfoTree.dodagModeOfOperation = new QTreeWidgetItem(nodeInfoTree.rplInstanceIdMain);
+        nodeInfoTree.dodagModeOfOperation->setText(0, "Mode of Operation");
+		nodeInfoTree.dodagPrefix = new QTreeWidgetItem(nodeInfoTree.rplInstanceIdMain);
 		nodeInfoTree.dodagPrefix->setText(0, "Prefix");
         nodeInfoTree.dodagPrefixOnLink = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
         nodeInfoTree.dodagPrefixOnLink->setText(0, "On-link");
@@ -145,7 +143,7 @@ MainWindow::MainWindow(QWidget *parent) :
         nodeInfoTree.dodagPrefixValidLifetime->setText(0, "Valid lifetime");
         nodeInfoTree.dodagPrefixPreferredLifetime = new QTreeWidgetItem(nodeInfoTree.dodagPrefix);
         nodeInfoTree.dodagPrefixPreferredLifetime->setText(0, "Preferred lifetime");
-        nodeInfoTree.dodagConfig = new QTreeWidgetItem(nodeInfoTree.dodagMain);
+        nodeInfoTree.dodagConfig = new QTreeWidgetItem(nodeInfoTree.rplInstanceIdMain);
 
         nodeInfoTree.dodagConfig->setText(0, "Configuration");
 		nodeInfoTree.dodagConfigAuthEnabled = new QTreeWidgetItem(nodeInfoTree.dodagConfig);
@@ -169,17 +167,19 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.dodagConfigObjectiveFunction = new QTreeWidgetItem(nodeInfoTree.dodagConfig);
 		nodeInfoTree.dodagConfigObjectiveFunction->setText(0, "Objective Function");
 
-        nodeInfoTree.rplMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
-        nodeInfoTree.rplMain->setText(0, "RPL");
-		nodeInfoTree.nodeMetric = new QTreeWidgetItem(nodeInfoTree.rplMain);
+        nodeInfoTree.rplDataMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
+        nodeInfoTree.rplDataMain->setText(0, "RPL operational data");
+        nodeInfoTree.rplDodagDataMain = new QTreeWidgetItem(nodeInfoTree.rplDataMain);
+        nodeInfoTree.rplDodagDataMain->setText(0, "Instance ID");
+		nodeInfoTree.nodeMetric = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
 		nodeInfoTree.nodeMetric->setText(0, "Metric");
-		nodeInfoTree.nodeRank = new QTreeWidgetItem(nodeInfoTree.rplMain);
+		nodeInfoTree.nodeRank = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
 		nodeInfoTree.nodeRank->setText(0, "Rank");
-		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.rplMain);
+		nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
 		nodeInfoTree.nodeGrounded->setText(0, "Grounded");
-        nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.rplMain);
+        nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
         nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
-        nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.rplMain);
+        nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
         nodeInfoTree.nodeLastDaoSeq->setText(0, "Last DAO Sequence");
 
         nodeInfoTree.statisticsMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
@@ -342,15 +342,25 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		return;
 	}
 
+    nodeInfoTree.nodeMacAddress->setText(1, QString::number(node_get_key(node)->ref.wpan_address, 16));
+
+    inet_ntop(AF_INET6, (const char*)node_get_local_ip(node), ipv6string, INET6_ADDRSTRLEN);
+    nodeInfoTree.nodeLocalIp->setText(1, ipv6string);
+    setDeltaColor( nodeInfoTree.nodeLocalIp, node_get_local_address_delta(node));
+
+    inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
+    nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
+    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node));
+
     const rpl_instance_config_t *instance_config = node_get_instance_config(node);
     const rpl_instance_config_delta_t *instance_config_delta = node_get_instance_config_delta(node);
     const rpl_instance_config_delta_t *actual_instance_config_delta = node_get_actual_instance_config_delta(node);
     setTitleThreeColor(nodeInfoTree.rplInstanceMain, actual_instance_config_delta->has_changed, instance_config_delta->has_changed);
     if (instance_config) {
-        nodeInfoTree.rplInstanceId->setText(1, QString::number(instance_config->rpl_instance_id));
-        setThreeColor(nodeInfoTree.rplInstanceId, actual_instance_config_delta->rpl_instance_id, instance_config_delta->rpl_instance_id);
-        nodeInfoTree.rplInstanceModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
-        setThreeColor(nodeInfoTree.rplInstanceModeOfOperation, actual_instance_config_delta->mode_of_operation, instance_config_delta->mode_of_operation);
+        nodeInfoTree.rplInstanceIdMain->setText(1, QString::number(instance_config->rpl_instance_id));
+        setThreeColor(nodeInfoTree.rplInstanceIdMain, actual_instance_config_delta->rpl_instance_id, instance_config_delta->rpl_instance_id);
+        nodeInfoTree.dodagModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
+        setThreeColor(nodeInfoTree.dodagModeOfOperation, actual_instance_config_delta->mode_of_operation, instance_config_delta->mode_of_operation);
         inet_ntop(AF_INET6, (const char*)&instance_config->dodagid, ipv6string, INET6_ADDRSTRLEN);
         nodeInfoTree.dodagId->setText(1, ipv6string);
         setThreeColor(nodeInfoTree.dodagId, actual_instance_config_delta->dodagid, instance_config_delta->dodagid);
@@ -363,7 +373,7 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
         nodeInfoTree.nodeLastDtsn->setText(1, QString::number(instance_config->dtsn));
         setDeltaColor( nodeInfoTree.nodeLastDtsn, instance_config_delta->dtsn);
     } else {
-        nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
+        nodeInfoTree.dodagModeOfOperation->setText(1, "");
         nodeInfoTree.dodagId->setText(1, "");
         nodeInfoTree.dodagVersion->setText(1, "");
         nodeInfoTree.nodeGrounded->setText(1, "");
@@ -436,15 +446,9 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
         nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
     }
 
-	nodeInfoTree.nodeMacAddress->setText(1, QString::number(node_get_key(node)->ref.wpan_address, 16));
-
-	inet_ntop(AF_INET6, (const char*)node_get_local_ip(node), ipv6string, INET6_ADDRSTRLEN);
-	nodeInfoTree.nodeLocalIp->setText(1, ipv6string);
-    setDeltaColor( nodeInfoTree.nodeLocalIp, node_get_local_address_delta(node));
-
-	inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
-	nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
-    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node));
+    if (instance_config) {
+        nodeInfoTree.rplDodagDataMain->setText(1, QString::number(instance_config->rpl_instance_id));
+    }
 
     const di_metric_t *metric = node_get_metric(node);
 	QString metricValue;
@@ -498,9 +502,16 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 }
 
 void MainWindow::clearTargetNodeInfo() {
+    setTitleDeltaColor( nodeInfoTree.linkMain, false);
+    nodeInfoTree.nodeMacAddress->setText(1, "");
+
+    setTitleDeltaColor( nodeInfoTree.ipv6Main, false);
+    nodeInfoTree.nodeLocalIp->setText(1, "");
+    nodeInfoTree.nodeGlobalIp->setText(1, "");
+
     setTitleDeltaColor(nodeInfoTree.rplInstanceMain, false );
-	nodeInfoTree.rplInstanceId->setText(1, "");
-	nodeInfoTree.rplInstanceModeOfOperation->setText(1, "");
+	nodeInfoTree.rplInstanceIdMain->setText(1, "");
+	nodeInfoTree.dodagModeOfOperation->setText(1, "");
 
     setTitleDeltaColor( nodeInfoTree.dodagConfig, false);
 	nodeInfoTree.dodagVersion->setText(1, "");
@@ -527,17 +538,20 @@ void MainWindow::clearTargetNodeInfo() {
 	nodeInfoTree.dodagConfigLifetimeUnit->setText(1, "");
 	nodeInfoTree.dodagConfigObjectiveFunction->setText(1, "");
 
-	nodeInfoTree.nodeMacAddress->setText(1, "");
-	nodeInfoTree.nodeLocalIp->setText(1, "");
-	nodeInfoTree.nodeGlobalIp->setText(1, "");
-	nodeInfoTree.nodeMetric->setText(1, "");
-	nodeInfoTree.nodeRank->setText(1, "");
-	nodeInfoTree.nodeGrounded->setText(1, "");
+    setTitleDeltaColor( nodeInfoTree.rplDodagDataMain, false);
+    nodeInfoTree.rplDodagDataMain->setText(1, "");
+    nodeInfoTree.nodeMetric->setText(1, "");
+    nodeInfoTree.nodeRank->setText(1, "");
+    nodeInfoTree.nodeGrounded->setText(1, "");
+    nodeInfoTree.nodeLastDtsn->setText(1, "");
+    nodeInfoTree.nodeLastDaoSeq->setText(1, "");
+
+    setTitleDeltaColor( nodeInfoTree.statisticsMain, false);
 	nodeInfoTree.nodeTraffic->setText(1, "");
 	nodeInfoTree.nodeMaxDaoInterval->setText(1, "");
 	nodeInfoTree.nodeMaxDioInterval->setText(1, "");
-	nodeInfoTree.nodeLastDtsn->setText(1, "");
-	nodeInfoTree.nodeLastDaoSeq->setText(1, "");
+
+    setTitleDeltaColor( nodeInfoTree.errorsMain, false);
 	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, "");
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, "");
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, "");

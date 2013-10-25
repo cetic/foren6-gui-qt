@@ -83,12 +83,11 @@ private:
         QTreeWidgetItem *nodeGlobalIp;
 
 	    QTreeWidgetItem *rplInstanceMain;
-		QTreeWidgetItem *rplInstanceId;
-		QTreeWidgetItem *rplInstanceModeOfOperation;
+		QTreeWidgetItem *rplInstanceIdMain;
 
-		QTreeWidgetItem *dodagMain;
-		QTreeWidgetItem *dodagVersion;
-		QTreeWidgetItem *dodagId;
+        QTreeWidgetItem *dodagId;
+        QTreeWidgetItem *dodagVersion;
+        QTreeWidgetItem *dodagModeOfOperation;
 		QTreeWidgetItem *dodagPrefix;
         QTreeWidgetItem *dodagPrefixOnLink;
         QTreeWidgetItem *dodagPrefixAutoconf;
@@ -107,7 +106,8 @@ private:
 		QTreeWidgetItem *dodagConfigLifetimeUnit;
 		QTreeWidgetItem *dodagConfigObjectiveFunction;
 
-        QTreeWidgetItem *rplMain;
+        QTreeWidgetItem *rplDataMain;
+        QTreeWidgetItem *rplDodagDataMain;
 		QTreeWidgetItem *nodeMetric;
 		QTreeWidgetItem *nodeRank;
 		QTreeWidgetItem *nodeGrounded;
