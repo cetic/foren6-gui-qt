@@ -31,6 +31,7 @@ protected slots:
     void onMessageLogClicked(QModelIndex index);
 	void onMessageLogDoubleClicked(QModelIndex index);
 	void onFilterTextChanged(QString newText);
+	void rowsInserted();
 	
 private:
 	Ui::InformationWidget *ui;

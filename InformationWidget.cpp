@@ -24,6 +24,11 @@ InformationWidget::~InformationWidget()
 
 void InformationWidget::addMessage(rpl::Event *newMsg) {
 	messageLog->addMessage(newMsg);
+    QTimer::singleShot(1, this, SLOT(rowsInserted()));
+}
+
+void InformationWidget::rowsInserted() {
+  ui->messageTable->scrollTo(messageLog->index(messageLog->rowCount()-1, 0));
 }
 
 void InformationWidget::clearMessages() {
