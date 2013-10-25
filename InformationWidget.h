@@ -22,6 +22,7 @@ public:
 public slots:
 	void addMessage(rpl::Event *newMsg);
 	void clearMessages();
+	void toggleAutoScroll();
 
 signals:
 	void setCurrentVersion(int version);
@@ -36,6 +37,7 @@ protected slots:
 private:
 	Ui::InformationWidget *ui;
 	EventLog *messageLog;
+	bool autoScroll;
 };
 
 #endif // INFORMATIONWIDGET_H

@@ -5,7 +5,8 @@
 
 InformationWidget::InformationWidget(QWidget *parent) :
     QDockWidget(parent),
-    ui(new Ui::InformationWidget)
+    ui(new Ui::InformationWidget),
+    autoScroll(true)
 {
 	ui->setupUi(this);
 	messageLog = new EventLog(this);
@@ -24,7 +25,9 @@ InformationWidget::~InformationWidget()
 
 void InformationWidget::addMessage(rpl::Event *newMsg) {
 	messageLog->addMessage(newMsg);
-    QTimer::singleShot(1, this, SLOT(rowsInserted()));
+    if ( autoScroll ) {
+      QTimer::singleShot(1, this, SLOT(rowsInserted()));
+    }
 }
 
 void InformationWidget::rowsInserted() {
@@ -47,4 +50,8 @@ void InformationWidget::onMessageLogDoubleClicked(QModelIndex index) {
 
 void InformationWidget::onFilterTextChanged(QString newText) {
 	messageLog->setFilter(newText);
+}
+
+void InformationWidget::toggleAutoScroll() {
+  autoScroll = ! autoScroll;
 }
