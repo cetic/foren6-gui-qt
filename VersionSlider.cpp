@@ -167,12 +167,12 @@ void VersionSlider::onVersionSliderChange(int newValue) {
 }
 
 void VersionSlider::onVersionSpinChange(int newValue) {
-	int version = qMax(qMin(newValue, maximum()), 1);
+	int version = qMax(qMin(newValue, maximum() + 1), 1);
 
 	if(settingCurrentVersion)
 		return;
 
-	if (version == maximum() ) {
+	if (version > maximum() ) {
 	    setRealtime();
 	} else {
         setValue(version);
