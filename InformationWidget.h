@@ -22,7 +22,7 @@ public:
 public slots:
 	void addMessage(rpl::Event *newMsg);
 	void clearMessages();
-	void toggleAutoScroll();
+    void setAutoScroll(bool);
 
 signals:
 	void setCurrentVersion(int version);

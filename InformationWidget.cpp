@@ -15,6 +15,7 @@ InformationWidget::InformationWidget(QWidget *parent) :
 	connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
 	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));
 	connect(ui->filterEdit, SIGNAL(textChanged(QString)), this, SLOT(onFilterTextChanged(QString)));
+    connect(ui->autoscrollButton, SIGNAL(toggled(bool)), this, SLOT(setAutoScroll(bool)));
 	setAttribute(Qt::WA_DeleteOnClose);
 }
 
@@ -52,6 +53,6 @@ void InformationWidget::onFilterTextChanged(QString newText) {
 	messageLog->setFilter(newText);
 }
 
-void InformationWidget::toggleAutoScroll() {
-  autoScroll = ! autoScroll;
+void InformationWidget::setAutoScroll(bool val) {
+    autoScroll = val;
 }
