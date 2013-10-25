@@ -157,7 +157,7 @@ QString EventLog::getEventString(int column, rpl::Event *event, bool for_search)
 				int data_size = 0;
 				pcap_file_t pcap_handle;
 
-				if(for_search == false) {
+				if(false && for_search == false) {
 					pcap_handle = pcap_parser_open("out.pcap");
 
 					if(pcap_handle == NULL)
