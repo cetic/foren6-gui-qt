@@ -17,7 +17,7 @@ CONFIG   += debug_and_release debug_and_release_target
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = rpl_diagnosis_tool
+TARGET = foren6
 TEMPLATE = app
 
 LIBS += -L$$PWD/../analyzer/dist/Debug/GNU-Linux-x86/
@@ -105,4 +105,4 @@ RESOURCES += \
 
 #Icons
 #MacOSX
-ICON = foren6-400p-alpha.icns
+ICON = resources/logo/foren6-400p-alpha.icns
