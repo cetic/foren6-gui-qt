@@ -66,6 +66,7 @@
     <addaction name="actionStart"/>
     <addaction name="actionStop"/>
     <addaction name="actionOpenSnifferDialog"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuLayout">
     <property name="title">
@@ -243,6 +244,11 @@
    </property>
    <property name="text">
     <string>Link/Unlink Dialogs</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences</string>
    </property>
   </action>
  </widget>

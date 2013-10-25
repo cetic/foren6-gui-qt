@@ -8,6 +8,7 @@
 #include "rpl_packet_parser.h"
 #include "InformationWidget.h"
 #include "PacketWidget.h"
+#include "SettingsDialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -46,6 +47,7 @@ protected slots:
 	void createNewInformationWindow();
     void createNewPacketWindow();
     void createNewAboutWindow();
+    void editSettings();
 	void onInformationWindowClosed(QObject *informationWindow);
     void onPacketWindowClosed(QObject *packetWindow);
 	void onClear();
@@ -65,6 +67,7 @@ private:
 	Ui::MainWindow *ui;
 	rpl::NetworkInfoManager *wsnManager;
 	SnifferDialog *snifferDialog;
+    SettingsDialog *settingsDialog;
 	bool captureStarted;
 	static MainWindow *  thisInstance;
 

@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     overlays/RouteLoopErrorOverlay.cpp \
     overlays/ErrorsOverlay.cpp \
     overlays/IPMismatchErrorOverlay.cpp \
-    overlays/DodagMismatchErrorOverlay.cpp
+    overlays/DodagMismatchErrorOverlay.cpp \
+    SettingsDialog.cpp
 
 HEADERS  += MainWindow.h \
     rpl/rplTreeScene.h \
@@ -90,7 +91,8 @@ HEADERS  += MainWindow.h \
     overlays/RouteLoopErrorOverlay.h \
     overlays/ErrorsOverlay.h \
     overlays/IPMismatchErrorOverlay.h \
-    overlays/DodagMismatchErrorOverlay.h
+    overlays/DodagMismatchErrorOverlay.h \
+    SettingsDialog.h
 
 FORMS    += MainWindow.ui \
     InformationWidget.ui \
@@ -98,7 +100,8 @@ FORMS    += MainWindow.ui \
     SnifferDialog.ui \
     VersionSlider.ui \
     GraphView.ui \
-    About.ui
+    About.ui \
+    SettingsDialog.ui
 
 RESOURCES += \
     Resource.qrc
