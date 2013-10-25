@@ -92,7 +92,6 @@ void GraphView::resizeEvent(QResizeEvent * e) {
 
 void GraphView::bindSceneToView() {
     if(!this->networkMgr->scene()->hasValidBackground()) {
-        qDebug("bindSceneToView");
         QRect _rect = this->rect();
         _rect.setWidth(_rect.width()*0.9);
         _rect.setHeight(_rect.height()*0.9);
