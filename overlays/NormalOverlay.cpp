@@ -4,7 +4,7 @@
 
 int NormalOverlay::getErrorCount(rpl::Node *node) {
     di_node_t *node_data = node->getNodeData();
-    return node_get_downward_error_count(node_data) + node_get_upward_error_count(node_data) +
-       node_get_route_error_count(node_data) +  node_get_ip_mismatch_error_count(node_data) +
-       /*node_get_dodag_version_decrease_error_count(node_data) +*/ node_get_dodag_mismatch_error_count(node_data);
+    const rpl_errors_t *rpl_errors = node_get_rpl_errors(node_data);
+    return rpl_errors->upward_rank_errors + rpl_errors->downward_rank_errors + rpl_errors->route_loop_errors +
+        rpl_errors->ip_mismatch_errors + /*delta->dodag_version_decrease_errors +*/ rpl_errors->dodag_mismatch_errors;
 }

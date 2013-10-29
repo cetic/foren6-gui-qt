@@ -12,15 +12,16 @@ bool TrafficOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBru
 	if(!newPen || !newBrush)
 		return false;
 
-	if(node_get_packet_count(node->getNodeData()) > max_packets_encountered) {
-		max_packets_encountered = node_get_packet_count(node->getNodeData());
+    int packet_count = node_get_sixlowpan_statistics(node->getNodeData())->packet_count;
+	if(packet_count > max_packets_encountered) {
+		max_packets_encountered = packet_count;
 		//invalidate();
 	}
 
 	if(node->isSelected())
 		*newPen = QPen(QColor(Qt::darkBlue));
 	else {
-		int color = 240 - qMin(node_get_packet_count(node->getNodeData())*240/max_packets_encountered, 240);
+		int color = 240 - qMin(packet_count*240/max_packets_encountered, 240);
 		*newPen = QPen(QColor(color, color, color));
 	}
 
@@ -56,9 +57,9 @@ bool TrafficOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 }
 
 bool TrafficOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-    int traffic = node_get_packet_count(node->getNodeData());
+    int packet_count = node_get_sixlowpan_statistics(node->getNodeData())->packet_count;
     if (infoText) {
-        *infoText = QString::number(traffic);
+        *infoText = QString::number(packet_count);
     }
     return true;
 }

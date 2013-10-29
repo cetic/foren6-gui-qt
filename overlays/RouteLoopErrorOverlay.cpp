@@ -4,5 +4,7 @@
 
 int RouteLoopErrorOverlay::getErrorCount(rpl::Node *node) {
 	di_node_t *node_data = node->getNodeData();
-	return node_get_route_error_count(node_data);
+    const rpl_errors_t *rpl_errors = node_get_rpl_errors(node_data);
+
+    return rpl_errors->route_loop_errors;
 }

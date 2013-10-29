@@ -342,16 +342,21 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		return;
 	}
 
+    //802.15.4
+    const sixlowpan_config_t *sixlowpan_config = node_get_sixlowpan_config(node);
+    const sixlowpan_config_delta_t *sixlowpan_config_delta = node_get_sixlowpan_config_delta(node);
     nodeInfoTree.nodeMacAddress->setText(1, QString::number(node_get_key(node)->ref.wpan_address, 16));
 
-    inet_ntop(AF_INET6, (const char*)node_get_local_ip(node), ipv6string, INET6_ADDRSTRLEN);
+    //IPv6
+    setTitleDeltaColor(nodeInfoTree.ipv6Main, sixlowpan_config_delta->has_changed);
+    inet_ntop(AF_INET6, (const char*)&sixlowpan_config->local_address, ipv6string, INET6_ADDRSTRLEN);
     nodeInfoTree.nodeLocalIp->setText(1, ipv6string);
-    setDeltaColor( nodeInfoTree.nodeLocalIp, node_get_local_address_delta(node));
-
-    inet_ntop(AF_INET6, (const char*)node_get_global_ip(node), ipv6string, INET6_ADDRSTRLEN);
+    setDeltaColor( nodeInfoTree.nodeLocalIp, sixlowpan_config_delta->local_address);
+    inet_ntop(AF_INET6, (const char*)&sixlowpan_config->global_address, ipv6string, INET6_ADDRSTRLEN);
     nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
-    setDeltaColor( nodeInfoTree.nodeGlobalIp, node_get_global_address_delta(node));
+    setDeltaColor( nodeInfoTree.nodeGlobalIp, sixlowpan_config_delta->global_address);
 
+    // RPL Instance Config
     const rpl_instance_config_t *instance_config = node_get_instance_config(node);
     const rpl_instance_config_delta_t *instance_config_delta = node_get_instance_config_delta(node);
     const rpl_instance_config_delta_t *actual_instance_config_delta = node_get_actual_instance_config_delta(node);
@@ -359,28 +364,20 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     if (instance_config) {
         nodeInfoTree.rplInstanceIdMain->setText(1, QString::number(instance_config->rpl_instance_id));
         setThreeColor(nodeInfoTree.rplInstanceIdMain, actual_instance_config_delta->rpl_instance_id, instance_config_delta->rpl_instance_id);
-        nodeInfoTree.dodagModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
-        setThreeColor(nodeInfoTree.dodagModeOfOperation, actual_instance_config_delta->mode_of_operation, instance_config_delta->mode_of_operation);
         inet_ntop(AF_INET6, (const char*)&instance_config->dodagid, ipv6string, INET6_ADDRSTRLEN);
         nodeInfoTree.dodagId->setText(1, ipv6string);
         setThreeColor(nodeInfoTree.dodagId, actual_instance_config_delta->dodagid, instance_config_delta->dodagid);
         nodeInfoTree.dodagVersion->setText(1, QString::number(instance_config->version_number));
         setThreeColor(nodeInfoTree.dodagVersion, instance_config_delta->version_number, instance_config_delta->version_number);
-        nodeInfoTree.nodeGrounded->setText(1, (instance_config->grounded ? "true" : "false"));
-        setThreeColor( nodeInfoTree.nodeGrounded, actual_instance_config_delta->grounded, instance_config_delta->grounded);
-        nodeInfoTree.nodeRank->setText(1, QString::number(instance_config->rank));
-        setDeltaColor( nodeInfoTree.nodeRank, instance_config_delta->rank);
-        nodeInfoTree.nodeLastDtsn->setText(1, QString::number(instance_config->dtsn));
-        setDeltaColor( nodeInfoTree.nodeLastDtsn, instance_config_delta->dtsn);
+        nodeInfoTree.dodagModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
+        setThreeColor(nodeInfoTree.dodagModeOfOperation, actual_instance_config_delta->mode_of_operation, instance_config_delta->mode_of_operation);
     } else {
-        nodeInfoTree.dodagModeOfOperation->setText(1, "");
         nodeInfoTree.dodagId->setText(1, "");
         nodeInfoTree.dodagVersion->setText(1, "");
-        nodeInfoTree.nodeGrounded->setText(1, "");
-        nodeInfoTree.nodeRank->setText(1, "");
-        nodeInfoTree.nodeLastDtsn->setText(1, "" );
+        nodeInfoTree.dodagModeOfOperation->setText(1, "");
     }
 
+    // RPL DODAG Config
     const rpl_dodag_config_t *dodag_config = node_get_dodag_config(node);
     const rpl_dodag_config_delta_t *dodag_config_delta = node_get_dodag_config_delta(node);
     const rpl_dodag_config_delta_t *actual_dodag_config_delta = node_get_actual_dodag_config_delta(node);
@@ -419,6 +416,8 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 		nodeInfoTree.dodagConfigObjectiveFunction->setText(1, "");
 		nodeInfoTree.dodagConfigPathControlSize->setText(1, "");
 	}
+
+    //RPL DODAG Prefix
     const rpl_prefix_t *prefix_info = node_get_dodag_prefix_info(node);
     const rpl_prefix_delta_t *prefix_info_delta = node_get_dodag_prefix_info_delta(node);
     const rpl_prefix_delta_t *actual_prefix_info_delta = node_get_actual_dodag_prefix_info_delta(node);
@@ -446,40 +445,76 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
         nodeInfoTree.dodagPrefixPreferredLifetime->setText(1, "");
     }
 
-    if (instance_config) {
-        nodeInfoTree.rplDodagDataMain->setText(1, QString::number(instance_config->rpl_instance_id));
+    // RPL Instance Data
+    const rpl_instance_data_t *instance_data = node_get_instance_data(node);
+    const rpl_instance_data_delta_t *instance_data_delta = node_get_instance_data_delta(node);
+    setTitleDeltaColor(nodeInfoTree.rplDodagDataMain, instance_data_delta->has_changed);
+    if (instance_data) {
+        nodeInfoTree.rplDodagDataMain->setText(1, QString::number(instance_data->rpl_instance_id));
+        setDeltaColor(nodeInfoTree.rplInstanceIdMain, instance_data_delta->rpl_instance_id);
+        nodeInfoTree.nodeGrounded->setText(1, (instance_data->grounded ? "true" : "false"));
+        setDeltaColor( nodeInfoTree.nodeGrounded, instance_data_delta->grounded);
+        nodeInfoTree.nodeLastDtsn->setText(1, QString::number(instance_data->dtsn));
+        setDeltaColor( nodeInfoTree.nodeLastDtsn, instance_data_delta->dtsn);
+    } else {
+        nodeInfoTree.nodeGrounded->setText(1, "");
+        nodeInfoTree.nodeLastDtsn->setText(1, "" );
+    }
+    if (instance_data && instance_data->has_dao_data) {
+        nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(instance_data->latest_dao_sequence));
+        setDeltaColor( nodeInfoTree.nodeLastDaoSeq, instance_data_delta->latest_dao_sequence);
+    } else {
+        nodeInfoTree.nodeLastDaoSeq->setText(1, "");
+    }
+    if (instance_data && instance_data->has_rank) {
+        nodeInfoTree.nodeRank->setText(1, QString::number(instance_data->rank));
+        setDeltaColor( nodeInfoTree.nodeRank, instance_data_delta->rank);
+    } else {
+        nodeInfoTree.nodeRank->setText(1, "");
     }
 
-    const di_metric_t *metric = node_get_metric(node);
-	QString metricValue;
+    if (instance_data && instance_data->has_metric) {
+        di_metric_t metric_value = {metric_get_type("ETX"), instance_data->metric.value};
+        QString metricValue = QString::number(metric_value.value);
+        if(metric_value.type) {
+            metricValue += QString(" (") + metric_value.type->name + ": " + QString::number(metric_get_display_value(&metric_value)) + ")";
+        }
+        nodeInfoTree.nodeMetric->setText(1, metricValue);
+        setDeltaColor( nodeInfoTree.nodeMetric, instance_data_delta->metric);
+    } else {
+        nodeInfoTree.nodeMetric->setText(1, "");
+    }
 
-	metricValue = QString::number(metric->value);
-	if(metric->type) {
-		metricValue += QString(" (") + metric->type->name + ": " + QString::number(metric_get_display_value(metric)) + ")";
-	}
-	nodeInfoTree.nodeMetric->setText(1, metricValue);
-    setDeltaColor( nodeInfoTree.nodeMetric, node_get_metric_delta(node));
+    //6LoWPAN statistics
+    const sixlowpan_statistics_t *sixlowpan_statistics = node_get_sixlowpan_statistics(node);
+    const sixlowpan_statistics_delta_t *sixlowpan_statistics_delta = node_get_sixlowpan_statistics_delta(node);
+	nodeInfoTree.nodeTraffic->setText(1, QString::number(sixlowpan_statistics->packet_count));
+    setDeltaColor( nodeInfoTree.nodeTraffic, sixlowpan_statistics_delta->packet_count);
 
-	nodeInfoTree.nodeTraffic->setText(1, QString::number(node_get_packet_count(node)));
-    setDeltaColor( nodeInfoTree.nodeTraffic, node_get_packet_count_delta(node));
+    //RPL statistics
+    const rpl_statistics_t *rpl_statistics = node_get_rpl_statistics(node);
+    const rpl_statistics_delta_t *rpl_statistics_delta = node_get_rpl_statistics_delta(node);
+	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(rpl_statistics->max_dao_interval) + " sec");
+    setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, rpl_statistics_delta->max_dao_interval);
+	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(rpl_statistics->max_dio_interval) + " sec");
+    setDeltaColor( nodeInfoTree.nodeMaxDioInterval, rpl_statistics_delta->max_dio_interval);
 
-	nodeInfoTree.nodeMaxDaoInterval->setText(1, QString::number(node_get_max_dao_interval(node)) + " sec");
-    setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, node_get_max_dao_interval_delta(node));
-	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(node_get_max_dio_interval(node)) + " sec");
-    setDeltaColor( nodeInfoTree.nodeMaxDioInterval, node_get_max_dio_interval_delta(node));
-	nodeInfoTree.nodeLastDaoSeq->setText(1, QString::number(node_get_dao_seq(node)));
-    setDeltaColor( nodeInfoTree.nodeLastDaoSeq, node_get_latest_dao_sequence_delta(node));
+    setTitleDeltaColor(nodeInfoTree.statisticsMain, sixlowpan_statistics_delta->has_changed || rpl_statistics_delta->has_changed);
 
-    nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(node_get_upward_error_count(node)));
-    setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, node_get_upward_error_delta(node), QColor(Qt::red));
-	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(node_get_downward_error_count(node)));
-    setDeltaColor( nodeInfoTree.nodeDownwardRankErrorCount, node_get_downward_error_delta(node), QColor(Qt::red));
-	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, QString::number(node_get_route_error_count(node)));
-	setDeltaColor( nodeInfoTree.nodeRouteLoopErrorCount, node_get_route_error_delta(node), QColor(Qt::red));
-	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, QString::number(node_get_ip_mismatch_error_count(node)));
-    setDeltaColor( nodeInfoTree.nodeIpMismatchErrorCount, node_get_ip_mismatch_error_delta(node), QColor(Qt::red));
-	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(node_get_dodag_mismatch_error_count(node)));
-    setDeltaColor( nodeInfoTree.nodeDodagMismatchErrorCount, node_get_dodag_mismatch_error_delta(node), QColor(Qt::red));
+    //RPL errors
+    const rpl_errors_t *rpl_errors = node_get_rpl_errors(node);
+    const rpl_errors_delta_t *rpl_errors_delta = node_get_rpl_errors_delta(node);
+    setTitleDeltaColor(nodeInfoTree.errorsMain, rpl_errors_delta->has_changed, QColor(Qt::red));
+    nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(rpl_errors->upward_rank_errors));
+    setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, rpl_errors_delta->upward_rank_errors, QColor(Qt::red));
+	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(rpl_errors->downward_rank_errors));
+    setDeltaColor( nodeInfoTree.nodeDownwardRankErrorCount, rpl_errors_delta->downward_rank_errors, QColor(Qt::red));
+	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, QString::number(rpl_errors->route_loop_errors));
+	setDeltaColor( nodeInfoTree.nodeRouteLoopErrorCount, rpl_errors_delta->route_loop_errors, QColor(Qt::red));
+	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, QString::number(rpl_errors->ip_mismatch_errors));
+    setDeltaColor( nodeInfoTree.nodeIpMismatchErrorCount, rpl_errors_delta->ip_mismatch_errors, QColor(Qt::red));
+	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(rpl_errors->dodag_mismatch_errors));
+    setDeltaColor( nodeInfoTree.nodeDodagMismatchErrorCount, rpl_errors_delta->dodag_mismatch_errors, QColor(Qt::red));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;
