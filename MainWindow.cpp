@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "ui_About.h"
+#include "SettingsDialog.h"
 #include <rpl_packet_parser.h>
 #include "rpl/rplNetworkInfoManager.h"
 #include "utlist.h"
@@ -73,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionStart->setEnabled(hasActiveSniffers && ! captureStarted);
     ui->actionStop->setEnabled(hasActiveSniffers && captureStarted);
 
+    settingsDialog = new SettingsDialog(this);
+
 	ui->graphView->setNetworkManager(wsnManager);
 
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
@@ -87,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
     connect(ui->actionNewPacketWindow, SIGNAL(triggered()), this, SLOT(createNewPacketWindow()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(createNewAboutWindow()));
+    connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editSettings()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 	connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
     connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeInfo()));
@@ -276,6 +280,16 @@ void MainWindow::createNewAboutWindow() {
     ui.setupUi(&window);
     window.exec();
 }
+
+void MainWindow::editSettings() {
+    if(settingsDialog->exec()){
+        settingsDialog->applySettings();
+    }
+    else{
+        settingsDialog->restoreSettings();
+    }
+}
+
 
 void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
 	infoWidgets.removeAll((InformationWidget*)informationWindow);

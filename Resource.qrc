@@ -11,5 +11,6 @@
         <file>resources/icons/unlinked.png</file>
         <file>resources/logo/foren6-48-alpha.png</file>
         <file>resources/logo/foren6-400p-alpha.icns</file>
+        <file>resources/icons/autoscroll-24.png</file>
     </qresource>
 </RCC>
