@@ -121,6 +121,9 @@ private:
         QTreeWidgetItem *nodeTraffic;
 		QTreeWidgetItem *nodeMaxDaoInterval;
 		QTreeWidgetItem *nodeMaxDioInterval;
+        QTreeWidgetItem *nodeDis;
+        QTreeWidgetItem *nodeDio;
+        QTreeWidgetItem *nodeDao;
 
         QTreeWidgetItem *errorsMain;
 		QTreeWidgetItem *nodeUpwardRankErrorCount;

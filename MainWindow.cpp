@@ -194,6 +194,12 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeMaxDaoInterval->setText(0, "Max DAO Interval");
 		nodeInfoTree.nodeMaxDioInterval = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
 		nodeInfoTree.nodeMaxDioInterval->setText(0, "Max DIO Interval");
+        nodeInfoTree.nodeDis = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
+        nodeInfoTree.nodeDis->setText(0, "DIS sent");
+        nodeInfoTree.nodeDio = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
+        nodeInfoTree.nodeDio->setText(0, "DIO sent");
+        nodeInfoTree.nodeDao = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
+        nodeInfoTree.nodeDao->setText(0, "DAO sent");
 
         nodeInfoTree.errorsMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
         nodeInfoTree.errorsMain->setText(0, "Errors");
@@ -514,6 +520,12 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     setDeltaColor( nodeInfoTree.nodeMaxDaoInterval, rpl_statistics_delta->max_dao_interval);
 	nodeInfoTree.nodeMaxDioInterval->setText(1, QString::number(rpl_statistics->max_dio_interval) + " sec");
     setDeltaColor( nodeInfoTree.nodeMaxDioInterval, rpl_statistics_delta->max_dio_interval);
+    nodeInfoTree.nodeDis->setText(1, QString::number(rpl_statistics->dis));
+    setDeltaColor( nodeInfoTree.nodeDis, rpl_statistics_delta->dis);
+    nodeInfoTree.nodeDio->setText(1, QString::number(rpl_statistics->dio));
+    setDeltaColor( nodeInfoTree.nodeDio, rpl_statistics_delta->dio);
+    nodeInfoTree.nodeDao->setText(1, QString::number(rpl_statistics->dao));
+    setDeltaColor( nodeInfoTree.nodeDao, rpl_statistics_delta->dao);
 
     setTitleDeltaColor(nodeInfoTree.statisticsMain, sixlowpan_statistics_delta->has_changed || rpl_statistics_delta->has_changed);
 
@@ -603,6 +615,9 @@ void MainWindow::clearTargetNodeInfo() {
 	nodeInfoTree.nodeTraffic->setText(1, "");
 	nodeInfoTree.nodeMaxDaoInterval->setText(1, "");
 	nodeInfoTree.nodeMaxDioInterval->setText(1, "");
+    nodeInfoTree.nodeDis->setText(1, "");
+    nodeInfoTree.nodeDio->setText(1, "");
+    nodeInfoTree.nodeDao->setText(1, "");
 
     setTitleDeltaColor( nodeInfoTree.errorsMain, false);
 	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, "");
