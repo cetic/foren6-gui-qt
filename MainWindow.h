@@ -127,6 +127,7 @@ private:
 		QTreeWidgetItem *nodeDownwardRankErrorCount;
 		QTreeWidgetItem *nodeRouteLoopErrorCount;
 		QTreeWidgetItem *nodeDodagMismatchErrorCount;
+        QTreeWidgetItem *nodeDodagConfigMismatchErrorCount;
 		QTreeWidgetItem *nodeIpMismatchErrorCount;
 
 		QTreeWidgetItem *routeMain;

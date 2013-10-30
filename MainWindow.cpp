@@ -207,6 +207,8 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeIpMismatchErrorCount->setText(0, "IP mismatch errors");
 		nodeInfoTree.nodeDodagMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeDodagMismatchErrorCount->setText(0, "Dodag mismatch errors");
+        nodeInfoTree.nodeDodagConfigMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
+        nodeInfoTree.nodeDodagConfigMismatchErrorCount->setText(0, "Dodag config mismatch errors");
 
 		nodeInfoTree.routeMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
 		nodeInfoTree.routeMain->setText(0, "Routing table");
@@ -529,6 +531,8 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     setDeltaColor( nodeInfoTree.nodeIpMismatchErrorCount, rpl_errors_delta->ip_mismatch_errors, QColor(Qt::red));
 	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, QString::number(rpl_errors->dodag_mismatch_errors));
     setDeltaColor( nodeInfoTree.nodeDodagMismatchErrorCount, rpl_errors_delta->dodag_mismatch_errors, QColor(Qt::red));
+    nodeInfoTree.nodeDodagConfigMismatchErrorCount->setText(1, QString::number(rpl_errors->dodag_config_mismatch_errors));
+    setDeltaColor( nodeInfoTree.nodeDodagConfigMismatchErrorCount, rpl_errors_delta->dodag_config_mismatch_errors, QColor(Qt::red));
 
 	di_route_list_t route_table;
 	di_route_el_t *route;
@@ -605,6 +609,7 @@ void MainWindow::clearTargetNodeInfo() {
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, "");
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, "");
 	nodeInfoTree.nodeDodagMismatchErrorCount->setText(1, "");
+    nodeInfoTree.nodeDodagConfigMismatchErrorCount->setText(1, "");
 	nodeInfoTree.nodeIpMismatchErrorCount->setText(1, "");
 
 	QList<QTreeWidgetItem *> routeChildren = nodeInfoTree.routeMain->takeChildren();
