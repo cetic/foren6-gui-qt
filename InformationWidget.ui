@@ -42,6 +42,9 @@
         <height>30</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Toggle Autoscroll</string>
+      </property>
       <property name="text">
        <string/>
       </property>
