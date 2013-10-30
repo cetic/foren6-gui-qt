@@ -381,20 +381,27 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     // RPL Instance Config
     const rpl_instance_config_t *instance_config = node_get_instance_config(node);
     const rpl_instance_config_delta_t *instance_config_delta = node_get_instance_config_delta(node);
-    const rpl_instance_config_delta_t *actual_instance_config_delta = node_get_actual_instance_config_delta(node);
-    setTitleThreeColor(nodeInfoTree.rplInstanceMain, actual_instance_config_delta->has_changed, instance_config_delta->has_changed);
+    //const rpl_instance_config_delta_t *actual_instance_config_delta = node_get_actual_instance_config_delta(node);
+    setTitleDeltaColor(nodeInfoTree.rplInstanceMain, /*actual_instance_config_delta->has_changed,*/ instance_config_delta->has_changed);
     if (instance_config) {
         nodeInfoTree.rplInstanceIdMain->setText(1, QString::number(instance_config->rpl_instance_id));
-        setThreeColor(nodeInfoTree.rplInstanceIdMain, actual_instance_config_delta->rpl_instance_id, instance_config_delta->rpl_instance_id);
+        setDeltaColor(nodeInfoTree.rplInstanceIdMain, /*actual_instance_config_delta->rpl_instance_id,*/ instance_config_delta->rpl_instance_id);
+    } else {
+        nodeInfoTree.rplInstanceIdMain->setText(1, "");
+    }
+    if (instance_config && instance_config->has_dodagid) {
         inet_ntop(AF_INET6, (const char*)&instance_config->dodagid, ipv6string, INET6_ADDRSTRLEN);
         nodeInfoTree.dodagId->setText(1, ipv6string);
-        setThreeColor(nodeInfoTree.dodagId, actual_instance_config_delta->dodagid, instance_config_delta->dodagid);
-        nodeInfoTree.dodagVersion->setText(1, QString::number(instance_config->version_number));
-        setThreeColor(nodeInfoTree.dodagVersion, instance_config_delta->version_number, instance_config_delta->version_number);
-        nodeInfoTree.dodagModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
-        setThreeColor(nodeInfoTree.dodagModeOfOperation, actual_instance_config_delta->mode_of_operation, instance_config_delta->mode_of_operation);
+        setDeltaColor(nodeInfoTree.dodagId, /*actual_instance_config_delta->dodagid,*/ instance_config_delta->dodagid);
     } else {
         nodeInfoTree.dodagId->setText(1, "");
+    }
+    if (instance_config && instance_config->has_dio_config) {
+        nodeInfoTree.dodagVersion->setText(1, QString::number(instance_config->version_number));
+        setDeltaColor(nodeInfoTree.dodagVersion, /*actual_instance_config_delta->version_number,*/ instance_config_delta->version_number);
+        nodeInfoTree.dodagModeOfOperation->setText(1, QString::number(instance_config->mode_of_operation));
+        setDeltaColor(nodeInfoTree.dodagModeOfOperation, /*actual_instance_config_delta->mode_of_operation,*/ instance_config_delta->mode_of_operation);
+    } else {
         nodeInfoTree.dodagVersion->setText(1, "");
         nodeInfoTree.dodagModeOfOperation->setText(1, "");
     }
@@ -472,6 +479,12 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     const rpl_instance_data_delta_t *instance_data_delta = node_get_instance_data_delta(node);
     setTitleDeltaColor(nodeInfoTree.rplDodagDataMain, instance_data_delta->has_changed);
     if (instance_data) {
+        nodeInfoTree.rplDodagDataMain->setText(1, QString::number(instance_data->rpl_instance_id));
+        setDeltaColor(nodeInfoTree.rplInstanceIdMain, instance_data_delta->rpl_instance_id);
+    } else {
+        nodeInfoTree.rplInstanceIdMain->setText(1, "");
+    }
+    if (instance_data && instance_data->has_dio_data) {
         nodeInfoTree.rplDodagDataMain->setText(1, QString::number(instance_data->rpl_instance_id));
         setDeltaColor(nodeInfoTree.rplInstanceIdMain, instance_data_delta->rpl_instance_id);
         nodeInfoTree.nodeGrounded->setText(1, (instance_data->grounded ? "true" : "false"));
