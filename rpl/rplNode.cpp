@@ -47,7 +47,10 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
     this->addToGroup(&_infoLabel);
     setInfoText("");
 
-    setCenterPos(qrand()%500, qrand()%500);
+    int dx = (int)networkInfoManager->scene()->width()/2;
+    int dy = (int)networkInfoManager->scene()->height()/2;
+
+    setCenterPos(qrand() % (2*dx) - dx, qrand() % (2*dy) - dy);
 	setZValue(1);
 
 	qstrcpy(guard, "node");
