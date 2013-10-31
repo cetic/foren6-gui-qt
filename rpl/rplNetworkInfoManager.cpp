@@ -210,6 +210,12 @@ void NetworkInfoManager::onSaveLayout() {
   if(target.isEmpty())
       return;
 
+  if(!target.endsWith(".ini")){
+      QFileInfo fileinfo(target);
+      target = fileinfo.completeBaseName();
+      target.append(".ini");
+  }
+
   QSettings *  newLayout = new QSettings(target, QSettings::IniFormat);
   newLayout->clear();
   _scene.getLayout(newLayout);
