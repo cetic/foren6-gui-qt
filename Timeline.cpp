@@ -32,8 +32,6 @@ void Timeline::paintEvent(QPaintEvent *ev) {
 	bool has_errors = false;
 	while(version <= maxVersion) {
 		timestamp = rpldata_wsn_version_get_timestamp(version);
-		has_errors = has_errors || rpldata_wsn_version_get_has_errors(version);
-
 		int position = QStyle::sliderPositionFromValue(min, max, ceil(timestamp*100), w-offset) + offset/2;
 		if ( position == current_position ) {
 		    alpha = 64 + (255-64) * alpha / 255;
@@ -48,6 +46,10 @@ void Timeline::paintEvent(QPaintEvent *ev) {
 	        has_errors = false;
 	        current_position = position;
 		}
+        has_errors = has_errors || rpldata_wsn_version_get_has_errors(version);
+        if ( rpldata_wsn_version_get_has_errors(version) ) {
+          //printf("e: %d (%f)\n", version, timestamp);
+        }
 		version++;
 	}
     if ( has_errors ) {
