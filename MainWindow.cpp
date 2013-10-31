@@ -410,7 +410,7 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     const rpl_dodag_config_t *dodag_config = node_get_dodag_config(node);
     const rpl_dodag_config_delta_t *dodag_config_delta = node_get_dodag_config_delta(node);
     const rpl_dodag_config_delta_t *actual_dodag_config_delta = node_get_actual_dodag_config_delta(node);
-    setTitleDeltaColor( nodeInfoTree.dodagConfig, actual_dodag_config_delta->has_changed, dodag_config_delta->has_changed);
+    setTitleThreeColor( nodeInfoTree.dodagConfig, actual_dodag_config_delta->has_changed, dodag_config_delta->has_changed);
     if(dodag_config) {
 		nodeInfoTree.dodagConfigAuthEnabled->setText(1, (dodag_config->auth_enabled? "Yes" : "No"));
 		setThreeColor( nodeInfoTree.dodagConfigAuthEnabled, actual_dodag_config_delta->auth_enabled, dodag_config_delta->auth_enabled);
