@@ -1,15 +1,27 @@
+#include <QSettings>
+
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
+#include "rpl_packet_parser.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
-    this->settings_RplRootRank = "256";
-    this->settings_6lowpanContext = "aaaa::";
+    //Get default config
+    analyser_config_t config = *(rpl_tool_get_analyser_config());
+
+    //Update config from user preferences
+    QSettings settings;
+    settings.beginGroup("rpl");
+    config.root_rank = settings.value("root_rank", config.root_rank).toInt();
+    //context
+    settings.endGroup();
+
+    rpl_tool_set_analyser_config(&config);
+
     ui->setupUi(this);
-    ui->settings_RplRootRankEdit->setText(this->settings_RplRootRank);
-    ui->settings_6lowpanContextEdit->setText(this->settings_6lowpanContext);
+    restoreSettings();
 }
 
 SettingsDialog::~SettingsDialog()
@@ -19,22 +31,28 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::applySettings()
 {
-    this->settings_RplRootRank = ui->settings_RplRootRankEdit->text();
-    this->settings_6lowpanContext = ui->settings_6lowpanContextEdit->text();
+    bool valid = true;
+    //Get current config
+    analyser_config_t config = *(rpl_tool_get_analyser_config());
+
+    config.root_rank = ui->settings_RplRootRankEdit->text().toInt(&valid, 10);
+    //config. = ui->settings_6lowpanContextEdit->text();
+
+    if (valid) {
+        rpl_tool_set_analyser_config(&config);
+        //Update user preferences
+        QSettings settings;
+        settings.beginGroup("rpl");
+        settings.setValue("root_rank", config.root_rank);
+        settings.endGroup();
+    }
+
+
 }
 
 void SettingsDialog::restoreSettings()
 {
-    ui->settings_RplRootRankEdit->setText(this->settings_RplRootRank);
-    ui->settings_6lowpanContextEdit->setText(this->settings_6lowpanContext);
-}
-
-QString SettingsDialog::getRplRootRank()
-{
-    return settings_RplRootRank;
-}
-
-QString SettingsDialog::get6lowpanContext()
-{
-    return settings_6lowpanContext;
+    const analyser_config_t *config = rpl_tool_get_analyser_config();
+    ui->settings_RplRootRankEdit->setText(QString::number(config->root_rank));
+    //ui->settings_6lowpanContextEdit->setText(this->settings_6lowpanContext);
 }

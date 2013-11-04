@@ -16,13 +16,9 @@ public:
     ~SettingsDialog();
     void applySettings();
     void restoreSettings();
-    QString getRplRootRank();
-    QString get6lowpanContext();
     
 private:
     Ui::SettingsDialog *ui;
-    QString settings_6lowpanContext;
-    QString settings_RplRootRank;
 };
 
 #endif // SETTINGSDIALOG_H
