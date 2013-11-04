@@ -8,13 +8,17 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
+    char ipv6string[INET6_ADDRSTRLEN];
     //Get default config
     analyser_config_t config = *(rpl_tool_get_analyser_config());
+    inet_ntop(AF_INET6, (const char*)&config.context0, ipv6string, INET6_ADDRSTRLEN);
 
     //Update config from user preferences
     QSettings settings;
     settings.beginGroup("rpl");
     config.root_rank = settings.value("root_rank", config.root_rank).toInt();
+    QString context0 = settings.value("context0", ipv6string).toString();
+    inet_pton(AF_INET6, qPrintable(context0), (void *)&config.context0);
     //context
     settings.endGroup();
 
@@ -36,7 +40,7 @@ void SettingsDialog::applySettings()
     analyser_config_t config = *(rpl_tool_get_analyser_config());
 
     config.root_rank = ui->settings_RplRootRankEdit->text().toInt(&valid, 10);
-    //config. = ui->settings_6lowpanContextEdit->text();
+    valid = valid && inet_pton(AF_INET6, qPrintable(ui->settings_6lowpanContextEdit->text()), (void *)&config.context0);
 
     if (valid) {
         rpl_tool_set_analyser_config(&config);
@@ -44,6 +48,7 @@ void SettingsDialog::applySettings()
         QSettings settings;
         settings.beginGroup("rpl");
         settings.setValue("root_rank", config.root_rank);
+        settings.setValue("context0", ui->settings_6lowpanContextEdit->text());
         settings.endGroup();
     }
 
@@ -52,7 +57,9 @@ void SettingsDialog::applySettings()
 
 void SettingsDialog::restoreSettings()
 {
+    char ipv6string[INET6_ADDRSTRLEN];
     const analyser_config_t *config = rpl_tool_get_analyser_config();
     ui->settings_RplRootRankEdit->setText(QString::number(config->root_rank));
-    //ui->settings_6lowpanContextEdit->setText(this->settings_6lowpanContext);
+    inet_ntop(AF_INET6, (const char*)&config->context0, ipv6string, INET6_ADDRSTRLEN);
+    ui->settings_6lowpanContextEdit->setText(ipv6string);
 }
