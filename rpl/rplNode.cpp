@@ -47,10 +47,17 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
     this->addToGroup(&_infoLabel);
     setInfoText("");
 
-    int dx = (int)networkInfoManager->scene()->width()/2;
-    int dy = (int)networkInfoManager->scene()->height()/2;
+    if (networkInfoManager->scene()->hasValidBackground()) {
+        int dx = (int)networkInfoManager->scene()->width();
+        int dy = (int)networkInfoManager->scene()->height();
+        setCenterPos(qrand() % dx, qrand() % dy);
+    }
+    else {
+        int dx = (int)networkInfoManager->scene()->width()/2;
+        int dy = (int)networkInfoManager->scene()->height()/2;
+        setCenterPos(qrand() % (2*dx) - dx, qrand() % (2*dy) - dy);
+    }
 
-    setCenterPos(qrand() % (2*dx) - dx, qrand() % (2*dy) - dy);
 	setZValue(1);
 
 	qstrcpy(guard, "node");
