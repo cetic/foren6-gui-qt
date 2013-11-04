@@ -27,7 +27,7 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
 	  _isSelected(false),
 	  _showInfoText(false)
 {
-	setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable);
+    setFlags( QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
 	setAcceptHoverEvents( true );
 	setNodeData(nodeData, version);
 
@@ -47,7 +47,17 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
     this->addToGroup(&_infoLabel);
     setInfoText("");
 
-    setCenterPos(qrand()%500, qrand()%500);
+    if (networkInfoManager->scene()->hasValidBackground()) {
+        int dx = (int)networkInfoManager->scene()->width();
+        int dy = (int)networkInfoManager->scene()->height();
+        setCenterPos(qrand() % dx, qrand() % dy);
+    }
+    else {
+        int dx = (int)networkInfoManager->scene()->width()/2;
+        int dy = (int)networkInfoManager->scene()->height()/2;
+        setCenterPos(qrand() % (2*dx) - dx, qrand() % (2*dy) - dy);
+    }
+
 	setZValue(1);
 
 	qstrcpy(guard, "node");
@@ -232,6 +242,22 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 			link->updatePosition();
 		}
 	}
+}
+
+QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemPositionChange && scene()) {
+         // value is the new position.
+         QPointF newPos = value.toPointF();
+         QRectF rect = scene()->sceneRect();
+         if (!rect.contains(newPos)) {
+             // Keep the item inside the scene rect.
+             newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
+             newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
+             return newPos;
+         }
+     }
+     return QGraphicsItem::itemChange(change, value);
 }
 
 void Node::setNodeData(di_node_t *data, int version) {
