@@ -68,6 +68,7 @@ protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 	void alignLabels();
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
 	NetworkInfoManager *_networkInfoManager;
