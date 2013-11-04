@@ -84,8 +84,14 @@ void PacketWidget::showPacket(rpl::Event *event) {
 
     if ( event->object != rpl::Event::EO_Packet ) return;
 
+    char ipv6string[INET6_ADDRSTRLEN];
+    analyser_config_t config = *(rpl_tool_get_analyser_config());
+    inet_ntop(AF_INET6, (const char*)&config.context0, ipv6string, INET6_ADDRSTRLEN);
+
+    QString context = "6lowpan.context0:";
+    context += ipv6string;
     QProcess tshark;
-    tshark.start("tshark", QStringList() << "-V" << "-c" << "1" << "-r" << "out.pcap" << "-R" << (QString("frame.number==") + QString::number(event->packed_id+1)));
+    tshark.start("tshark", QStringList() << "-V" << "-c" << "1" << "-r" << "out.pcap" << "-R" << (QString("frame.number==") + QString::number(event->packed_id+1)) << "-o" << context);
     if (!tshark.waitForStarted())
         return;
     if (!tshark.waitForFinished())

@@ -76,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settingsDialog = new SettingsDialog(this);
 
+    rpl_tool_start();
+
 	ui->graphView->setNetworkManager(wsnManager);
 
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
