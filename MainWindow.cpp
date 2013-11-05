@@ -205,6 +205,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
         nodeInfoTree.errorsMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
         nodeInfoTree.errorsMain->setText(0, "Errors");
+        nodeInfoTree.nodeInvalidIp = new QTreeWidgetItem(nodeInfoTree.errorsMain);
+        nodeInfoTree.nodeInvalidIp->setText(0, "Invalid IP");
+        nodeInfoTree.nodeInvalidPrefix = new QTreeWidgetItem(nodeInfoTree.errorsMain);
+        nodeInfoTree.nodeInvalidPrefix->setText(0, "Invalid prefix");
 		nodeInfoTree.nodeUpwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeUpwardRankErrorCount->setText(0, "Upward rank errors");
 		nodeInfoTree.nodeDownwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
@@ -544,10 +548,20 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
 
     setTitleDeltaColor(nodeInfoTree.statisticsMain, sixlowpan_statistics_delta->has_changed || rpl_statistics_delta->has_changed);
 
+    //6LoWPAN errors
+    const sixlowpan_errors_t *sixlowpan_errors = node_get_sixlowpan_errors(node);
+    const sixlowpan_errors_delta_t *sixlowpan_errors_delta = node_get_sixlowpan_errors_delta(node);
+
     //RPL errors
     const rpl_errors_t *rpl_errors = node_get_rpl_errors(node);
     const rpl_errors_delta_t *rpl_errors_delta = node_get_rpl_errors_delta(node);
-    setTitleDeltaColor(nodeInfoTree.errorsMain, rpl_errors_delta->has_changed, QColor(Qt::red));
+
+    setTitleDeltaColor(nodeInfoTree.errorsMain, rpl_errors_delta->has_changed || sixlowpan_errors_delta->has_changed, QColor(Qt::red));
+    nodeInfoTree.nodeInvalidIp->setText(1, QString::number(sixlowpan_errors->invalid_ip));
+    setDeltaColor( nodeInfoTree.nodeInvalidIp, sixlowpan_errors_delta->invalid_ip, QColor(Qt::red));
+    nodeInfoTree.nodeInvalidPrefix->setText(1, QString::number(sixlowpan_errors->invalid_prefix));
+    setDeltaColor( nodeInfoTree.nodeInvalidPrefix, sixlowpan_errors_delta->invalid_prefix, QColor(Qt::red));
+
     nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(rpl_errors->upward_rank_errors));
     setDeltaColor( nodeInfoTree.nodeUpwardRankErrorCount, rpl_errors_delta->upward_rank_errors, QColor(Qt::red));
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(rpl_errors->downward_rank_errors));
@@ -635,6 +649,8 @@ void MainWindow::clearTargetNodeInfo() {
     nodeInfoTree.nodeDao->setText(1, "");
 
     setTitleDeltaColor( nodeInfoTree.errorsMain, false);
+    nodeInfoTree.nodeInvalidIp->setText(1, "");
+    nodeInfoTree.nodeInvalidPrefix->setText(1, "");
 	nodeInfoTree.nodeUpwardRankErrorCount->setText(1, "");
 	nodeInfoTree.nodeDownwardRankErrorCount->setText(1, "");
 	nodeInfoTree.nodeRouteLoopErrorCount->setText(1, "");

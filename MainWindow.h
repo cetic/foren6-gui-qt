@@ -126,6 +126,8 @@ private:
         QTreeWidgetItem *nodeDao;
 
         QTreeWidgetItem *errorsMain;
+        QTreeWidgetItem *nodeInvalidIp;
+        QTreeWidgetItem *nodeInvalidPrefix;
 		QTreeWidgetItem *nodeUpwardRankErrorCount;
 		QTreeWidgetItem *nodeDownwardRankErrorCount;
 		QTreeWidgetItem *nodeRouteLoopErrorCount;
