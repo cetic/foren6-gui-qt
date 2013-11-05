@@ -216,7 +216,7 @@ MainWindow::MainWindow(QWidget *parent) :
 		nodeInfoTree.nodeRouteLoopErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeRouteLoopErrorCount->setText(0, "Route loop errors");
 		nodeInfoTree.nodeIpMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
-		nodeInfoTree.nodeIpMismatchErrorCount->setText(0, "IP mismatch errors");
+		nodeInfoTree.nodeIpMismatchErrorCount->setText(0, "DAO IP mismatch errors");
 		nodeInfoTree.nodeDodagMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
 		nodeInfoTree.nodeDodagMismatchErrorCount->setText(0, "Dodag mismatch errors");
         nodeInfoTree.nodeDodagConfigMismatchErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
