@@ -74,5 +74,13 @@ bool DodagOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 }
 
 bool DodagOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-    return false;
+  if (infoText) {
+      const rpl_instance_config_t *config = node_get_instance_config(node->getNodeData());
+      if ( config && config->has_dio_config ) {
+          *infoText = QString::number(config->version_number);
+      } else {
+          *infoText = "-";
+      }
+  }
+  return true;
 }
