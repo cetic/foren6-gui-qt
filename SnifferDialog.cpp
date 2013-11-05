@@ -161,6 +161,7 @@ void SnifferDialog::onStartSniffer() {
 	QList<OpenedSniffersModel::SnifferInterface> openedSniffers = openedSniffersModel->getOpenedSniffers();
 	OpenedSniffersModel::SnifferInterface openedSniffer;
 
+	rpl_tool_start_capture();
 	foreach(openedSniffer, openedSniffers) {
 		openedSniffer.interface->start(openedSniffer.sniffer_handle);
 	}
@@ -173,6 +174,7 @@ void SnifferDialog::onStopSniffer() {
 	foreach(openedSniffer, openedSniffers) {
 		openedSniffer.interface->stop(openedSniffer.sniffer_handle);
 	}
+    rpl_tool_stop_capture();
 }
 
 bool SnifferDialog::loadInterface(const QString& soLocation) {
