@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 	connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
     connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeInfo()));
+    connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), wsnManager, SLOT(toggleLinkDialogs(bool)));
 
 	connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
 	connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
