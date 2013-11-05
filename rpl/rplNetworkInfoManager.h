@@ -63,7 +63,7 @@ public slots:
     void onLoadLayout();
     void onSaveLayout();
     void onClearLayout();
-    void toggleLinkDialogs(bool);
+    void onToggleLinkDialogs(bool);
 
 signals:
 	void nodeUpdateSelected(const di_node_t *node, const di_dodag_t* dodag, const di_rpl_instance_t* rpl_instance);

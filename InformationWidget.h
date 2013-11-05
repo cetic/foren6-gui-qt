@@ -23,6 +23,8 @@ public slots:
 	void addMessage(rpl::Event *newMsg);
 	void clearMessages();
     void setAutoScroll(bool);
+    void onChangeCurrentVersion(int);
+    void onToggleLinkDialogs(bool);
 
 signals:
 	void setCurrentVersion(int version);
@@ -33,11 +35,16 @@ protected slots:
 	void onMessageLogDoubleClicked(QModelIndex index);
 	void onFilterTextChanged(QString newText);
 	void rowsInserted();
+    void onSelectedRowChange(QModelIndex,QModelIndex);
 	
 private:
 	Ui::InformationWidget *ui;
 	EventLog *messageLog;
 	bool autoScroll;
+    void findVersionIndexes(int, int&, int&);
+    int currentRow;
+    int previousRow;
+    bool dialogsLinked;
 };
 
 #endif // INFORMATIONWIDGET_H

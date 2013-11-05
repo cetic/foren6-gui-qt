@@ -96,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 	connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
     connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeInfo()));
-    connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), wsnManager, SLOT(toggleLinkDialogs(bool)));
+    connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), wsnManager, SLOT(onToggleLinkDialogs(bool)));
 
 	connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
 	connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
@@ -270,7 +270,10 @@ void MainWindow::doCreateNewInformationWindow(QString name) {
     connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
     connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
     connect(infoWidget, SIGNAL(messageSelected(rpl::Event*)), this, SLOT(messageSelected(rpl::Event*)));
+    connect(this, SIGNAL(changeWsnVersion(int)), infoWidget, SLOT(onChangeCurrentVersion(int)));
     connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
+    connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), infoWidget, SLOT(onToggleLinkDialogs(bool)));
+
 
     foreach(message, messages) {
         infoWidget->addMessage(message);
@@ -336,6 +339,7 @@ void MainWindow::clearMessages() {
 
 void MainWindow::messageSelected(rpl::Event * event) {
     if ( ! packetWidget) return;
+    if (event == NULL) return;
     packetWidget->showPacket(event);
 }
 

@@ -465,13 +465,11 @@ int NetworkInfoManager::getVersion() {
 	return currentVersion;
 }
 
-void NetworkInfoManager::toggleLinkDialogs(bool state){
-    qDebug("toggle, state = %d", state);
+void NetworkInfoManager::onToggleLinkDialogs(bool state){
     this->dialogsLinked = state;
 }
 
 bool NetworkInfoManager::getDialogsLinked(){
-    qDebug("get state = %d", dialogsLinked);
     return dialogsLinked;
 }
 }
