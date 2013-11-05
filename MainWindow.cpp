@@ -380,9 +380,16 @@ void MainWindow::setTargetNodeInfo(const di_node_t* node, const di_dodag_t* doda
     inet_ntop(AF_INET6, (const char*)&sixlowpan_config->local_address, ipv6string, INET6_ADDRSTRLEN);
     nodeInfoTree.nodeLocalIp->setText(1, ipv6string);
     setDeltaColor( nodeInfoTree.nodeLocalIp, sixlowpan_config_delta->local_address);
+    QFont nodeLocalIpFont = nodeInfoTree.nodeLocalIp->font(1);
+    nodeLocalIpFont.setItalic(!sixlowpan_config->has_seen_local_address);
+    nodeInfoTree.nodeLocalIp->setFont(1, nodeLocalIpFont);
+
     inet_ntop(AF_INET6, (const char*)&sixlowpan_config->global_address, ipv6string, INET6_ADDRSTRLEN);
     nodeInfoTree.nodeGlobalIp->setText(1, ipv6string);
     setDeltaColor( nodeInfoTree.nodeGlobalIp, sixlowpan_config_delta->global_address);
+    QFont nodeGlobalIpFont = nodeInfoTree.nodeGlobalIp->font(1);
+    nodeGlobalIpFont.setItalic(!sixlowpan_config->has_seen_global_address);
+    nodeInfoTree.nodeGlobalIp->setFont(1, nodeGlobalIpFont);
 
     // RPL Instance Config
     const rpl_instance_config_t *instance_config = node_get_instance_config(node);
