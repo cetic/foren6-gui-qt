@@ -91,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionClearLayout, SIGNAL(triggered()), wsnManager, SLOT(onClearLayout()));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
     connect(ui->actionNewPacketWindow, SIGNAL(triggered()), this, SLOT(createNewPacketWindow()));
+    connect(ui->actionClosePacketWindow, SIGNAL(triggered()), this, SLOT(closePacketWindow()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(createNewAboutWindow()));
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editSettings()));
 	connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
@@ -285,6 +286,16 @@ void MainWindow::createNewPacketWindow() {
     packetWidget->show();
     packetWidget->move(this->pos()); /* Place at the same position as main window to avoid multi-screen glitches */
     connect(packetWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onPacketWindowClosed(QObject*)));
+    ui->actionNewPacketWindow->setEnabled(false);
+    ui->actionClosePacketWindow->setEnabled(true);
+}
+
+void MainWindow::closePacketWindow() {
+    if (packetWidget){
+        packetWidget->close();
+        ui->actionNewPacketWindow->setEnabled(true);
+        ui->actionClosePacketWindow->setEnabled(false);
+    }
 }
 
 void MainWindow::createNewAboutWindow() {

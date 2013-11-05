@@ -85,6 +85,7 @@
     </property>
     <addaction name="actionNewInformationWindow"/>
     <addaction name="actionNewPacketWindow"/>
+    <addaction name="actionClosePacketWindow"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -249,6 +250,14 @@
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionClosePacketWindow">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Close Packet Window</string>
    </property>
   </action>
  </widget>
