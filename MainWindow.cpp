@@ -326,6 +326,8 @@ void MainWindow::onInformationWindowClosed(QObject *informationWindow) {
 
 void MainWindow::onPacketWindowClosed(QObject *packetWindow) {
 	packetWidget = 0;
+    ui->actionNewPacketWindow->setEnabled(true);
+    ui->actionClosePacketWindow->setEnabled(false);
 }
 
 void MainWindow::addMessage(rpl::Event *event) {
