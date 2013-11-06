@@ -10,15 +10,18 @@ InformationWidget::InformationWidget(QWidget *parent) :
     dialogsLinked(false)
 {
 	ui->setupUi(this);
-	messageLog = new EventLog(this);
+    messageLog = new EventLog(this);
+    rowChangedTimer = new QTimer(this);
+    rowChangedTimer->setSingleShot(true);
+    rowChangedTimer->setInterval(500);
 	ui->messageTable->setModel(messageLog);
-	connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
-	connect(ui->messageTable, SIGNAL(clicked(QModelIndex)), this, SLOT(onMessageLogClicked(QModelIndex)));
 	connect(ui->messageTable, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onMessageLogDoubleClicked(QModelIndex)));
 	connect(ui->filterEdit, SIGNAL(textChanged(QString)), this, SLOT(onFilterTextChanged(QString)));
     connect(ui->autoscrollButton, SIGNAL(toggled(bool)), this, SLOT(setAutoScroll(bool)));
     connect(ui->messageTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(onSelectedRowChange(QModelIndex,QModelIndex)));
-	setAttribute(Qt::WA_DeleteOnClose);
+    connect(rowChangedTimer, SIGNAL(timeout()), this, SLOT(rowSelected()));
+    setAttribute(Qt::WA_DeleteOnClose);
+    lockManualSelection = false;
 }
 
 InformationWidget::~InformationWidget()
@@ -41,12 +44,6 @@ void InformationWidget::clearMessages() {
 	messageLog->clear();
 }
 
-void InformationWidget::onMessageLogClicked(QModelIndex index) {
-    rpl::Event *  event = messageLog->at(index);
-    emit messageSelected(event);
-    ui->messageTable->resizeColumnsToContents();
-}
-
 void InformationWidget::onMessageLogDoubleClicked(QModelIndex index) {
 	emit setCurrentVersion(messageLog->getVersion(index.row()));
 }
@@ -65,11 +62,14 @@ void InformationWidget::onChangeCurrentVersion(int version){
     findVersionIndexes(version, start, stop);
     //override current selection only if currently selected row is not within the new version's rows
     if (currentRow < start || currentRow > stop){
+        lockManualSelection = true;
         ui->messageTable->selectRow(start);
         ui->messageTable->scrollTo(messageLog->index(start, 0));
         if (dialogsLinked && currentRow != -1){
-            emit messageSelected(messageLog->at(messageLog->index(start,0)));
+            _tempRow = start;
+            rowChangedTimer->start();
         }
+        lockManualSelection = false;
     }
 }
 
@@ -101,8 +101,18 @@ void InformationWidget::findVersionIndexes(int version, int &startIndex, int &st
 void InformationWidget::onSelectedRowChange(QModelIndex current, QModelIndex previous){
     currentRow = current.row();
     previousRow = previous.row();
+    _tempRow = currentRow;
+    ui->messageTable->scrollTo(messageLog->index(currentRow, 0));
+    ui->messageTable->resizeColumnsToContents();
+    rowChangedTimer->start();
 }
 
 void InformationWidget::onToggleLinkDialogs(bool state){
     dialogsLinked = state;
+}
+
+void InformationWidget::rowSelected(){
+    if (!lockManualSelection){
+        emit messageSelected(messageLog->at(messageLog->index(_tempRow,0)));
+    }
 }

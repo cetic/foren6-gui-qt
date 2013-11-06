@@ -31,11 +31,11 @@ signals:
 	void messageSelected(rpl::Event *  event);
 
 protected slots:
-    void onMessageLogClicked(QModelIndex index);
 	void onMessageLogDoubleClicked(QModelIndex index);
 	void onFilterTextChanged(QString newText);
 	void rowsInserted();
     void onSelectedRowChange(QModelIndex,QModelIndex);
+    void rowSelected();
 	
 private:
 	Ui::InformationWidget *ui;
@@ -44,7 +44,10 @@ private:
     void findVersionIndexes(int, int&, int&);
     int currentRow;
     int previousRow;
+    int _tempRow;
     bool dialogsLinked;
+    QTimer *rowChangedTimer;
+    bool lockManualSelection;
 };
 
 #endif // INFORMATIONWIDGET_H
