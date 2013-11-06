@@ -252,8 +252,9 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
          QRectF rect = scene()->sceneRect();
          if (!rect.contains(newPos)) {
              // Keep the item inside the scene rect.
-             newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
-             newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
+             // TODO: hardcoded 32 as Max Elipse Size
+             newPos.setX(qMin(rect.right() - 32, qMax(newPos.x(), rect.left())));
+             newPos.setY(qMin(rect.bottom() - 32, qMax(newPos.y(), rect.top())));
              return newPos;
          }
      }
