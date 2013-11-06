@@ -58,8 +58,13 @@ void SettingsDialog::applySettings()
 void SettingsDialog::restoreSettings()
 {
     char ipv6string[INET6_ADDRSTRLEN];
+    bool autoconfAddresses, singlePreferredParent;
     const analyser_config_t *config = rpl_tool_get_analyser_config();
+    autoconfAddresses = true; //TODO: read from analyser config
+    singlePreferredParent = true; //TODO: read from analyser config
     ui->settings_RplRootRankEdit->setText(QString::number(config->root_rank));
     inet_ntop(AF_INET6, (const char*)&config->context0, ipv6string, INET6_ADDRSTRLEN);
     ui->settings_6lowpanContextEdit->setText(ipv6string);
+    ui->settings_AutoconfAddrsCbx->setChecked(autoconfAddresses);
+    ui->settings_SinglePreferredParentCbx->setChecked(singlePreferredParent);
 }
