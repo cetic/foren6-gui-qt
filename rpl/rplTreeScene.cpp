@@ -188,13 +188,15 @@ void TreeScene::updateNodePositions() {
 			if(qAbs(dist) < 0.01) dist = 0.01;
 			//qreal factor = (100 - dist)/(dist * 3);
 			qreal link_weight;
-            if(currentLink->weight()/10 < 30)
+            /*if(currentLink->weight()/10 < 30)
                 link_weight = 30;
-			else link_weight = currentLink->weight()/10;
-
-			qreal factor = (link_weight - dist)/(dist * 3);
-			currentLink->from()->incSpeed(-factor * vx, -factor * vy);
-			currentLink->to()->incSpeed(factor * vx, factor * vy);
+			else */
+			link_weight = currentLink->weight()/10;
+			if ( link_weight != 0 ) {
+			    qreal factor = (link_weight - dist)/(dist * 3);
+			    currentLink->from()->incSpeed(-factor * vx, -factor * vy);
+			    currentLink->to()->incSpeed(factor * vx, factor * vy);
+			}
 		}
 
 

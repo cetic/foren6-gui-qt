@@ -57,9 +57,11 @@ bool ErrorsOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColo
 }
 
 bool ErrorsOverlay::linkPen(rpl::Link *link, QPen *newPen) {
-	Q_UNUSED(link);
-
-	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    if (link_get_deprecated(link->getLinkData()) ) {
+        *newPen = QPen(Qt::lightGray, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    } else {
+        *newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    }
 	return true;
 }
 
