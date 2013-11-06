@@ -48,13 +48,13 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
     setInfoText("");
 
     if (networkInfoManager->scene()->hasValidBackground()) {
-        int dx = (int)networkInfoManager->scene()->width();
-        int dy = (int)networkInfoManager->scene()->height();
+        int dx = (int)(networkInfoManager->scene()->width() - _maxSize/2);
+        int dy = (int)(networkInfoManager->scene()->height() - _maxSize/2);
         setCenterPos(qrand() % dx, qrand() % dy);
     }
     else {
-        int dx = (int)networkInfoManager->scene()->width()/2;
-        int dy = (int)networkInfoManager->scene()->height()/2;
+        int dx = (int)((networkInfoManager->scene()->width()-(_maxSize/2))/2);
+        int dy = (int)((networkInfoManager->scene()->height()-(_maxSize/2))/2);
         setCenterPos(qrand() % (2*dx) - dx, qrand() % (2*dy) - dy);
     }
 
@@ -252,8 +252,9 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
          QRectF rect = scene()->sceneRect();
          if (!rect.contains(newPos)) {
              // Keep the item inside the scene rect.
-             newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
-             newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
+             // TODO: hardcoded 32 as Max Elipse Size
+             newPos.setX(qMin(rect.right() - 32, qMax(newPos.x(), rect.left())));
+             newPos.setY(qMin(rect.bottom() - 32, qMax(newPos.y(), rect.top())));
              return newPos;
          }
      }
