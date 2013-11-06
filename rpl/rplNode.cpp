@@ -48,13 +48,13 @@ Node::Node(NetworkInfoManager *networkInfoManager, di_node_t *nodeData, int vers
     setInfoText("");
 
     if (networkInfoManager->scene()->hasValidBackground()) {
-        int dx = (int)networkInfoManager->scene()->width();
-        int dy = (int)networkInfoManager->scene()->height();
+        int dx = (int)(networkInfoManager->scene()->width() - _maxSize/2);
+        int dy = (int)(networkInfoManager->scene()->height() - _maxSize/2);
         setCenterPos(qrand() % dx, qrand() % dy);
     }
     else {
-        int dx = (int)networkInfoManager->scene()->width()/2;
-        int dy = (int)networkInfoManager->scene()->height()/2;
+        int dx = (int)((networkInfoManager->scene()->width()-(_maxSize/2))/2);
+        int dy = (int)((networkInfoManager->scene()->height()-(_maxSize/2))/2);
         setCenterPos(qrand() % (2*dx) - dx, qrand() % (2*dy) - dy);
     }
 
