@@ -43,6 +43,7 @@ NetworkInfoManager::NetworkInfoManager()
 	qRegisterMetaType<rpl::Event*>();
 	_overlay = new NormalOverlay;
 	layout = 0;
+    dialogsLinked = true;
 
 	_updateVersionTimer.setInterval(100);
 	_updateVersionTimer.setSingleShot(false);
