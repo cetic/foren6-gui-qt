@@ -46,6 +46,7 @@ protected slots:
 	void onOpenSnifferDialog();
 	void createNewInformationWindow();
     void createNewPacketWindow();
+    void closePacketWindow();
     void createNewAboutWindow();
     void editSettings();
 	void onInformationWindowClosed(QObject *informationWindow);
