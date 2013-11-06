@@ -465,4 +465,11 @@ int NetworkInfoManager::getVersion() {
 	return currentVersion;
 }
 
+void NetworkInfoManager::onToggleLinkDialogs(bool state){
+    this->dialogsLinked = state;
+}
+
+bool NetworkInfoManager::getDialogsLinked(){
+    return dialogsLinked;
+}
 }

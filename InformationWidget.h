@@ -23,21 +23,31 @@ public slots:
 	void addMessage(rpl::Event *newMsg);
 	void clearMessages();
     void setAutoScroll(bool);
+    void onChangeCurrentVersion(int);
+    void onToggleLinkDialogs(bool);
 
 signals:
 	void setCurrentVersion(int version);
 	void messageSelected(rpl::Event *  event);
 
 protected slots:
-    void onMessageLogClicked(QModelIndex index);
 	void onMessageLogDoubleClicked(QModelIndex index);
 	void onFilterTextChanged(QString newText);
 	void rowsInserted();
+    void onSelectedRowChange(QModelIndex,QModelIndex);
+    void rowSelected();
 	
 private:
 	Ui::InformationWidget *ui;
 	EventLog *messageLog;
 	bool autoScroll;
+    void findVersionIndexes(int, int&, int&);
+    int currentRow;
+    int previousRow;
+    int _tempRow;
+    bool dialogsLinked;
+    QTimer *rowChangedTimer;
+    bool lockManualSelection;
 };
 
 #endif // INFORMATIONWIDGET_H
