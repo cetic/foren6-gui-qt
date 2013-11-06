@@ -83,7 +83,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(onStartSniffer()));
 	connect(ui->actionStop, SIGNAL(triggered()), this, SLOT(onStopSniffer()));
 	connect(ui->actionOpenSnifferDialog, SIGNAL(triggered()), this, SLOT(onOpenSnifferDialog()));
-	connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), this, SIGNAL(changeWsnVersion(int)));
+    connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), this, SLOT(onSliderVersionChanged(int)));
+    connect(ui->versionSlider, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
     connect(ui->actionLoadBackground, SIGNAL(triggered()), wsnManager, SLOT(onLoadBackground()));
     connect(ui->actionClearBackground, SIGNAL(triggered()), wsnManager, SLOT(onClearBackground()));
     connect(ui->actionLoadLayout, SIGNAL(triggered()), wsnManager, SLOT(onLoadLayout()));
@@ -271,7 +272,7 @@ void MainWindow::doCreateNewInformationWindow(QString name) {
     connect(infoWidget, SIGNAL(setCurrentVersion(int)), ui->versionSlider, SLOT(onChangeCurrentVersion(int)));
     connect(infoWidget, SIGNAL(destroyed(QObject*)), this, SLOT(onInformationWindowClosed(QObject*)));
     connect(infoWidget, SIGNAL(messageSelected(rpl::Event*)), this, SLOT(messageSelected(rpl::Event*)));
-    connect(this, SIGNAL(changeWsnVersion(int)), infoWidget, SLOT(onChangeCurrentVersion(int)));
+    connect(this, SIGNAL(changeWsnVersionInfo(int)), infoWidget, SLOT(onChangeCurrentVersion(int)));
     connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
     connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), infoWidget, SLOT(onToggleLinkDialogs(bool)));
 
@@ -713,6 +714,12 @@ void MainWindow::onOpenSnifferDialog() {
     bool hasActiveSniffers = snifferDialog->activeSniffersCount() > 0;
     ui->actionStart->setEnabled(hasActiveSniffers && ! captureStarted);
     ui->actionStop->setEnabled(hasActiveSniffers && captureStarted);
+}
+
+void MainWindow::onSliderVersionChanged(int version){
+    if (wsnManager->getDialogsLinked()){
+        emit changeWsnVersionInfo(version);
+    }
 }
 
 void MainWindow::onClear() {

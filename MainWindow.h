@@ -30,6 +30,7 @@ public:
 
 signals:
 	void changeWsnVersion(int newVersion);
+    void changeWsnVersionInfo(int newVersion);
 	void toggleNodeMovement();
     void reportError(QString errorMessage);
 
@@ -55,6 +56,7 @@ protected slots:
 	void messageSelected(rpl::Event *  event);
     void onReportError(QString errorMessage);
     void layoutChanged(QString layout);
+    void onSliderVersionChanged(int);
 
 protected:
 	static void onErrorEvent(char const * errorMessage);

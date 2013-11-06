@@ -7,7 +7,7 @@ InformationWidget::InformationWidget(QWidget *parent) :
     QDockWidget(parent),
     ui(new Ui::InformationWidget),
     autoScroll(true),
-    dialogsLinked(false)
+    dialogsLinked(true)
 {
 	ui->setupUi(this);
     messageLog = new EventLog(this);
