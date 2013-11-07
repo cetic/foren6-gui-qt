@@ -56,18 +56,6 @@ bool ParentChildrenOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush 
 	return true;
 }
 
-bool ParentChildrenOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
-	Q_UNUSED(node);
-	Q_UNUSED(newColor);
-
-	if(newFont) {
-		*newFont = QApplication::font();
-		newFont->setPointSize(8);
-	}
-
-	return true;
-}
-
 bool ParentChildrenOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 	Q_UNUSED(link);
 	rpl::Node *to, *from;
@@ -81,8 +69,4 @@ bool ParentChildrenOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 		*newPen = QPen(Qt::gray, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
 	return true;
-}
-
-bool ParentChildrenOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-  return false;
 }

@@ -54,25 +54,6 @@ bool DodagOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush
 	return true;
 }
 
-bool DodagOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
-	Q_UNUSED(node);
-	Q_UNUSED(newColor);
-
-	if(newFont) {
-		*newFont = QApplication::font();
-		newFont->setPointSize(8);
-	}
-
-	return true;
-}
-
-bool DodagOverlay::linkPen(rpl::Link *link, QPen *newPen) {
-	Q_UNUSED(link);
-
-	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-	return true;
-}
-
 bool DodagOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
   if (infoText) {
       const rpl_instance_config_t *config = node_get_instance_config(node->getNodeData());

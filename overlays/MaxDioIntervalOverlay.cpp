@@ -39,25 +39,6 @@ bool MaxDioIntervalOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush 
 	return true;
 }
 
-bool MaxDioIntervalOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
-	Q_UNUSED(node);
-	Q_UNUSED(newColor);
-
-	if(newFont) {
-		*newFont = QApplication::font();
-		newFont->setPointSize(8);
-	}
-
-	return true;
-}
-
-bool MaxDioIntervalOverlay::linkPen(rpl::Link *link, QPen *newPen) {
-	Q_UNUSED(link);
-
-	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-	return true;
-}
-
 bool MaxDioIntervalOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
     double interval = node_get_rpl_statistics(node->getNodeData())->max_dio_interval;
     if (infoText) {

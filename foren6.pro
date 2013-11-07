@@ -42,6 +42,7 @@ SOURCES += main.cpp\
     SimpleTreeModel.cpp \
     EventLog.cpp \
     InformationWidget.cpp \
+    IOverlayModel.cpp \
     PacketWidget.cpp \
     SnifferDialog.cpp \
     OpenedSniffersModel.cpp \

@@ -45,26 +45,3 @@ bool RplInstanceOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *ne
 
 	return true;
 }
-
-bool RplInstanceOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
-	Q_UNUSED(node);
-	Q_UNUSED(newColor);
-
-	if(newFont) {
-		*newFont = QApplication::font();
-		newFont->setPointSize(8);
-	}
-
-	return true;
-}
-
-bool RplInstanceOverlay::linkPen(rpl::Link *link, QPen *newPen) {
-	Q_UNUSED(link);
-
-	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-	return true;
-}
-
-bool RplInstanceOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-  return false;
-}

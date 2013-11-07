@@ -44,27 +44,6 @@ bool ErrorsOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrus
 	return true;
 }
 
-bool ErrorsOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
-	Q_UNUSED(node);
-	Q_UNUSED(newColor);
-
-	if(newFont) {
-		*newFont = QApplication::font();
-		newFont->setPointSize(8);
-	}
-
-	return true;
-}
-
-bool ErrorsOverlay::linkPen(rpl::Link *link, QPen *newPen) {
-    if (link_get_deprecated(link->getLinkData()) ) {
-        *newPen = QPen(Qt::lightGray, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    } else {
-        *newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    }
-	return true;
-}
-
 bool ErrorsOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
     int errorCount = getErrorCount(node);
     if (infoText) {

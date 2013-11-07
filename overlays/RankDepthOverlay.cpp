@@ -35,25 +35,6 @@ bool RankDepthOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newB
 	return true;
 }
 
-bool RankDepthOverlay::nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor) {
-	Q_UNUSED(node);
-	Q_UNUSED(newColor);
-
-	if(newFont) {
-		*newFont = QApplication::font();
-		newFont->setPointSize(8);
-	}
-
-	return true;
-}
-
-bool RankDepthOverlay::linkPen(rpl::Link *link, QPen *newPen) {
-	Q_UNUSED(link);
-
-	*newPen = QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-	return true;
-}
-
 bool RankDepthOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
     if (infoText) {
         if (node_has_rank(node->getNodeData())) {
