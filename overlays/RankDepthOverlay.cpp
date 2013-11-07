@@ -55,9 +55,13 @@ bool RankDepthOverlay::linkPen(rpl::Link *link, QPen *newPen) {
 }
 
 bool RankDepthOverlay::nodeInfoText(rpl::Node *node, QString *  infoText) {
-    int rank = node_get_rank(node->getNodeData());
     if (infoText) {
-        *infoText = QString::number(rank);
+        if (node_has_rank(node->getNodeData())) {
+            int rank = node_get_rank(node->getNodeData());
+            *infoText = QString::number(rank);
+        } else {
+            *infoText = "-";
+        }
     }
     return true;
 }
