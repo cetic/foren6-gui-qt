@@ -21,7 +21,14 @@ bool TrafficOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBru
 	if(node->isSelected())
 		*newPen = QPen(QColor(Qt::darkBlue));
 	else {
-		int color = 240 - qMin(packet_count*240/max_packets_encountered, 240);
+        int color;
+        if (max_packets_encountered != 0){
+            color = 240 - qMin(packet_count*240/max_packets_encountered, 240);
+        }
+        else{
+            //force black instead of divide by 0 error
+            color = 0; //TODO #7246
+        }
 		*newPen = QPen(QColor(color, color, color));
 	}
 
