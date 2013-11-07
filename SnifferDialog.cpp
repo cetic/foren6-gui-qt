@@ -34,7 +34,9 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 
 	extensions << QString("*.so") << QString("*.dylib");
 
-	searchPath = QDir(QApplication::applicationDirPath() + "/capture");
+    searchPath = QDir("/usr/lib/foren6/interfaces");
+    if(!searchPath.exists())
+        searchPath = QDir(QApplication::applicationDirPath() + "/capture");
 	if(!searchPath.exists())
 		searchPath = QDir(QApplication::applicationDirPath());
 
