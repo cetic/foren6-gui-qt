@@ -26,7 +26,7 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 	connect(ui->addButton, SIGNAL(clicked()), this, SLOT(onAddSniffer()));
 	connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(onRemoveSniffer()));
 	connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(onBrowseSniffer()));
-	connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(accept()));
+	connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(onCloseDialog()));
 
 	QFileInfoList captureInterfaces;
 	QDir searchPath;
@@ -63,7 +63,9 @@ SnifferDialog::SnifferDialog(QWidget *parent) :
 SnifferDialog::~SnifferDialog()
 {
 	delete ui;
-	qDebug("Sniffer done");
+}
+
+void SnifferDialog::onCloseDialog() {
     QSettings settings;
     settings.beginGroup("Sniffers");
     settings.beginWriteArray("sources");
@@ -73,6 +75,7 @@ SnifferDialog::~SnifferDialog()
     }
     settings.endArray();
     settings.endGroup();
+    accept();
 }
 
 void SnifferDialog::onAddSniffer() {

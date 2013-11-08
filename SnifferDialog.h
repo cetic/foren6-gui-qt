@@ -28,6 +28,7 @@ protected slots:
 	void onAddSniffer();
 	void onRemoveSniffer();
 	void onBrowseSniffer();
+	void onCloseDialog();
 
 protected:
 	void doAddSniffer(QUrl snifferUrl);
