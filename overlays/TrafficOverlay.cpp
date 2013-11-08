@@ -27,7 +27,7 @@ bool TrafficOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBru
         }
         else{
             //force black instead of divide by 0 error
-            color = 0; //TODO #7246
+            color = 0;
         }
 		*newPen = QPen(QColor(color, color, color));
 	}
