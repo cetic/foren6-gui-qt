@@ -79,6 +79,13 @@
     <addaction name="actionSaveLayout"/>
     <addaction name="actionClearLayout"/>
    </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="actionClearAllErrors"/>
+    <addaction name="actionClearDeprecatedLinks"/>
+   </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
      <string>Window</string>
@@ -95,6 +102,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLayout"/>
+   <addaction name="menuData"/>
    <addaction name="menuWindow"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -154,6 +162,16 @@
    </property>
    <property name="text">
     <string>Manage Sources</string>
+   </property>
+  </action>
+  <action name="actionClearAllErrors">
+   <property name="text">
+    <string>Clear All Errors</string>
+   </property>
+  </action>
+  <action name="actionClearDeprecatedLinks">
+   <property name="text">
+    <string>Clear Deprecated Links</string>
    </property>
   </action>
   <action name="actionNewInformationWindow">

@@ -45,6 +45,8 @@ protected slots:
 	void onStartSniffer();
 	void onStopSniffer();
 	void onOpenSnifferDialog();
+	void clearAllErrors();
+	void clearDeprecatedLinks();
 	void createNewInformationWindow();
     void createNewPacketWindow();
     void closePacketWindow();

@@ -90,6 +90,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoadLayout, SIGNAL(triggered()), wsnManager, SLOT(onLoadLayout()));
     connect(ui->actionSaveLayout, SIGNAL(triggered()), wsnManager, SLOT(onSaveLayout()));
     connect(ui->actionClearLayout, SIGNAL(triggered()), wsnManager, SLOT(onClearLayout()));
+    connect(ui->actionClearAllErrors, SIGNAL(triggered()), this, SLOT(clearAllErrors()));
+    connect(ui->actionClearDeprecatedLinks, SIGNAL(triggered()), this, SLOT(clearDeprecatedLinks()));
 	connect(ui->actionNewInformationWindow, SIGNAL(triggered()), this, SLOT(createNewInformationWindow()));
     connect(ui->actionNewPacketWindow, SIGNAL(triggered()), this, SLOT(createNewPacketWindow()));
     connect(ui->actionClosePacketWindow, SIGNAL(triggered()), this, SLOT(closePacketWindow()));
@@ -725,6 +727,14 @@ void MainWindow::onSliderVersionChanged(int version){
 void MainWindow::onClear() {
 	rpldata_clear();
     ui->versionSlider->clearTime();
+}
+
+void MainWindow::clearAllErrors() {
+    nodes_clear_all_errors();
+}
+
+void MainWindow::clearDeprecatedLinks() {
+    links_clear_all_deprecated();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
