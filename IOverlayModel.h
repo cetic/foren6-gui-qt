@@ -45,24 +45,23 @@
 #include <QGraphicsTextItem>
 
 namespace rpl {
-class Node;
-class Link;
-}
+    class Node;
+    class Link;
+} class IOverlayModel {
+    //Methods return true if pen, font and/or color contain relevant data or false to keep the current object's style
+  public:
+    virtual ~ IOverlayModel() {
+    } virtual int neededPasses() {
+        return 1;
+    }
 
-class IOverlayModel
-{
-	//Methods return true if pen, font and/or color contain relevant data or false to keep the current object's style
-public:
-	virtual ~IOverlayModel() {}
+    virtual void initPasses() {
+    };
 
-	virtual int neededPasses() { return 1; }
-
-	virtual void initPasses() {};
-
-	virtual bool nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush);
-	virtual bool nodeTextPen(rpl::Node *node, QFont *newFont, QColor *newColor);
-	virtual bool linkPen(rpl::Link *link, QPen *newPen);
-    virtual bool nodeInfoText(rpl::Node *node, QString *  infoText);
+    virtual bool nodeCirclePen(rpl::Node * node, QPen * newPen, QBrush * newBrush);
+    virtual bool nodeTextPen(rpl::Node * node, QFont * newFont, QColor * newColor);
+    virtual bool linkPen(rpl::Link * link, QPen * newPen);
+    virtual bool nodeInfoText(rpl::Node * node, QString * infoText);
 };
 
 #endif // IOVERLAYMODEL_H

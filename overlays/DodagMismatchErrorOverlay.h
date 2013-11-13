@@ -40,10 +40,9 @@
 
 #include "ErrorsOverlay.h"
 
-class DodagMismatchErrorOverlay : public ErrorsOverlay
-{
-public:
-	virtual int getErrorCount(rpl::Node *node);
+class DodagMismatchErrorOverlay:public ErrorsOverlay {
+  public:
+    virtual int getErrorCount(rpl::Node * node);
 };
 
 #endif // DODAGMISMATCHERROROVERLAY_H

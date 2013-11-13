@@ -40,10 +40,9 @@
 
 #include "ErrorsOverlay.h"
 
-class IPMismatchErrorOverlay : public ErrorsOverlay
-{
-public:
-	virtual int getErrorCount(rpl::Node *node);
+class IPMismatchErrorOverlay:public ErrorsOverlay {
+  public:
+    virtual int getErrorCount(rpl::Node * node);
 };
 
 #endif // IPMISMATCHERROROVERLAY_H

@@ -42,43 +42,49 @@
 #include <QApplication>
 #include <QCryptographicHash>
 
-QColor RplInstanceOverlay::rplInstanceToColor(int16_t instance) {
-	unsigned char color[3] = {0};
+QColor
+RplInstanceOverlay::rplInstanceToColor(int16_t instance)
+{
+    unsigned char color[3] = { 0 };
 
-	QByteArray md5Hash = QCryptographicHash::hash(QByteArray((const char*)&instance, sizeof(int16_t)), QCryptographicHash::Md5);
+    QByteArray md5Hash = QCryptographicHash::hash(QByteArray((const char *)&instance, sizeof(int16_t)), QCryptographicHash::Md5);
 
-	for(int i = 0; i < md5Hash.size(); i++) {
-		color[i%3] += md5Hash.at(i);
-	}
+    for(int i = 0; i < md5Hash.size(); i++) {
+        color[i % 3] += md5Hash.at(i);
+    }
 
-	return QColor(color[0]/2+64, color[1]/2+64, color[2]/2+64);
+    return QColor(color[0] / 2 + 64, color[1] / 2 + 64, color[2] / 2 + 64);
 }
 
-bool RplInstanceOverlay::nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush) {
-	if(!newPen || !newBrush)
-		return false;
+bool
+RplInstanceOverlay::nodeCirclePen(rpl::Node * node, QPen * newPen, QBrush * newBrush)
+{
+    if(!newPen || !newBrush)
+        return false;
 
-	const di_dodag_ref_t* dodagRef = node_get_dodag(node->getNodeData());
-	QColor dodagColor;
+    const di_dodag_ref_t *dodagRef = node_get_dodag(node->getNodeData());
+    QColor dodagColor;
 
-	if(dodagRef) {
-		const di_dodag_t* dodag = rpl::NetworkInfoManager::getInstance()->getDodag(dodagRef);
-		dodagColor = rplInstanceToColor(dodag_get_rpl_instance(dodag)->rpl_instance);
-	} else dodagColor = QColor(Qt::black);
+    if(dodagRef) {
+        const di_dodag_t *dodag = rpl::NetworkInfoManager::getInstance()->getDodag(dodagRef);
 
-	if(node->isSelected())
-		*newPen = QPen(QColor(Qt::darkBlue));
-	else
-		*newPen = QPen(dodagColor);
+        dodagColor = rplInstanceToColor(dodag_get_rpl_instance(dodag)->rpl_instance);
+    } else
+        dodagColor = QColor(Qt::black);
 
-	if(node_get_rank(node->getNodeData()) == 256) {
-		newPen->setWidth(3);
-	} else {
-		newPen->setWidth(2);
-	}
+    if(node->isSelected())
+        *newPen = QPen(QColor(Qt::darkBlue));
+    else
+        *newPen = QPen(dodagColor);
 
-	newBrush->setStyle(Qt::SolidPattern);
-	newBrush->setColor(Qt::white);
+    if(node_get_rank(node->getNodeData()) == 256) {
+        newPen->setWidth(3);
+    } else {
+        newPen->setWidth(2);
+    }
 
-	return true;
+    newBrush->setStyle(Qt::SolidPattern);
+    newBrush->setColor(Qt::white);
+
+    return true;
 }

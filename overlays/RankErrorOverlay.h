@@ -40,10 +40,9 @@
 
 #include "ErrorsOverlay.h"
 
-class RankErrorOverlay : public ErrorsOverlay
-{
-public:
-	virtual int getErrorCount(rpl::Node *node);
+class RankErrorOverlay:public ErrorsOverlay {
+  public:
+    virtual int getErrorCount(rpl::Node * node);
 };
 
 #endif // RANKERROROVERLAY_H

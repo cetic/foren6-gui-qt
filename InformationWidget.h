@@ -44,41 +44,33 @@
 #include "EventLog.h"
 
 namespace Ui {
-class InformationWidget;
-}
-
-class InformationWidget : public QDockWidget
-{
-	Q_OBJECT
-	
-public:
-	explicit InformationWidget(QWidget *parent = 0);
-	~InformationWidget();
+    class InformationWidget;
+} class InformationWidget:public QDockWidget {
+  Q_OBJECT public:
+    explicit InformationWidget(QWidget * parent = 0);
+    ~InformationWidget();
 
 
-public slots:
-	void addMessage(rpl::Event *newMsg);
-	void clearMessages();
+    public slots:void addMessage(rpl::Event * newMsg);
+    void clearMessages();
     void setAutoScroll(bool);
     void onChangeCurrentVersion(int);
     void onToggleLinkDialogs(bool);
 
-signals:
-	void setCurrentVersion(int version);
-	void messageSelected(rpl::Event *  event);
+      signals:void setCurrentVersion(int version);
+    void messageSelected(rpl::Event * event);
 
-protected slots:
-	void onMessageLogDoubleClicked(QModelIndex index);
-	void onFilterTextChanged(QString newText);
-	void rowsInserted();
-    void onSelectedRowChange(QModelIndex,QModelIndex);
+    protected slots:void onMessageLogDoubleClicked(QModelIndex index);
+    void onFilterTextChanged(QString newText);
+    void rowsInserted();
+    void onSelectedRowChange(QModelIndex, QModelIndex);
     void rowSelected();
-	
-private:
-	Ui::InformationWidget *ui;
-	EventLog *messageLog;
-	bool autoScroll;
-    void findVersionIndexes(int, int&, int&);
+
+  private:
+      Ui::InformationWidget * ui;
+    EventLog *messageLog;
+    bool autoScroll;
+    void findVersionIndexes(int, int &, int &);
     int currentRow;
     int previousRow;
     int _tempRow;

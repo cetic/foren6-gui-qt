@@ -40,13 +40,12 @@
 
 #include "IOverlayModel.h"
 
-class ParentChildrenOverlay : public IOverlayModel
-{
-public:
-	ParentChildrenOverlay();
+class ParentChildrenOverlay:public IOverlayModel {
+  public:
+    ParentChildrenOverlay();
 
-	virtual bool nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush);
-	virtual bool linkPen(rpl::Link *link, QPen *newPen);
+    virtual bool nodeCirclePen(rpl::Node * node, QPen * newPen, QBrush * newBrush);
+    virtual bool linkPen(rpl::Link * link, QPen * newPen);
 };
 
 #endif // PARENTCHILDRENOVERLAY_H

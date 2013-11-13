@@ -40,17 +40,19 @@
 
 #include "IOverlayModel.h"
 
-class MaxDioIntervalOverlay : public IOverlayModel
-{
-public:
-	MaxDioIntervalOverlay();
-	virtual int neededPasses() { return 2; }
-	virtual void initPasses() { max_dio_interval = 0; }
-	virtual bool nodeCirclePen(rpl::Node *node, QPen *newPen, QBrush *newBrush);
-    virtual bool nodeInfoText(rpl::Node *node, QString *  infoText);
+class MaxDioIntervalOverlay:public IOverlayModel {
+  public:
+    MaxDioIntervalOverlay();
+    virtual int neededPasses() {
+        return 2;
+    } virtual void initPasses() {
+        max_dio_interval = 0;
+    }
+    virtual bool nodeCirclePen(rpl::Node * node, QPen * newPen, QBrush * newBrush);
+    virtual bool nodeInfoText(rpl::Node * node, QString * infoText);
 
-private:
-	double max_dio_interval;
+  private:
+    double max_dio_interval;
 };
 
 #endif // MAXDIOINTERVALOVERLAY_H
