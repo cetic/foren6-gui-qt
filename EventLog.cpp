@@ -133,27 +133,27 @@ QString EventLog::getPacketTypeString(rpl::Event * event) const {
     case PT_PING_REPLY:
         return "Ping reply";
     case PT_NDP_RS:
-        return "RS";
+        return "NDP RS";
     case PT_NDP_RA:
-        return "RA";
+        return "NDP RA";
     case PT_NDP_NS:
-        return "NS";
+        return "NDP NS";
     case PT_NDP_NA:
-        return "NA";
+        return "NDP NA";
     case PT_NDP_Redirect:
-        return "Redirect";
+        return "NDP Redirect";
     case PT_6ND_DAR:
-        return "DAR";
+        return "6ND DAR";
     case PT_6ND_DAC:
-        return "DAC";
+        return "6ND DAC";
     case PT_RPL_Unknown:
         return "RPL Unknown";
     case PT_DIS:
-        return "DIS";
+        return "RPL DIS";
     case PT_DIO:
-        return "DIO";
+        return "RPL DIO";
     case PT_DAO:
-        return "DAO";
+        return "RPL DAO";
     case PT_UDP:
         return "UDP";
     case PT_TCP:
