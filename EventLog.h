@@ -55,6 +55,7 @@ class EventLog:public QAbstractTableModel {
 
   protected:
       QString getEventString(int column, rpl::Event * event, bool for_search) const;
+      QString getPacketTypeString(rpl::Event * event) const;
 
   private:
       QList < rpl::Event * >messages;

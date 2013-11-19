@@ -51,6 +51,7 @@ namespace rpl {
             di_dodag_t *as_dodag;
             di_rpl_instance_t *as_instance;
             di_link_t *as_link;
+            packet_info_t packet_info;
         };
         int version;
         int packed_id;
@@ -107,7 +108,7 @@ namespace rpl {
         static void onDodagEvent(di_dodag_t * dodag, rpl_event_type_e type);
         static void onRplInstanceEvent(di_rpl_instance_t * rpl_instance, rpl_event_type_e type);
         static void onLinkEvent(di_link_t * link, rpl_event_type_e type);
-        static void onPacketEvent(int packet_id);
+        static void onPacketEvent(int packet_id, packet_info_t packet_info);
         static void onClear();
 
       private:

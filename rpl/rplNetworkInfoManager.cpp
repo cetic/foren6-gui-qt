@@ -142,7 +142,7 @@ namespace rpl {
         thisInstance->emit logMessage(event);
     }
 
-    void NetworkInfoManager::onPacketEvent(int packet_id) {
+    void NetworkInfoManager::onPacketEvent(int packet_id, packet_info_t packet_info) {
         if(!thisInstance)
             return;
 
@@ -151,6 +151,7 @@ namespace rpl {
         event->type = RET_Created;
         event->object = Event::EO_Packet;
         event->packed_id = packet_id;
+        event->packet_info = packet_info;
         event->version = rpldata_get_wsn_last_version();
 
         thisInstance->emit logMessage(event);

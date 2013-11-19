@@ -59,7 +59,9 @@ void EventLog::setFilter(const QString& filter) {
     filteredMessages.clear();
 
     foreach(message, messages) {
-        if(getEventString(0, message, true).contains(filter, Qt::CaseInsensitive) || getEventString(1, message, true).contains(filter, Qt::CaseInsensitive)) {
+        if(getEventString(0, message, true).contains(filter, Qt::CaseInsensitive) ||
+                getEventString(1, message, true).contains(filter, Qt::CaseInsensitive) ||
+                getEventString(2, message, true).contains(filter, Qt::CaseInsensitive)) {
             filteredMessages.append(message);
         }
     }
@@ -122,6 +124,45 @@ QVariant EventLog::headerData(int section, Qt::Orientation orientation, int role
     } else return QVariant::fromValue(section);
 }
 
+QString EventLog::getPacketTypeString(rpl::Event * event) const {
+    switch (event->packet_info.type) {
+    case PT_ICMPv6_Unknown:
+        return "ICMPv6";
+    case PT_PING_ECHO:
+        return "Ping request";
+    case PT_PING_REPLY:
+        return "Ping reply";
+    case PT_NDP_RS:
+        return "RS";
+    case PT_NDP_RA:
+        return "RA";
+    case PT_NDP_NS:
+        return "NS";
+    case PT_NDP_NA:
+        return "NA";
+    case PT_NDP_Redirect:
+        return "Redirect";
+    case PT_6ND_DAR:
+        return "DAR";
+    case PT_6ND_DAC:
+        return "DAC";
+    case PT_RPL_Unknown:
+        return "RPL Unknown";
+    case PT_DIS:
+        return "DIS";
+    case PT_DIO:
+        return "DIO";
+    case PT_DAO:
+        return "DAO";
+    case PT_UDP:
+        return "UDP";
+    case PT_TCP:
+        return "TCP";
+    case PT_IPv6_Unknown:
+    default:
+        return "Unknown";
+    }
+}
 
 QString EventLog::getEventString(int column, rpl::Event *event, bool for_search) const {
     QString eventType;
@@ -198,7 +239,11 @@ QString EventLog::getEventString(int column, rpl::Event *event, bool for_search)
                     //packet_id + 1 to start from 1 as wireshark
                     return QString("Frame: %1, data=%2").arg(event->packed_id+1).arg(QString::fromLocal8Bit(QByteArray(buffer, data_size).toHex()));
                 } else {
-                    return QString("Frame: %1").arg(event->packed_id+1);
+                    return QString("Type: %1 src:%2 dst: %3 frame: %4")
+                            .arg(getPacketTypeString(event))
+                            .arg(event->packet_info.src_wpan_address, 0, 16)
+                            .arg(event->packet_info.dst_wpan_address, 0, 16)
+                            .arg(event->packed_id+1);
                 }
 
             }
