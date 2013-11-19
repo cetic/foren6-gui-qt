@@ -39,6 +39,7 @@
 
 #include <QVector2D>
 #include <QPainter>
+#include <QFileInfo>
 
 namespace rpl {
 
@@ -62,9 +63,15 @@ namespace rpl {
         emit backgroundChangeEvent();
     }
 
-    void TreeScene::setLayout(QSettings * newLayout) {
+    void TreeScene::setLayout(QString layoutFile, QSettings * newLayout) {
         layout = newLayout;
-        setBackground(backgroundFile = layout->value("background", "").toString());
+
+        backgroundFile = layout->value("background", "").toString();
+        if ( ! QDir::isAbsolutePath(backgroundFile) ) {
+            QDir layoutPath = QFileInfo(layoutFile).dir();
+            backgroundFile = layoutPath.filePath(backgroundFile);
+        }
+        setBackground(backgroundFile);
         scale = layout->value("scale", 1.0).toFloat();
         Node *node;
 

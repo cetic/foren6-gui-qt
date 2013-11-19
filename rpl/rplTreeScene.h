@@ -33,6 +33,7 @@
 #include <rpl_packet_parser.h>
 #include <QTimer>
 #include <QSettings>
+#include <QDir>
 
 class IOverlayModel;
 
@@ -54,7 +55,7 @@ namespace rpl {
 
         void setBackground(QString newBackgroundFile);
         bool hasValidBackground();
-        void setLayout(QSettings * layout);
+        void setLayout(QString layoutFile, QSettings * layout);
         void getLayout(QSettings * layout);
         void clearLayout();
 

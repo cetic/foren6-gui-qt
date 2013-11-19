@@ -230,7 +230,7 @@ namespace rpl {
             /* TODO: add error */
             return;
         }
-        _scene.setLayout(newLayout);
+        _scene.setLayout(target, newLayout);
 
         layoutFile = target;
         delete layout;
