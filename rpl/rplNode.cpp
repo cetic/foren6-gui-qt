@@ -40,13 +40,14 @@ namespace rpl {
 
     static qreal const defaultNodeSize = 32;
 
-      Node::Node(NetworkInfoManager * networkInfoManager, di_node_t * nodeData, int version)
+      Node::Node(NetworkInfoManager * networkInfoManager, addr_wpan_t wpan_address)
     : _networkInfoManager(networkInfoManager),
+        _wpan_address(wpan_address),
         _nodeData(0),
-        _ellipse(this), _label(this), _infoLabel(this), _dx(0), _dy(0), _isBeingMoved(false), _pinned(false), _isSelected(false), _showInfoText(false) {
+        _ellipse(this), _label(this), _infoLabel(this), _dx(0), _dy(0), _seen(false), _known(false), _isBeingMoved(false), _pinned(false), _isSelected(false), _showInfoText(false), _version(0) {
         setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
         setAcceptHoverEvents(true);
-        setNodeData(nodeData, version);
+        setNodeData(_nodeData, _version);
 
         QSettings settings;
           _maxSize = settings.value("node_size", defaultNodeSize).toFloat();
@@ -110,7 +111,7 @@ namespace rpl {
         if(!name.isEmpty()) {
             _label.setText(name);
         } else {
-            _label.setText(QString::number((node_get_key(_nodeData)->ref.wpan_address & 0xFF), 16));
+            _label.setText(QString::number(_wpan_address & 0xFF, 16));
         }
         alignLabels();
     }

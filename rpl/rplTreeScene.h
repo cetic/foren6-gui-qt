@@ -40,18 +40,19 @@ class IOverlayModel;
 namespace rpl {
     class Node;
     class Link;
+    class NetworkInfoManager;
 
     class TreeScene:public QGraphicsScene {
       Q_OBJECT public:
-        TreeScene();
+        TreeScene(NetworkInfoManager * networkInfoManager);
 
         void addNode(Node * node);
         void addLink(Link * link);
         void removeNode(Node * node);
         void removeLink(Link * link);
         void removeAllLinks();
-        void removeAllNodes();
-        void clear();
+        void removeAllNodes(bool keepKnownNodes);
+        void clear(bool keepKnownNodes);
 
         void setBackground(QString newBackgroundFile);
         bool hasValidBackground();
@@ -64,16 +65,20 @@ namespace rpl {
 
         const QHash < addr_wpan_t, Node * >&getNodes() {
             return _nodes;
-        } const QHash < QPair < addr_wpan_t, addr_wpan_t >, Link * >&getLinks() {
+        }
+        const QHash < QPair < addr_wpan_t, addr_wpan_t >, Link * >&getLinks() {
             return _links;
-      } protected:
+        }
+     protected:
         void drawBackground(QPainter * painter, const QRectF & rect);
 
         protected slots:void updateNodePositions();
         void toggleNodeMovement();
         void toggleNodeInfo();
+        void doAddNode(Node * node);
 
       private:
+        NetworkInfoManager * _networkInfoManager;
         QTimer _updateDagsTimer;
         QHash < addr_wpan_t, Node * >_nodes;
         QHash < QPair < addr_wpan_t, addr_wpan_t >, Link * >_links;

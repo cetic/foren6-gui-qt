@@ -37,13 +37,14 @@
 #include "rplLink.h"
 #include <math.h>
 
+#include <QApplication>
 #include <QVector2D>
 #include <QPainter>
 #include <QFileInfo>
 
 namespace rpl {
 
-    TreeScene::TreeScene() {
+    TreeScene::TreeScene(NetworkInfoManager * networkInfoManager) : _networkInfoManager(networkInfoManager) {
         _updateDagsTimer.setInterval(40);
         _updateDagsTimer.setSingleShot(false);
         connect(&_updateDagsTimer, SIGNAL(timeout()), this, SLOT(updateNodePositions()));
@@ -75,14 +76,38 @@ namespace rpl {
         scale = layout->value("scale", 1.0).toFloat();
         Node *node;
 
+        //Clean up stage
+        QList <Node * > _nodesToRemove;
         foreach(node, _nodes) {
-            layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
-            if(layout->contains("x")) {
-                node->setPos(layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
+            if (!node->seen()) {
+                _nodesToRemove.append(node);
             }
-            node->setLocked(layout->value("locked", true).toBool());
-            node->setName(layout->value("name", "").toString());
-            layout->endGroup();
+        }
+        foreach(node, _nodesToRemove) {
+            removeNode(node);
+            delete node;
+        }
+        QStringList nodes = layout->childGroups();
+        foreach(QString node_id, nodes) {
+            bool ok;
+            addr_wpan_t node_addr = node_id.toUpper().toULongLong(&ok, 16);
+            if (ok) {
+                layout->beginGroup(node_id);
+                node = getNode( node_addr );
+                if (!node) {
+                    node = new Node(_networkInfoManager, node_addr);
+                    doAddNode(node);
+                }
+                if(layout->contains("x")) {
+                    node->setPos(layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
+                }
+                node->setLocked(layout->value("locked", true).toBool());
+                node->setName(layout->value("name", "").toString());
+                node->setKnown(true);
+                layout->endGroup();
+            } else {
+                printf("invalid node_id: %s\n", qPrintable(node_id));
+            }
         }
     }
 
@@ -93,7 +118,7 @@ namespace rpl {
         Node *node;
 
         foreach(node, _nodes) {
-            layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
+            layout->beginGroup(QString::number(node->wpan_address(), 16));
             layout->setValue("x", node->x() / scale);
             layout->setValue("y", node->y() / scale);
             layout->setValue("locked", node->isLocked());
@@ -104,11 +129,11 @@ namespace rpl {
 
     void TreeScene::clearLayout() {
         setBackground(QString());
-        Node *node;
 
-        foreach(node, _nodes) {
+        foreach(Node *node, _nodes) {
             node->setLocked(false);
             node->setName("");
+            node->setKnown(false);
         }
         layout = 0;
         scale = 1.0;
@@ -136,13 +161,17 @@ namespace rpl {
         }
     }
 
-    void TreeScene::addNode(Node * node) {
+    void TreeScene::doAddNode(Node * node) {
         //qDebug("Adding Node %p %llX", node, node_get_mac64(node->getNodeData()));
         addItem(node);
         node->showInfoText(showNodeInfo);
-        _nodes.insert(node_get_key(node->getNodeData())->ref.wpan_address, node);
+        _nodes.insert(node->wpan_address(), node);
+    }
+
+    void TreeScene::addNode(Node * node) {
+        doAddNode(node);
         if(layout) {
-            layout->beginGroup(QString::number(node_get_key(node->getNodeData())->ref.wpan_address, 16));
+            layout->beginGroup(QString::number(node->wpan_address(), 16));
             if(layout->contains("x")) {
                 node->setPos(layout->value("x", 0).toFloat() * scale, layout->value("y", 0).toFloat() * scale);
             }
@@ -165,16 +194,39 @@ namespace rpl {
     void TreeScene::removeNode(Node * node) {
         //qDebug("Removing Node %p", node);
         removeItem(node);
-        _nodes.remove(node_get_key(node->getNodeData())->ref.wpan_address);
+        _nodes.remove(node->wpan_address());
     }
 
-    void TreeScene::removeAllNodes() {
-        Node *node;
-
-        foreach(node, _nodes) {
-            delete node;
+    void TreeScene::removeAllNodes(bool keepKnownNodes) {
+        if ( keepKnownNodes ) {
+            QList <Node * > _nodesToRemove;
+            foreach(Node *node, _nodes) {
+                if (!node->known()) {
+                    _nodesToRemove.append(node);
+                } else {
+                    QPen pen(QColor(128, 128, 128));
+                    QBrush brush;
+                    QFont font = QApplication::font();
+                    font.setPointSize(8);
+                    node->setSeen(false);
+                    node->setNodeData(0, 0);
+                    node->setPen(pen);
+                    node->setBrush(brush);
+                    node->setFont(font);
+                    node->setTextColor(QColor(128, 128, 128));
+                }
+            }
+            foreach(Node *node, _nodesToRemove) {
+                removeNode(node);
+                delete node;
+            }
+        } else {
+            foreach(Node *node, _nodes) {
+                removeItem(node);
+                delete node;
+            }
+            _nodes.clear();
         }
-        _nodes.clear();
     }
 
     void TreeScene::removeLink(Link * link) {
@@ -191,15 +243,15 @@ namespace rpl {
         Link *link;
 
         foreach(link, _links) {
+            removeItem(link);
             delete link;
         }
         _links.clear();
     }
 
-    void TreeScene::clear() {
+    void TreeScene::clear(bool keepKnownNodes) {
         removeAllLinks();
-        removeAllNodes();
-        QGraphicsScene::clear();
+        removeAllNodes(keepKnownNodes);
     }
 
     Node *TreeScene::getNode(addr_wpan_t address) {

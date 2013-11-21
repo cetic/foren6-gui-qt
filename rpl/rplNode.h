@@ -43,7 +43,7 @@ namespace rpl {
 
     class Node:public QGraphicsItemGroup {
       public:
-        Node(NetworkInfoManager * networkInfoManager, di_node_t * nodeData, int version);
+        Node(NetworkInfoManager * networkInfoManager, addr_wpan_t wpan_address);
          ~Node();
 
         void addLink(Link * link) {
@@ -73,6 +73,10 @@ namespace rpl {
             return _ellipse.rect().width() / 2;
         }
 
+        addr_wpan_t wpan_address() {
+            return _wpan_address;
+        }
+
         di_node_t *getNodeData() {
             return _nodeData;
         }
@@ -84,6 +88,12 @@ namespace rpl {
         int getVersion() {
             return _version;
         }
+
+        bool seen() const { return _seen; }
+        void setSeen(bool seen) { _seen = seen; }
+
+        bool known() const { return _known; }
+        void setKnown(bool known) { _known = known; }
 
         void setPen(QPen pen) {
             _ellipse.setPen(pen);
@@ -126,12 +136,15 @@ namespace rpl {
 
       private:
         NetworkInfoManager * _networkInfoManager;
+        addr_wpan_t _wpan_address;
         QElapsedTimer _timeElapsedMouseMove;    //Since last pos using mouse
         di_node_t *_nodeData;
         QGraphicsEllipseItem _ellipse;
         QGraphicsSimpleTextItem _label;
         QGraphicsSimpleTextItem _infoLabel;
         qreal _dx, _dy;
+        bool _seen;
+        bool _known;
 
         QList < Link * >_links;
         qreal _maxSize;

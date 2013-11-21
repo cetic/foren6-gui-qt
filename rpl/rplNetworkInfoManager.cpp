@@ -50,7 +50,7 @@ namespace rpl {
     NetworkInfoManager *NetworkInfoManager::thisInstance = 0;
 
 
-      NetworkInfoManager::NetworkInfoManager() {
+      NetworkInfoManager::NetworkInfoManager() : _scene(this) {
         rpl_event_callbacks_t callbacks = {
             &onNodeEvent,
             &onDodagEvent,
@@ -164,11 +164,6 @@ namespace rpl {
 
 
     void NetworkInfoManager::updateOverlay() {
-        QPen pen;
-        QBrush brush;
-        QFont font;
-        QColor fontColor;
-        QString infoText;
         QGraphicsItem *currentItem;
         Node *currentNode;
         Link *currentLink;
@@ -178,7 +173,13 @@ namespace rpl {
 
         for(int i = 0; i < passes; i++) {
             foreach(currentItem, _scene.items()) {
+                QPen pen;
+                QBrush brush;
+                QFont font;
+                QColor fontColor;
+                QString infoText;
                 if((currentNode = dynamic_cast < Node * >(currentItem))) {
+                    if (!currentNode->getNodeData()) continue;
                     if(_overlay->nodeCirclePen(currentNode, &pen, &brush)) {
                         currentNode->setPen(pen);
                         currentNode->setBrush(brush);
@@ -299,9 +300,9 @@ namespace rpl {
     }
 
     void NetworkInfoManager::updateSelectedNodeInfo() {
-        const di_node_t *node_data;
-        const di_dodag_t *dodag_data;
-        const di_rpl_instance_t *rpl_instance_data;
+        const di_node_t *node_data = 0;
+        const di_dodag_t *dodag_data = 0;
+        const di_rpl_instance_t *rpl_instance_data = 0;
         void *ptr;
 
         if(selectedNode) {
@@ -310,28 +311,29 @@ namespace rpl {
 
             node_data = selectedNode->getNodeData();
 
-            dodag_ref = node_get_dodag(node_data);
+            if ( node_data ) {
+                dodag_ref = node_get_dodag(node_data);
 
-            if(dodag_ref) {
-                ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
-                if(ptr)
-                    dodag_data = *(di_dodag_t **) ptr;
-                else
+                if(dodag_ref) {
+                    ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*dodag_ref), HVM_FailIfNonExistant, 0);
+                    if(ptr)
+                        dodag_data = *(di_dodag_t **) ptr;
+                    else
+                        dodag_data = 0;
+                } else
                     dodag_data = 0;
-            } else
-                dodag_data = 0;
 
-            rpl_instance_ref = dodag_get_rpl_instance(dodag_data);
+                rpl_instance_ref = dodag_get_rpl_instance(dodag_data);
 
-            if(dodag_data && rpl_instance_ref) {
-                ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
-                if(ptr)
-                    rpl_instance_data = *(di_rpl_instance_t **) ptr;
-                else
+                if(dodag_data && rpl_instance_ref) {
+                    ptr = hash_value(rpldata_get_dodags(currentVersion), hash_key_make(*rpl_instance_ref), HVM_FailIfNonExistant, 0);
+                    if(ptr)
+                        rpl_instance_data = *(di_rpl_instance_t **) ptr;
+                    else
+                        rpl_instance_data = 0;
+                } else
                     rpl_instance_data = 0;
-            } else
-                rpl_instance_data = 0;
-
+            }
             emit nodeUpdateSelected(node_data, dodag_data, rpl_instance_data);
         } else {
             emit nodeUpdateSelected(0, 0, 0);
@@ -359,7 +361,7 @@ namespace rpl {
         if(version == 0) {      //rpldata_get_wsn_last_version return 0, so there is no version
             selectedNode = 0;
             updateSelectedNodeInfo();
-            _scene.clear();
+            _scene.clear(true);
             return;
         }
 
@@ -383,10 +385,11 @@ namespace rpl {
                 if(newnode) {
                     presentNodes.remove(node_get_mac64(node));
                 } else {
-                    newnode = new Node(this, node, currentVersion);
+                    newnode = new Node(this, node_get_mac64(node));
                     _scene.addNode(newnode);
                 }
                 newnode->setNodeData(node, currentVersion);
+                newnode->setSeen(true);
             }
         }
 
@@ -417,8 +420,13 @@ namespace rpl {
         foreach(currentNode, presentNodes) {
             if(currentNode == selectedNode)
                 selectedNode = 0;
-            _scene.removeNode(currentNode);
-            delete currentNode;
+            if (!currentNode->known()) {
+                _scene.removeNode(currentNode);
+                delete currentNode;
+            } else {
+                currentNode->setSeen(false);
+                currentNode->setNodeData(0, currentVersion);
+            }
         }
 
         updateOverlay();
