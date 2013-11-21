@@ -36,7 +36,7 @@ EventLog::EventLog(QObject *parent) : QAbstractTableModel(parent)
 void EventLog::addMessage(rpl::Event *newMsg) {
     messages.append(newMsg);
 
-    if(currentFilter.isEmpty() || getEventString(0, newMsg, true).contains(currentFilter) || getEventString(1, newMsg, true).contains(currentFilter, Qt::CaseInsensitive)) {
+    if(currentFilter.isEmpty() || getEventString(0, newMsg, true).contains(currentFilter) || getEventString(1, newMsg, true).contains(currentFilter, Qt::CaseInsensitive) || getEventString(2, newMsg, true).contains(currentFilter, Qt::CaseInsensitive)) {
         beginInsertRows(QModelIndex(), filteredMessages.size()-1, filteredMessages.size()-1);
         filteredMessages.append(newMsg);
         endInsertRows();
