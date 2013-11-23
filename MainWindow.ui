@@ -176,7 +176,10 @@
   </action>
   <action name="actionNewInformationWindow">
    <property name="text">
-    <string>New Information Window</string>
+    <string>New Event Window</string>
+   </property>
+   <property name="iconText">
+    <string>New Event Window</string>
    </property>
   </action>
   <action name="actionNewPacketWindow">
