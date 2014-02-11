@@ -152,6 +152,8 @@ class MainWindow:public QMainWindow {
         QTreeWidgetItem *errorsMain;
         QTreeWidgetItem *nodeInvalidIp;
         QTreeWidgetItem *nodeInvalidPrefix;
+        QTreeWidgetItem *nodeRankErrorCount;
+        QTreeWidgetItem *nodeForwardErrorCount;
         QTreeWidgetItem *nodeUpwardRankErrorCount;
         QTreeWidgetItem *nodeDownwardRankErrorCount;
         QTreeWidgetItem *nodeRouteLoopErrorCount;

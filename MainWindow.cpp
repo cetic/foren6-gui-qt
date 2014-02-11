@@ -248,6 +248,10 @@ QMainWindow(parent), ui(new Ui::MainWindow)
         nodeInfoTree.nodeInvalidIp->setText(0, "Invalid IP");
         nodeInfoTree.nodeInvalidPrefix = new QTreeWidgetItem(nodeInfoTree.errorsMain);
         nodeInfoTree.nodeInvalidPrefix->setText(0, "Invalid prefix");
+        nodeInfoTree.nodeRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
+        nodeInfoTree.nodeRankErrorCount->setText(0, "Rank errors");
+        nodeInfoTree.nodeForwardErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
+        nodeInfoTree.nodeForwardErrorCount->setText(0, "Forward errors");
         nodeInfoTree.nodeUpwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
         nodeInfoTree.nodeUpwardRankErrorCount->setText(0, "Upward rank errors");
         nodeInfoTree.nodeDownwardRankErrorCount = new QTreeWidgetItem(nodeInfoTree.errorsMain);
@@ -682,6 +686,10 @@ MainWindow::setTargetNodeInfo(const di_node_t * node, const di_dodag_t * dodag, 
     nodeInfoTree.nodeInvalidPrefix->setText(1, QString::number(sixlowpan_errors->invalid_prefix));
     setDeltaColor(nodeInfoTree.nodeInvalidPrefix, sixlowpan_errors_delta->invalid_prefix, QColor(Qt::red));
 
+    nodeInfoTree.nodeRankErrorCount->setText(1, QString::number(rpl_errors->rank_errors));
+    setDeltaColor(nodeInfoTree.nodeRankErrorCount, rpl_errors_delta->rank_errors, QColor(Qt::red));
+    nodeInfoTree.nodeForwardErrorCount->setText(1, QString::number(rpl_errors->forward_errors));
+    setDeltaColor(nodeInfoTree.nodeForwardErrorCount, rpl_errors_delta->forward_errors, QColor(Qt::red));
     nodeInfoTree.nodeUpwardRankErrorCount->setText(1, QString::number(rpl_errors->upward_rank_errors));
     setDeltaColor(nodeInfoTree.nodeUpwardRankErrorCount, rpl_errors_delta->upward_rank_errors, QColor(Qt::red));
     nodeInfoTree.nodeDownwardRankErrorCount->setText(1, QString::number(rpl_errors->downward_rank_errors));
@@ -776,6 +784,8 @@ MainWindow::clearTargetNodeInfo()
     setTitleDeltaColor(nodeInfoTree.errorsMain, false);
     nodeInfoTree.nodeInvalidIp->setText(1, "");
     nodeInfoTree.nodeInvalidPrefix->setText(1, "");
+    nodeInfoTree.nodeRankErrorCount->setText(1, "");
+    nodeInfoTree.nodeForwardErrorCount->setText(1, "");
     nodeInfoTree.nodeUpwardRankErrorCount->setText(1, "");
     nodeInfoTree.nodeDownwardRankErrorCount->setText(1, "");
     nodeInfoTree.nodeRouteLoopErrorCount->setText(1, "");
