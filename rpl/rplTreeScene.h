@@ -54,6 +54,7 @@ namespace rpl {
         void removeAllNodes(bool keepKnownNodes);
         void clear(bool keepKnownNodes);
         void setNodeMovement(bool moving);
+        void setNodeInfo(bool showInfo);
 
         void setBackground(QString newBackgroundFile);
         bool hasValidBackground();
@@ -75,7 +76,6 @@ namespace rpl {
 
       protected slots:
         void updateNodePositions();
-        void toggleNodeInfo();
         void doAddNode(Node * node);
 
       private:

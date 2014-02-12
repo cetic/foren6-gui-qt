@@ -96,6 +96,8 @@ QMainWindow(parent), ui(new Ui::MainWindow)
 
     ui->actionToggleNodeMovement->setChecked(settings.value("nodeMovement", true).toBool());
     wsnManager->scene()->setNodeMovement(!ui->actionToggleNodeMovement->isChecked());
+    ui->actionToggleNodeInfo->setChecked(settings.value("nodeInfo", true).toBool());
+    wsnManager->scene()->setNodeInfo(ui->actionToggleNodeInfo->isChecked());
 
     rpl_tool_set_analyzer_callbacks(&callbacks);
     rpl_tool_init();
@@ -133,7 +135,7 @@ QMainWindow(parent), ui(new Ui::MainWindow)
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editSettings()));
     connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), this, SLOT(onToggleNodeMovement()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
-    connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeInfo()));
+    connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), this, SLOT(onToggleNodeInfo()));
     connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), wsnManager, SLOT(onToggleLinkDialogs(bool)));
 
     connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
@@ -848,6 +850,14 @@ MainWindow::onToggleNodeMovement(void)
   wsnManager->scene()->setNodeMovement(!ui->actionToggleNodeMovement->isChecked());
   QSettings settings;
   settings.setValue("nodeMovement", ui->actionToggleNodeMovement->isChecked());
+}
+
+void
+MainWindow::onToggleNodeInfo(void)
+{
+  wsnManager->scene()->setNodeInfo(ui->actionToggleNodeInfo->isChecked());
+  QSettings settings;
+  settings.setValue("nodeInfo", ui->actionToggleNodeInfo->isChecked());
 }
 
 void

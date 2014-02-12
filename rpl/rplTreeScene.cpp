@@ -154,12 +154,12 @@ namespace rpl {
         }
     }
 
-    void TreeScene::toggleNodeInfo() {
-        showNodeInfo = !showNodeInfo;
+    void TreeScene::setNodeInfo(bool showInfo) {
+        showNodeInfo = showInfo;
         Node *node;
 
         foreach(node, _nodes) {
-            node->showInfoText(showNodeInfo);
+            node->showInfoText(showInfo);
         }
     }
 

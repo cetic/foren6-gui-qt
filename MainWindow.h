@@ -56,7 +56,6 @@ class MainWindow:public QMainWindow {
 
     void changeWsnVersion(int newVersion);
     void changeWsnVersionInfo(int newVersion);
-    void toggleNodeMovement();
     void reportError(QString errorMessage);
 
   public slots:
@@ -71,6 +70,7 @@ class MainWindow:public QMainWindow {
     void onStopSniffer();
     void onOpenSnifferDialog();
     void onToggleNodeMovement();
+    void onToggleNodeInfo();
     void clearAllErrors();
     void clearDeprecatedLinks();
     void createNewInformationWindow();
