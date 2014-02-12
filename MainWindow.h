@@ -50,20 +50,27 @@ class MainWindow:public QMainWindow {
 
     static MainWindow *getInstance() {
         return thisInstance;
-    } signals:void changeWsnVersion(int newVersion);
+    }
+
+    signals:
+
+    void changeWsnVersion(int newVersion);
     void changeWsnVersionInfo(int newVersion);
     void toggleNodeMovement();
     void reportError(QString errorMessage);
 
-    public slots:void setTargetNodeInfo(const di_node_t * node, const di_dodag_t * dodag, const di_rpl_instance_t * rpl_instance);
+  public slots:
+    void setTargetNodeInfo(const di_node_t * node, const di_dodag_t * dodag, const di_rpl_instance_t * rpl_instance);
     void clearTargetNodeInfo();
     void addMessage(rpl::Event * event);
     void clearMessages();
     void closeEvent(QCloseEvent * event);
 
-    protected slots:void onStartSniffer();
+  protected slots:
+    void onStartSniffer();
     void onStopSniffer();
     void onOpenSnifferDialog();
+    void onToggleNodeMovement();
     void clearAllErrors();
     void clearDeprecatedLinks();
     void createNewInformationWindow();

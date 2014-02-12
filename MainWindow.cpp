@@ -94,6 +94,9 @@ QMainWindow(parent), ui(new Ui::MainWindow)
     restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
 
+    ui->actionToggleNodeMovement->setChecked(settings.value("nodeMovement", true).toBool());
+    wsnManager->scene()->setNodeMovement(!ui->actionToggleNodeMovement->isChecked());
+
     rpl_tool_set_analyzer_callbacks(&callbacks);
     rpl_tool_init();
 
@@ -128,14 +131,12 @@ QMainWindow(parent), ui(new Ui::MainWindow)
     connect(ui->actionClosePacketWindow, SIGNAL(triggered()), this, SLOT(closePacketWindow()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(createNewAboutWindow()));
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(editSettings()));
-    connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeMovement()));
+    connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), this, SLOT(onToggleNodeMovement()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
     connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), wsnManager->scene(), SLOT(toggleNodeInfo()));
     connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), wsnManager, SLOT(onToggleLinkDialogs(bool)));
 
     connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
-
-    connect(this, SIGNAL(toggleNodeMovement()), wsnManager->scene(), SLOT(toggleNodeMovement()));
 
     connect(wsnManager, SIGNAL(nodeUpdateSelected(const di_node_t *, const di_dodag_t *, const di_rpl_instance_t *)), this,
             SLOT(setTargetNodeInfo(const di_node_t *, const di_dodag_t *, const di_rpl_instance_t *)));
@@ -839,6 +840,14 @@ MainWindow::onSliderVersionChanged(int version)
     if(wsnManager->getDialogsLinked()) {
         emit changeWsnVersionInfo(version);
     }
+}
+
+void
+MainWindow::onToggleNodeMovement(void)
+{
+  wsnManager->scene()->setNodeMovement(!ui->actionToggleNodeMovement->isChecked());
+  QSettings settings;
+  settings.setValue("nodeMovement", ui->actionToggleNodeMovement->isChecked());
 }
 
 void

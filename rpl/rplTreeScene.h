@@ -53,6 +53,7 @@ namespace rpl {
         void removeAllLinks();
         void removeAllNodes(bool keepKnownNodes);
         void clear(bool keepKnownNodes);
+        void setNodeMovement(bool moving);
 
         void setBackground(QString newBackgroundFile);
         bool hasValidBackground();
@@ -69,11 +70,11 @@ namespace rpl {
         const QHash < QPair < addr_wpan_t, addr_wpan_t >, Link * >&getLinks() {
             return _links;
         }
-     protected:
+      protected:
         void drawBackground(QPainter * painter, const QRectF & rect);
 
-        protected slots:void updateNodePositions();
-        void toggleNodeMovement();
+      protected slots:
+        void updateNodePositions();
         void toggleNodeInfo();
         void doAddNode(Node * node);
 

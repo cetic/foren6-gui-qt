@@ -145,11 +145,13 @@ namespace rpl {
         painter->restore();
     }
 
-    void TreeScene::toggleNodeMovement() {
-        if(_updateDagsTimer.isActive())
+    void TreeScene::setNodeMovement(bool moving) {
+        if(!moving && _updateDagsTimer.isActive()) {
             _updateDagsTimer.stop();
-        else
+        }
+        if(moving && !_updateDagsTimer.isActive()) {
             _updateDagsTimer.start();
+        }
     }
 
     void TreeScene::toggleNodeInfo() {
