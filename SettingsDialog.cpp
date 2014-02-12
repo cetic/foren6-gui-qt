@@ -55,6 +55,7 @@ QDialog(parent), ui(new Ui::SettingsDialog)
     settings.beginGroup("rpl");
     config.one_preferred_parent = settings.value("one_preferred_parent", config.one_preferred_parent).toBool();
     config.root_rank = settings.value("root_rank", config.root_rank).toInt();
+    config.sender_rank_inverted = settings.value("sender_rank_inverted", config.sender_rank_inverted).toBool();
     settings.endGroup();
 
     rpl_tool_set_analyser_config(&config);
@@ -80,6 +81,7 @@ SettingsDialog::applySettings()
     valid = valid && inet_pton(AF_INET6, qPrintable(ui->settings_6lowpanContextEdit->text()), (void *)&config.context0);
     config.address_autconf_only = ui->settings_AutoconfAddrsCbx->isChecked();
     config.one_preferred_parent = ui->settings_SinglePreferredParentCbx->isChecked();
+    config.sender_rank_inverted = ui->settings_SenderRankInvertedCbx->isChecked();
     if(valid) {
         rpl_tool_set_analyser_config(&config);
         //Update user preferences
@@ -94,6 +96,7 @@ SettingsDialog::applySettings()
         settings.beginGroup("rpl");
         settings.setValue("one_preferred_parent", config.one_preferred_parent);
         settings.setValue("root_rank", config.root_rank);
+        settings.setValue("sender_rank_inverted", config.sender_rank_inverted);
         settings.endGroup();
     }
 }
@@ -109,4 +112,5 @@ SettingsDialog::restoreSettings()
     ui->settings_6lowpanContextEdit->setText(ipv6string);
     ui->settings_AutoconfAddrsCbx->setChecked(config->address_autconf_only);
     ui->settings_SinglePreferredParentCbx->setChecked(config->one_preferred_parent);
+    ui->settings_SenderRankInvertedCbx->setChecked(config->sender_rank_inverted);
 }
