@@ -71,6 +71,7 @@ class MainWindow:public QMainWindow {
     void onOpenSnifferDialog();
     void onToggleNodeMovement();
     void onToggleNodeInfo();
+    void onToggleLinkDialogs(bool state);
     void clearAllErrors();
     void clearDeprecatedLinks();
     void createNewInformationWindow();

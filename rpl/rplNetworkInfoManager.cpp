@@ -519,7 +519,7 @@ namespace rpl {
         return currentVersion;
     }
 
-    void NetworkInfoManager::onToggleLinkDialogs(bool state) {
+    void NetworkInfoManager::setLinkDialogs(bool state) {
         this->dialogsLinked = state;
     }
 

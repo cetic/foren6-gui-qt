@@ -98,6 +98,8 @@ QMainWindow(parent), ui(new Ui::MainWindow)
     wsnManager->scene()->setNodeMovement(!ui->actionToggleNodeMovement->isChecked());
     ui->actionToggleNodeInfo->setChecked(settings.value("nodeInfo", true).toBool());
     wsnManager->scene()->setNodeInfo(ui->actionToggleNodeInfo->isChecked());
+    ui->actionLinkUnlinkDialogs->setChecked(settings.value("linkDialogs", true).toBool());
+    wsnManager->setLinkDialogs(ui->actionLinkUnlinkDialogs->isChecked());
 
     rpl_tool_set_analyzer_callbacks(&callbacks);
     rpl_tool_init();
@@ -136,7 +138,7 @@ QMainWindow(parent), ui(new Ui::MainWindow)
     connect(ui->actionToggleNodeMovement, SIGNAL(triggered()), this, SLOT(onToggleNodeMovement()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(onClear()));
     connect(ui->actionToggleNodeInfo, SIGNAL(triggered()), this, SLOT(onToggleNodeInfo()));
-    connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), wsnManager, SLOT(onToggleLinkDialogs(bool)));
+    connect(ui->actionLinkUnlinkDialogs, SIGNAL(triggered(bool)), this, SLOT(onToggleLinkDialogs(bool)));
 
     connect(this, SIGNAL(changeWsnVersion(int)), wsnManager, SLOT(useVersion(int)));
 
@@ -330,8 +332,7 @@ MainWindow::doCreateNewInformationWindow(QString name)
     connect(this, SIGNAL(changeWsnVersionInfo(int)), infoWidget, SLOT(onChangeCurrentVersion(int)));
 
     connect(wsnManager, SIGNAL(clearMessages()), infoWidget, SLOT(clearMessages()));
-    connect(ui->actionLink_Unlink_Dialogs, SIGNAL(triggered(bool)), infoWidget, SLOT(onToggleLinkDialogs(bool)));
-
+    connect(ui->actionLinkUnlinkDialogs, SIGNAL(triggered(bool)), infoWidget, SLOT(onToggleLinkDialogs(bool)));
 
     foreach(message, messages) {
         infoWidget->addMessage(message);
@@ -858,6 +859,14 @@ MainWindow::onToggleNodeInfo(void)
   wsnManager->scene()->setNodeInfo(ui->actionToggleNodeInfo->isChecked());
   QSettings settings;
   settings.setValue("nodeInfo", ui->actionToggleNodeInfo->isChecked());
+}
+
+void
+MainWindow::onToggleLinkDialogs(bool state)
+{
+  wsnManager->setLinkDialogs(state);
+  QSettings settings;
+  settings.setValue("linkDialogs", state);
 }
 
 void

@@ -122,7 +122,7 @@
    <addaction name="actionToggleNodeMovement"/>
    <addaction name="actionClear"/>
    <addaction name="actionToggleNodeInfo"/>
-   <addaction name="actionLink_Unlink_Dialogs"/>
+   <addaction name="actionLinkUnlinkDialogs"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStart">
@@ -252,7 +252,7 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionLink_Unlink_Dialogs">
+  <action name="actionLinkUnlinkDialogs">
    <property name="checkable">
     <bool>true</bool>
    </property>

@@ -77,20 +77,21 @@ namespace rpl {
         di_link_t *getLink(const di_link_ref_t * link_ref);
         di_rpl_instance_t *getRplInstance(const di_rpl_instance_ref_t * rpl_instance_ref);
         void setLayout(QString layoutFile);
+        void setLinkDialogs(bool state);
         bool getDialogsLinked();
 
         static NetworkInfoManager *getInstance() {
             return thisInstance;
         }
 
-        public slots:void useVersion(int version);
+      public slots:
+        void useVersion(int version);
         void updateOverlay();
         void onLoadBackground();
         void onClearBackground();
         void onLoadLayout();
         void onSaveLayout();
         void onClearLayout();
-        void onToggleLinkDialogs(bool);
 
       signals:
         void nodeUpdateSelected(const di_node_t * node, const di_dodag_t * dodag, const di_rpl_instance_t * rpl_instance);
