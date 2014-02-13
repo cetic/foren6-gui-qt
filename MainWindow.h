@@ -146,6 +146,7 @@ class MainWindow:public QMainWindow {
         QTreeWidgetItem *nodeMetric;
         QTreeWidgetItem *nodeRank;
         QTreeWidgetItem *nodeGrounded;
+        QTreeWidgetItem *nodePreference;
         QTreeWidgetItem *nodeLastDtsn;
         QTreeWidgetItem *nodeLastDaoSeq;
 

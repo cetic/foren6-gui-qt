@@ -94,7 +94,7 @@ QMainWindow(parent), ui(new Ui::MainWindow)
     restoreState(settings.value("windowState").toByteArray());
     settings.endGroup();
 
-    ui->actionToggleNodeMovement->setChecked(settings.value("nodeMovement", true).toBool());
+    ui->actionToggleNodeMovement->setChecked(settings.value("nodeMovement", false).toBool());
     wsnManager->scene()->setNodeMovement(!ui->actionToggleNodeMovement->isChecked());
     ui->actionToggleNodeInfo->setChecked(settings.value("nodeInfo", true).toBool());
     wsnManager->scene()->setNodeInfo(ui->actionToggleNodeInfo->isChecked());
@@ -227,6 +227,8 @@ QMainWindow(parent), ui(new Ui::MainWindow)
         nodeInfoTree.nodeRank->setText(0, "Rank");
         nodeInfoTree.nodeGrounded = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
         nodeInfoTree.nodeGrounded->setText(0, "Grounded");
+        nodeInfoTree.nodePreference = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
+        nodeInfoTree.nodePreference->setText(0, "Preference");
         nodeInfoTree.nodeLastDtsn = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
         nodeInfoTree.nodeLastDtsn->setText(0, "Last DTSN");
         nodeInfoTree.nodeLastDaoSeq = new QTreeWidgetItem(nodeInfoTree.rplDodagDataMain);
@@ -620,10 +622,13 @@ MainWindow::setTargetNodeInfo(const di_node_t * node, const di_dodag_t * dodag, 
         setDeltaColor(nodeInfoTree.rplInstanceIdMain, instance_data_delta->rpl_instance_id);
         nodeInfoTree.nodeGrounded->setText(1, (instance_data->grounded ? "true" : "false"));
         setDeltaColor(nodeInfoTree.nodeGrounded, instance_data_delta->grounded);
+        nodeInfoTree.nodePreference->setText(1, QString::number(instance_data->preference));
+        setDeltaColor(nodeInfoTree.nodePreference, instance_data_delta->preference);
         nodeInfoTree.nodeLastDtsn->setText(1, QString::number(instance_data->dtsn));
         setDeltaColor(nodeInfoTree.nodeLastDtsn, instance_data_delta->dtsn);
     } else {
         nodeInfoTree.nodeGrounded->setText(1, "");
+        nodeInfoTree.nodePreference->setText(1, "");
         nodeInfoTree.nodeLastDtsn->setText(1, "");
     }
     if(instance_data && instance_data->has_dao_data) {
@@ -774,6 +779,7 @@ MainWindow::clearTargetNodeInfo()
     nodeInfoTree.nodeMetric->setText(1, "");
     nodeInfoTree.nodeRank->setText(1, "");
     nodeInfoTree.nodeGrounded->setText(1, "");
+    nodeInfoTree.nodePreference->setText(1, "");
     nodeInfoTree.nodeLastDtsn->setText(1, "");
     nodeInfoTree.nodeLastDaoSeq->setText(1, "");
 
