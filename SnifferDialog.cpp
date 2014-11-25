@@ -116,7 +116,7 @@ SnifferDialog::onAddSniffer()
     QString snifferTarget = ui->targetEdit->text();
     int channel = ui->channelSpin->value();
 
-    QUrl snifferUrl(QString("%1://%2?channel=%3").arg(snifferType).arg(snifferTarget).arg(channel));
+    QUrl snifferUrl(QString("%1://%2?channel=%3&baudrate=%4").arg(snifferType).arg(snifferTarget).arg(channel).arg(115200));
 
     doAddSniffer(snifferUrl);
 }
@@ -130,11 +130,23 @@ SnifferDialog::doAddSniffer(QUrl snifferUrl)
     QString interfaceType = snifferUrl.scheme();
     QString interfacePath = snifferUrl.path();
 
+    int interfaceChannel;
+    int interfaceBaudrate;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-    int interfaceChanned = QUrlQuery(snifferUrl).queryItemValue("channel").toInt();
+    QUrlQuery query(snifferUrl);
 #else
-    int interfaceChanned = snifferUrl.queryItemValue("channel").toInt();
+    QUrl &query = snifferUrl;
 #endif
+    if (query.hasQueryItem("channel")) {
+        interfaceChannel = query.queryItemValue("channel").toInt();
+    } else {
+        interfaceChannel = 26;
+    }
+    if (query.hasQueryItem("baudrate")) {
+        interfaceBaudrate = query.queryItemValue("baudrate").toInt();
+    } else {
+        interfaceBaudrate = 115200;
+    }
 
     if(interfaceType.isEmpty())
         interfaceType = interfacePath.section('.', -1, -1);
@@ -149,13 +161,13 @@ SnifferDialog::doAddSniffer(QUrl snifferUrl)
         return;
     }
 
-    sniffer_handle = interface->open(interfacePath.toLatin1().constData(), interfaceChanned);
+    sniffer_handle = interface->open(interfacePath.toLatin1().constData(), interfaceChannel, interfaceBaudrate);
 
     if(sniffer_handle == 0) {
         qWarning("Could not open target interface !");
         QMessageBox::warning(this, QCoreApplication::applicationName(),
                              QString("Cannot open interface \"%1\" with channel %2. Maybe the file does not exist ?").arg(snifferUrl.path()).
-                             arg(interfaceChanned));
+                             arg(interfaceChannel));
         return;
     }
 
