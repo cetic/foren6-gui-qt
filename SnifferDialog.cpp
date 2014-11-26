@@ -115,8 +115,9 @@ SnifferDialog::onAddSniffer()
     QString snifferType = ui->typeCombo->currentText();
     QString snifferTarget = ui->targetEdit->text();
     int channel = ui->channelSpin->value();
+    int baudrate = ui->baudrateCombo->currentText().toInt();
 
-    QUrl snifferUrl(QString("%1://%2?channel=%3&baudrate=%4").arg(snifferType).arg(snifferTarget).arg(channel).arg(115200));
+    QUrl snifferUrl(QString("%1://%2?channel=%3&baudrate=%4").arg(snifferType).arg(snifferTarget).arg(channel).arg(baudrate));
 
     doAddSniffer(snifferUrl);
 }
