@@ -194,7 +194,14 @@ SnifferDialog::onRemoveSniffer()
 void
 SnifferDialog::onBrowseSniffer()
 {
-    QString target = QFileDialog::getOpenFileName(this, "Select a sniffer device or a file");
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setFilter(QDir::System | QDir::AllEntries);
+    QString target;
+    if (dialog.exec()) {
+        QStringList selectedFiles = dialog.selectedFiles();
+        target = selectedFiles.at(0);
+    }
 
     if(target.isEmpty())
         return;
