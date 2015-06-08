@@ -44,6 +44,9 @@ QDialog(parent), ui(new Ui::SettingsDialog)
     //Update config from user preferences
     QSettings settings;
 
+    settings.beginGroup("general");
+    config.old_tshark = settings.value("old_tshark", config.old_tshark).toBool();
+    settings.endGroup();
     settings.beginGroup("6lowpan");
     QString context0 = settings.value("context0", ipv6string).toString();
 
@@ -79,6 +82,7 @@ SettingsDialog::applySettings()
 
     config.root_rank = ui->settings_RplRootRankEdit->text().toInt(&valid, 10);
     valid = valid && inet_pton(AF_INET6, qPrintable(ui->settings_6lowpanContextEdit->text()), (void *)&config.context0);
+    config.old_tshark = ui->settings_OldTsharkCbx->isChecked();
     config.address_autconf_only = ui->settings_AutoconfAddrsCbx->isChecked();
     config.one_preferred_parent = ui->settings_SinglePreferredParentCbx->isChecked();
     config.sender_rank_inverted = ui->settings_SenderRankInvertedCbx->isChecked();
@@ -87,6 +91,9 @@ SettingsDialog::applySettings()
         //Update user preferences
         QSettings settings;
 
+        settings.beginGroup("general");
+        settings.setValue("old_tshark", config.old_tshark);
+        settings.endGroup();
         settings.beginGroup("6lowpan");
         settings.setValue("context0", ui->settings_6lowpanContextEdit->text());
         settings.endGroup();
@@ -98,6 +105,7 @@ SettingsDialog::applySettings()
         settings.setValue("root_rank", config.root_rank);
         settings.setValue("sender_rank_inverted", config.sender_rank_inverted);
         settings.endGroup();
+        printf("setting saved\n");
     }
 }
 
@@ -107,6 +115,7 @@ SettingsDialog::restoreSettings()
     char ipv6string[INET6_ADDRSTRLEN];
     const analyser_config_t *config = rpl_tool_get_analyser_config();
 
+    ui->settings_OldTsharkCbx->setChecked(config->old_tshark);
     ui->settings_RplRootRankEdit->setText(QString::number(config->root_rank));
     inet_ntop(AF_INET6, (const char *)&config->context0, ipv6string, INET6_ADDRSTRLEN);
     ui->settings_6lowpanContextEdit->setText(ipv6string);
