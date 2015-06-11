@@ -105,7 +105,6 @@ SettingsDialog::applySettings()
         settings.setValue("root_rank", config.root_rank);
         settings.setValue("sender_rank_inverted", config.sender_rank_inverted);
         settings.endGroup();
-        printf("setting saved\n");
     }
 }
 
