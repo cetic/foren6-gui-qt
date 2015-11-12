@@ -157,6 +157,7 @@ class MainWindow:public QMainWindow {
         QTreeWidgetItem *nodeDis;
         QTreeWidgetItem *nodeDio;
         QTreeWidgetItem *nodeDao;
+        QTreeWidgetItem *nodeDaoAck;
 
         QTreeWidgetItem *errorsMain;
         QTreeWidgetItem *nodeInvalidIp;
