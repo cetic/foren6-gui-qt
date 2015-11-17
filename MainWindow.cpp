@@ -248,6 +248,8 @@ QMainWindow(parent), ui(new Ui::MainWindow)
         nodeInfoTree.nodeDio->setText(0, "DIO sent");
         nodeInfoTree.nodeDao = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
         nodeInfoTree.nodeDao->setText(0, "DAO sent");
+        nodeInfoTree.nodeDaoAck = new QTreeWidgetItem(nodeInfoTree.statisticsMain);
+        nodeInfoTree.nodeDaoAck->setText(0, "DAO ACK sent");
 
         nodeInfoTree.errorsMain = new QTreeWidgetItem(ui->rplNodeInfoTree);
         nodeInfoTree.errorsMain->setText(0, "Errors");
@@ -678,6 +680,8 @@ MainWindow::setTargetNodeInfo(const di_node_t * node, const di_dodag_t * dodag, 
     setDeltaColor(nodeInfoTree.nodeDio, rpl_statistics_delta->dio);
     nodeInfoTree.nodeDao->setText(1, QString::number(rpl_statistics->dao));
     setDeltaColor(nodeInfoTree.nodeDao, rpl_statistics_delta->dao);
+    nodeInfoTree.nodeDaoAck->setText(1, QString::number(rpl_statistics->dao_ack));
+    setDeltaColor(nodeInfoTree.nodeDaoAck, rpl_statistics_delta->dao_ack);
 
     setTitleDeltaColor(nodeInfoTree.statisticsMain, sixlowpan_statistics_delta->has_changed || rpl_statistics_delta->has_changed);
 
@@ -790,6 +794,7 @@ MainWindow::clearTargetNodeInfo()
     nodeInfoTree.nodeDis->setText(1, "");
     nodeInfoTree.nodeDio->setText(1, "");
     nodeInfoTree.nodeDao->setText(1, "");
+    nodeInfoTree.nodeDaoAck->setText(1, "");
 
     setTitleDeltaColor(nodeInfoTree.errorsMain, false);
     nodeInfoTree.nodeInvalidIp->setText(1, "");
