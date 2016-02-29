@@ -53,7 +53,7 @@ LIBS += -lrplanalyzer
 INCLUDEPATH += $$PWD/../analyzer/src/
 
 APP_CAPTURE_BUNDLE.files = ../capture/bin/libinterface_pcap.dylib ../capture/bin/libinterface_snif.dylib ../capture/bin/libinterface_sensnif.dylib
-APP_CAPTURE_BUNDLE.path = Contents/MacOs
+APP_CAPTURE_BUNDLE.path = Contents/MacOS
 
 QMAKE_BUNDLE_DATA += APP_CAPTURE_BUNDLE
 
