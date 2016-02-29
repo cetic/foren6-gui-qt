@@ -53,6 +53,7 @@ QDialog(parent), ui(new Ui::SnifferDialog)
     connect(ui->removeButton, SIGNAL(clicked()), this, SLOT(onRemoveSniffer()));
     connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(onBrowseSniffer()));
     connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(onCloseDialog()));
+    connect(ui->typeCombo, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onSelectType(const QString &)));
 
     QFileInfoList captureInterfaces;
     QDir searchPath;
@@ -112,12 +113,26 @@ SnifferDialog::onCloseDialog()
 void
 SnifferDialog::onAddSniffer()
 {
+    int parameters = 0;
     QString snifferType = ui->typeCombo->currentText();
-    QString snifferTarget = ui->targetEdit->text();
-    int channel = ui->channelSpin->value();
-    int baudrate = ui->baudrateCombo->currentText().toInt();
-
-    QUrl snifferUrl(QString("%1://%2?channel=%3&baudrate=%4").arg(snifferType).arg(snifferTarget).arg(channel).arg(baudrate));
+    QString tmp = snifferType + "://";
+    if (ui->targetEdit->isEnabled()) {
+      QString snifferTarget = ui->targetEdit->text();
+      tmp += snifferTarget;
+    }
+    if (ui->channelSpin->isEnabled()) {
+      int channel = ui->channelSpin->value();
+      if (parameters++ == 0) tmp += '?'; else tmp += '&';
+      tmp += "channel=";
+      tmp += QString::number(channel);
+    }
+    if (ui->baudrateCombo->isEnabled()) {
+      int baudrate = ui->baudrateCombo->currentText().toInt();
+      if (parameters++ == 0) tmp += '?'; else tmp += '&';
+      tmp += "baudrate=";
+      tmp += QString::number(baudrate);
+    }
+    QUrl snifferUrl(tmp);
 
     doAddSniffer(snifferUrl);
 }
@@ -167,8 +182,7 @@ SnifferDialog::doAddSniffer(QUrl snifferUrl)
     if(sniffer_handle == 0) {
         qWarning("Could not open target interface !");
         QMessageBox::warning(this, QCoreApplication::applicationName(),
-                             QString("Cannot open interface \"%1\" with channel %2. Maybe the file does not exist ?").arg(snifferUrl.path()).
-                             arg(interfaceChannel));
+                             QString("Cannot open device \"%1\". Maybe the file does not exist ?").arg(snifferUrl.path()));
         return;
     }
 
@@ -224,6 +238,16 @@ SnifferDialog::onBrowseSniffer()
     }
 }
 
+void
+SnifferDialog::onSelectType(const QString & text)
+{
+  int index = ui->typeCombo->findText(text);
+  interface_t *interface = (interface_t *) ui->typeCombo->itemData(index).value < void *>();
+  ui->targetEdit->setEnabled((interface->parameters & INTERFACE_DEVICE) != 0);
+  ui->browseButton->setEnabled((interface->parameters & INTERFACE_DEVICE) != 0);
+  ui->channelSpin->setEnabled((interface->parameters & INTERFACE_CHANNEL) != 0);
+  ui->baudrateCombo->setEnabled((interface->parameters & INTERFACE_BAUDRATE) != 0);
+}
 
 void
 SnifferDialog::onStartSniffer()

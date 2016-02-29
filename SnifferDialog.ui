@@ -6,157 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>589</width>
-    <height>329</height>
+    <width>595</width>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Manage Sniffers</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1" colspan="2">
-    <widget class="QLineEdit" name="targetEdit"/>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="targetLabel">
-     <property name="text">
-      <string>Target</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="3">
-    <widget class="QPushButton" name="addButton">
-     <property name="text">
-      <string>Add</string>
-     </property>
-     <property name="autoDefault">
-      <bool>true</bool>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1" colspan="2">
-    <widget class="QSpinBox" name="channelSpin">
-     <property name="maximum">
-      <number>30</number>
-     </property>
-     <property name="value">
-      <number>26</number>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="browseButton">
-     <property name="text">
-      <string>Browse</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="channelLabel">
-     <property name="text">
-      <string>Channel</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="QPushButton" name="removeButton">
-     <property name="text">
-      <string>Remove</string>
-     </property>
-     <property name="shortcut">
-      <string>Del</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="4">
-    <widget class="QLabel" name="snifferLabel">
-     <property name="text">
-      <string>Opened sniffers and files</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="typeLabel">
-     <property name="text">
-      <string>Type</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="2">
-    <widget class="QComboBox" name="typeCombo">
-     <property name="editable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="baudrateLabel">
-     <property name="text">
-      <string>Baudrate</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1" colspan="2">
-    <widget class="QComboBox" name="baudrateCombo">
-     <property name="editable">
-      <bool>false</bool>
-     </property>
-     <item>
-      <property name="text">
-       <string>115200</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>230400</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>460800</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>500000</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="7" column="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item row="1" column="0" colspan="4">
     <widget class="QTableView" name="snifferTable">
      <property name="selectionMode">
@@ -194,7 +51,77 @@
      </attribute>
     </widget>
    </item>
-   <item row="6" column="3">
+   <item row="5" column="1" colspan="2">
+    <widget class="QLineEdit" name="targetEdit"/>
+   </item>
+   <item row="0" column="0" colspan="4">
+    <widget class="QLabel" name="snifferLabel">
+     <property name="text">
+      <string>Opened sniffers and files</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="baudrateLabel">
+     <property name="text">
+      <string>Baudrate</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1" colspan="2">
+    <widget class="QComboBox" name="baudrateCombo">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>115200</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>230400</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>460800</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>500000</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="12" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="typeLabel">
+     <property name="text">
+      <string>Type</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="3">
     <widget class="QPushButton" name="closeButton">
      <property name="text">
       <string>Close Window</string>
@@ -204,10 +131,83 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="3">
+   <item row="7" column="1" colspan="2">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>(path to packet file or a real sniffer device, example: /dev/ttyUSB0)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1" colspan="2">
+    <widget class="QSpinBox" name="channelSpin">
+     <property name="maximum">
+      <number>30</number>
+     </property>
+     <property name="value">
+      <number>26</number>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="targetLabel">
+     <property name="text">
+      <string>Target</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="browseButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="channelLabel">
+     <property name="text">
+      <string>Channel</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="3">
+    <widget class="QPushButton" name="removeButton">
+     <property name="text">
+      <string>Remove</string>
+     </property>
+     <property name="shortcut">
+      <string>Del</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QComboBox" name="typeCombo">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QPushButton" name="addButton">
+     <property name="text">
+      <string>Add</string>
+     </property>
+     <property name="autoDefault">
+      <bool>true</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

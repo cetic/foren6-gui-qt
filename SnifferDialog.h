@@ -50,6 +50,7 @@ class SnifferDialog:public QDialog {
     void onRemoveSniffer();
     void onBrowseSniffer();
     void onCloseDialog();
+    void onSelectType(const QString & text);
 
   protected:
     void doAddSniffer(QUrl snifferUrl);
