@@ -119,9 +119,17 @@ PacketWidget::showPacket(rpl::Event * event)
     context += ipv6string;
     QProcess tshark;
 
-    tshark.start("tshark",
-                 QStringList() << "-V" << "-c" << "1" << "-r" << "out.pcap" << "-R" << (QString("frame.number==") +
-                                                                                        QString::number(event->packed_id + 1)) << "-o" << context);
+    QStringList parameters;
+    if(rpl_tool_get_analyser_config()->old_tshark) {
+        parameters = QStringList() << "-V" << "-c" << "1" << "-r" << "out.pcap" << "-R" << (QString("frame.number==") +
+                                                                                            QString::number(event->packed_id + 1)) << "-o" << context;
+    } else {
+      parameters = QStringList() << "-V" << "-r" << "out.pcap" << "-Y" << (QString("frame.number==") +
+                                                                           QString::number(event->packed_id + 1)) << "-o" << context;
+    }
+
+    tshark.start("tshark", parameters);
+
     if(!tshark.waitForStarted())
         return;
     if(!tshark.waitForFinished())
