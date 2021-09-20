@@ -45,7 +45,7 @@
      models.
  */
 
- #include <QtGui>
+ #include <QtWidgets>
 
  #include "SimpleTreeItem.h"
  #include "SimpleTreeModel.h"
