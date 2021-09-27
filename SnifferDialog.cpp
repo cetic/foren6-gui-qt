@@ -177,6 +177,10 @@ SnifferDialog::doAddSniffer(QUrl snifferUrl)
         return;
     }
 
+    if (interface->parameters & INTERFACE_TARGET) {
+        interfacePath = snifferUrl.authority();
+    }
+
     sniffer_handle = interface->open(interfacePath.toLatin1().constData(), interfaceChannel, interfaceBaudrate);
 
     if(sniffer_handle == 0) {
@@ -243,7 +247,7 @@ SnifferDialog::onSelectType(const QString & text)
 {
   int index = ui->typeCombo->findText(text);
   interface_t *interface = (interface_t *) ui->typeCombo->itemData(index).value < void *>();
-  ui->targetEdit->setEnabled((interface->parameters & INTERFACE_DEVICE) != 0);
+  ui->targetEdit->setEnabled((interface->parameters & (INTERFACE_TARGET | INTERFACE_DEVICE)) != 0);
   ui->browseButton->setEnabled((interface->parameters & INTERFACE_DEVICE) != 0);
   ui->channelSpin->setEnabled((interface->parameters & INTERFACE_CHANNEL) != 0);
   ui->baudrateCombo->setEnabled((interface->parameters & INTERFACE_BAUDRATE) != 0);
